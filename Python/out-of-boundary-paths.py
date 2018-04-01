@@ -40,3 +40,21 @@ class Solution(object):
                                                  ((1 if (j == 0) else dp[moves % 2][i][j - 1]) + \
                                                   (1 if (j == n - 1) else dp[moves % 2][i][j + 1])) % M) % M
         return dp[N % 2][x][y]
+
+    def findPaths_bookshadow(self, m, n, N, i, j):
+        MOD = 10**9 + 7
+        ans, dirs = 0, [(-1,0), (1,0), (0, -1), (0,1)]
+        dp = [[0] *n for _ in range(m)]
+        dp[i][j] = 1
+        for t in range(N):
+            ndp = [[0] *n for _ in range(m)]
+            for x in range(m):
+                for y in range(n):
+                    for dx, dy in dirs:
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < m and 0 <= ny < n:
+                            ndp[nx][ny] = (ndp[nx][ny] + dp[x][y]) % MOD
+                        else:
+                            ans = (ans + dp[x][y]) % MOD
+            dp = ndp
+        return ans

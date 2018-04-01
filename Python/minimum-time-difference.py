@@ -21,3 +21,13 @@ class Solution(object):
         minutes.sort()
         return min((y - x) % (24 * 60)  \
                    for x, y in zip(minutes, minutes[1:] + minutes[:1]))
+
+    def findMinDifference_ming(self, timePoints):
+        """ circular array, not need space O(n) """
+        def getMinutes(x):
+            h, m = map(int, x.split(':'))
+            return h*60+m
+        minutes = map(getMinutes, timePoints)
+        minutes.sort()
+        ans = min(minutes[i+1]-minutes[i] for i in xrange(len(minutes)-1))
+        return min(ans, (minutes[0]-minutes[-1])%(24*60))
