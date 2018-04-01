@@ -27,24 +27,9 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        # axly represents number of strings containing x A’s and ending with y L’s.
         M = 1000000007
         a0l0, a0l1, a0l2, a1l0, a1l1, a1l2 = 1, 0, 0, 0, 0, 0
         for i in xrange(n+1):
             a0l2, a0l1, a0l0 = a0l1, a0l0, (a0l0 + a0l1 + a0l2) % M
             a1l2, a1l1, a1l0 = a1l1, a1l0, (a0l0 + a1l0 + a1l1 + a1l2) % M;
         return a1l0
-
-    def checkRecord_dp(self, n):
-        '''
-        利用dp[n][A][L]表示长度为n，包含A个字符'A'，以L个连续的'L'结尾的字符串的个数。
-        状态转移方程：
-        dp[n][0][0] = sum(dp[n - 1][0])
-        dp[n][0][1] = dp[n - 1][0][0]
-        dp[n][0][2] = dp[n - 1][0][1]
-        dp[n][1][0] = sum(dp[n - 1][0]) + sum(dp[n - 1][1])
-        dp[n][1][1] = dp[n - 1][1][0]
-        dp[n][1][2] = dp[n - 1][1][1]
-
-        初始令dp[1] = [[1, 1, 0], [1, 0, 0]]
-        '''

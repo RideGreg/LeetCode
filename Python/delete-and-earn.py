@@ -34,6 +34,25 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        c = collections.Counter(nums)
+        prev, take, skip = None, 0, 0
+        for k in sorted(c):
+            if k - 1 == prev:
+                skip, take = max(take, skip), c[k]*k + skip
+            else:
+                skip, take = max(take, skip), c[k]*k + max(take, skip)
+            prev = k
+        return max(use, avoid)
+''' ming DP, bad - for loop iterate dummy zeros
+        if not nums:
+            return 0
+        c = Counter(nums)
+        last, now = 0, 0
+        for k in xrange(max(c.keys())+1):
+            now, last = max(now, last + c[k]*k), now
+        return now
+'''
+''' kamyu DP, bad - for loop iterate dummy zeros, not using Counter
         vals = [0] * 10001
         for num in nums:
             vals[num] += num
@@ -42,3 +61,26 @@ class Solution(object):
             val_i_1, val_i_2 = val_i, val_i_1
             val_i = max(vals[i] + val_i_2, val_i_1)
         return val_i
+'''
+''' ming DFS, TLE - many unnecessary steps
+        def dfs(nums, used, ans, cur):
+            print "\nnums, used, cur = ", nums, used, cur
+            if not nums:
+                print ans[0], cur
+                ans[0] = max(ans[0], cur)
+
+            for v in nums:
+                if v not in used:
+                    used[v] = 1
+                    earn = nums.count(v) * v
+                    newList = [x for x in nums if x > v+1 or x < v-1]
+                    dfs(newList, used, ans, cur+earn)
+                    del used[v]
+
+        ans, used = [0], {}
+        dfs(nums, used, ans, 0)
+        return ans[0]
+'''
+print Solution().deleteAndEarn([3,4,2]) #6
+print Solution().deleteAndEarn([2, 2, 3, 3, 3, 4]) #9
+print Solution().deleteAndEarn([8,7,3,8,1,4,10,10,10,2])

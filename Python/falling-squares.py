@@ -222,3 +222,22 @@ class Solution3(object):
         for height in heights:
             result.append(max(result[-1], height) if result else height)
         return result
+
+# Time:  O(n^2)
+# Space: O(n)
+class Solution_voyageck(object):
+    def fallingSquares(self, p):
+        n = len(p)
+        h = [0] * n    # height of each square
+        h[0] = p[0][1]
+        maxH = h[0]
+        res = [maxH]
+        for i in xrange(1,n):
+            # max height of all touchable prev squares or 0
+            h[i] = max(h[j] for j in xrange(i+1) \
+                       if (p[i][0] < p[j][0]+p[j][1] \
+                          and p[j][0] < p[i][0]+p[i][1]))
+            h[i] += p[i][1]            # height of current square i
+            maxH = max(maxH, h[i])
+            res.append(maxH)
+        return res

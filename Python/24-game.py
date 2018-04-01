@@ -1,4 +1,4 @@
-# Time:  O(n^3 * 4^n) = O(1), n = 4
+# Time:  O(n^3 * 4^n) = O(1), n = 4: tree is n level, n^2 vertex per level; 4 ops per vertex. Generally DFS/BFS O(V+E)
 # Space: O(n^2) = O(1)
 
 # You have 4 cards each containing a number from 1 to 9.

@@ -34,16 +34,13 @@
 # M[i][i] = 1 for all students.
 # If M[i][j] = 1, then M[j][i] = 1.
 
-# https://www.cs.princeton.edu/~rs/AlgsDS07/01UnionFind.pdf
-# http://blog.csdn.net/dm_vincent/article/details/7655764
-# http://blog.csdn.net/dm_vincent/article/details/7769159
-
 class Solution(object):
-    def findCircleNum(self, M): # slowest, constructing class wastes time
+    def findCircleNum(self, M):
         """
         :type M: List[List[int]]
         :rtype: int
         """
+
         class UnionFind(object):
             def __init__(self, n):
                 self.set = range(n)
@@ -66,72 +63,4 @@ class Solution(object):
                 if M[i][j] and i != j:
                     circles.union_set(i, j)
         return circles.count
-
-class Solution_quick(object): # fastest, same logic as the above orig solution
-    def findCircleNum(self, M):
-        size = len(M)
-        pid = range(size)
-
-        def find(x):
-            if pid[x] != x:
-                pid[x] = find(pid[x])
-            return pid[x]
-
-        for i in xrange(size):
-            for j in xrange(size):
-                if i != j and M[i][j] == 1:
-                    pi, pj = find(i), find(j)
-                    if pi != pj:
-                        pid[min(pi, pj)] = max(pi, pj)
-                        size -= 1
-        return size
-
- # bad: need to maintain the list of circles: take extra space and update is time consuming
-class Solution_ming(object):
-    def findCircleNum(self, M):
-        lookup = [False] * len(M) # maintain a list of mapping friend to its circle Id
-        circles = [] # maintain a list of set, each set is a circle
-        size = 0
-        for i in xrange(len(M)):
-            for j in xrange(len(M[0])):
-                if M[i][j] == 1:
-                    if lookup[i] is False and lookup[j] is False: # create a new circle
-                        circles.append(set([i, j]))
-                        lookup[i] = lookup[j] = len(circles) - 1
-                        size += 1
-                    elif lookup[i] is not False and lookup[j] is not False: # merge circles
-                        smallCId, bigCId = min(lookup[i], lookup[j]), max(lookup[i], lookup[j])
-                        if smallCId != bigCId:
-                            for k in circles[bigCId]:
-                                lookup[k] = smallCId
-                            circles[smallCId].update(circles[bigCId])
-                            circles[bigCId] = set()
-                            size -= 1
-                    else: # add to existing circle
-                        cId = lookup[i] if lookup[i] is not False else lookup[j]
-                        circles[cId].update([i, j])
-                        lookup[i] = lookup[j] = cId
-        return size
-
-#Solution().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-#Solution().findCircleNum([[1,1,1,1,1,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]])
-
-
-#0.246370077133 sec
-#0.0578229427338 sec
-#0.096510887146 sec
-import time
-t = time.time()
-for _ in xrange(10000):
-    Solution().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
-
-t = time.time()
-for _ in xrange(10000):
-    Solution_quick().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
-
-t = time.time()
-for _ in xrange(10000):
-    Solution_ming().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
+ 

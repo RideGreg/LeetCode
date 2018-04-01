@@ -16,7 +16,7 @@
 # Note: The length of given array won't exceed 10000.
 
 class Solution(object):
-    def nextGreaterElements(self, nums):
+    def nextGreaterElements(self, nums): # hard to understand: reverse loop, keep greater in stack
         """
         :type nums: List[int]
         :rtype: List[int]
@@ -28,3 +28,13 @@ class Solution(object):
             result[i % len(nums)] = stk[-1] if stk else -1
             stk.append(nums[i % len(nums)])
         return result
+    def nextGreaterElements_easyUnderstand(self, nums):
+        lng = len(nums)
+        ans, stk = [-1] * lng, []
+        for i in xrange(2*len(nums)):
+            while stk and nums[stk[-1]%lng] < nums[i%lng]:
+                ii = stk.pop()
+                if ii < lng:
+                    ans[ii] = nums[i%lng]
+            stk.append(i)
+        return ans

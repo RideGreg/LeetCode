@@ -48,3 +48,54 @@ class Solution(object):
                     result = word
                 stack += [curr[letter] for letter in curr if letter != "_end"]
         return result
+
+class TrieNode:
+    def __init__(self):
+        self.is_string = False
+        self.leaves = {}
+
+class WordDictionary:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def addWord(self, word):
+        valid = True
+        curr = self.root
+        for id, c in enumerate(word,1):
+            if not c in curr.leaves:
+                curr.leaves[c] = TrieNode()
+            curr = curr.leaves[c]
+
+            if not curr.is_string and id != len(word):
+                valid = False
+        curr.is_string = True
+        return valid
+
+# bad: 1. Need to sort first (has to insert short word before long word); 2. trie takes space
+class Solution_ming(object):
+    def longestWord(self, words):
+        res = ''
+        words = sorted(words)
+        d = WordDictionary()
+        for w in words:
+            valid = d.addWord(w)
+            print w, valid
+            if valid and len(w) > len(res):
+                res = w
+        return res
+
+class Solution_bruteForce(object):
+    def longestWord(self, words):
+        ans = ""
+        wordset = set(words)
+        for word in words:
+            if len(word) > len(ans) or len(word) == len(ans) and word < ans:
+                if all(word[:k] in wordset for k in xrange(1, len(word))):
+                    ans = word
+
+        return ans
+
+print Solution().longestWord(["w","wo","wor","worl", "world"])
+#print Solution().longestWord(["htncv","htncvn","ht","mvaq","h","htnc"])
+#print Solution().longestWord(["a", "banana", "app", "appl", "ap", "apply", "apple"])
+#print Solution().longestWord(["yo","ew","fc","zrc","yodn","fcm","qm","qmo","fcmz","z","ewq","yod","ewqz","y"])

@@ -22,7 +22,7 @@
 #
 
 # iteration
-class Solution:
+class Solution1:
     # @param s, an input string
     # @param p, a pattern string
     # @return a boolean
@@ -74,7 +74,7 @@ class Solution2:
 # dp
 # Time:  O(m * n)
 # Space: O(m * n)
-class Solution3:
+class Solution:
     # @return a boolean
     def isMatch(self, s, p):
         result = [[False for j in xrange(len(p) + 1)] for i in xrange(len(s) + 1)]

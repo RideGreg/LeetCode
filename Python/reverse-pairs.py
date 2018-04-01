@@ -51,3 +51,43 @@ class Solution(object):
             return count
 
         return countAndMergeSort(nums, 0, len(nums) - 1)
+
+class Node:
+    def __init__(self, x):
+        self.val = x
+        self.greater_eq = 1
+        self.left = None
+        self.right = None
+
+class Solution_BST: #TLE: BST tree can be skewed hence, making it O(n^2) in complexity
+    def reversePairs(self, nums):
+        def search(head, value):
+            if not head: return 0
+            elif value == head.val: return head.greater_eq
+            elif value < head.val:
+                return head.greater_eq + search(head.left, value)
+            else:
+                return search(head.right, value)
+
+        def insert(head, value):
+            if not head:
+                return Node(value)
+            elif value == head.val:
+                head.greater_eq += 1
+            elif value < head.val:
+                head.left = insert(head.left, value)
+            else:
+                head.greater_eq += 1
+                head.right = insert(head.right, value)
+            return head
+
+        ans, head = 0, None
+        for n in nums:
+            ans += search(head, 2 * n + 1)
+            head = insert(head, n)
+
+        return ans
+
+
+print Solution().reversePairs([1,3,2,3,1])
+print Solution().reversePairs([2,4,3,5,1])

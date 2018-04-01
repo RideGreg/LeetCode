@@ -46,27 +46,3 @@ class Solution(object):
             return count
 
         return countArrangementHelper(N, range(1, N+1))
-
-    def countArrangement_bookshadow(self, N): # dfs + memorization: easy to remember
-        cache = dict()
-        def dfs(pos, nums):
-            if not nums: return 1
-            key = pos, tuple(nums)
-            if key in cache: return cache[key]
-            ans = 0
-            for i, n in enumerate(nums):
-                if n % pos == 0 or pos % n == 0:
-                    ans += dfs(pos + 1, nums[:i] + nums[i+1:])
-            cache[key] = ans
-            return ans
-        return dfs(1, range(1, N + 1))
-
-import timeit
-print timeit.timeit('Solution().countArrangement(12)', 'from __main__ import Solution', number=100)
-print timeit.timeit('Solution().countArrangement_bookshadow(12)', 'from __main__ import Solution', number=100)
-print timeit.timeit('Solution().countArrangement(11)', 'from __main__ import Solution', number=300)
-print timeit.timeit('Solution().countArrangement_bookshadow(11)', 'from __main__ import Solution', number=300)
-#1.15
-#1.01
-#0.74
-#1.28

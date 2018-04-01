@@ -39,3 +39,17 @@ class Solution(object):
         while stk:
             lookup[stk.pop()] = -1
         return map(lambda x : lookup[x], findNums)
+#        return [lookup[x] if x in lookup else -1 for x in findNums]
+
+    defenextGreaterElement_bnuteforce(self, findNums, nums):
+        ans = []
+        for m in findNums:
+            found, nxtNum = False, -1
+            for n in nums:
+                if n == m:
+                    found = True
+                if found and n > m:
+                    nxtNum = n
+                    break
+            ans.append(nxtNum)
+        return ans

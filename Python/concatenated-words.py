@@ -45,3 +45,5 @@ class Solution(object):
                     break
 
         return result
+
+print Solution().findAllConcatenatedWordsInADict(['sun', 'moon', 'star', 'sunmoon', 'sunstarsun', 'earthsun', 'suns', 'sunsun'])

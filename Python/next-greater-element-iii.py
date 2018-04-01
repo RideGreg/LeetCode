@@ -36,16 +36,3 @@ class Solution(object):
         digits[k + 1:] = digits[:k:-1]
         result = int("".join(map(str, digits)))
         return -1 if result >= 0x7FFFFFFF else result
-
-    def nextGreaterElement_ming(self, n):
-        digits = list(str(n))
-        if len(digits) < 2: return -1
-        for i in reversed(xrange(1, len(digits))):
-            if digits[i] > digits[i-1]:
-                for j in reversed(xrange(i, len(digits))):
-                    if digits[j] > digits[i-1]:
-                        digits[i-1], digits[j] = digits[j], digits[i-1]
-                        digits[i:] = digits[:i-1:-1]
-                        ans = int(''.join(digits))
-                        return ans if ans <= 0x7fffffff else -1
-        return -1

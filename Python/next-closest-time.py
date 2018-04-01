@@ -38,3 +38,23 @@ class Solution(object):
             if set(result) <= set(time):
                 break
         return result
+
+    def nextClosestTime2(self, time): # not using set, check each digits by bases
+        bases = [600, 60, 10, 1]
+        h, m = time.split(":")
+        curr = int(h) * 60 + int(m)
+        for i in xrange(1, 1441):
+            res = ''
+            t = (curr + i) % 1440
+            for base in bases:
+                digit = str(t // base) # check digit on each position
+                if digit not in time:
+                    break
+                res += str(digit)
+                t %= base
+            if len(res) == 4:
+                break
+
+        return res[:2] + ':' + res[2:]
+
+print Solution().nextClosestTime("19:34")

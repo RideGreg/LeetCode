@@ -32,14 +32,42 @@ class Solution:
             result.append(list(intermediate))
         prev = 0
         while start < len(candidates) and candidates[start] <= target:
-            if prev != candidates[start]:
+            if prev != candidates[start]: #this is a bug
                 intermediate.append(candidates[start])
                 self.combinationSumRecu(candidates, result, start + 1, intermediate, target - candidates[start])
                 intermediate.pop()
                 prev = candidates[start]
             start += 1
 
+    def combinationSum2_m(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        def dfs(res, curr, cans, target, pos):
+            if target == 0:
+                res.append(list(curr))
+                return
+
+            i = pos
+            while i < len(cans) and cans[i] <= target:
+                if i == pos or cans[i] != cans[i-1]:
+                    curr.append(cans[i])
+                    dfs(res, curr, cans, target-cans[i], i+1)
+                    curr.pop()
+                i += 1
+        
+        candidates = sorted(candidates)
+        if not candidates or candidates[0] > target:
+            return []
+        
+        res = []
+        dfs(res, [], candidates, target, 0)
+        return res
+
 if __name__ == "__main__":
-    candidates, target = [10, 1, 2, 7, 6, 1, 5], 8
-    result = Solution().combinationSum2(candidates, target)     
+#    candidates, target = [10, 1, 2, 7, 6, 1, 5], 8
+    candidates, target = [-8, 0, 8], 0
+    result = Solution().combinationSum2_m(candidates, target)     
     print result       

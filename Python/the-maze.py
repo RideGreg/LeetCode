@@ -1,6 +1,6 @@
 # Time:  O(max(r, c) * w)
 # Space: O(w)
-
+import collections
 class Solution(object):
     def hasPath(self, maze, start, destination):
         """
@@ -34,3 +34,14 @@ class Solution(object):
                 queue.append((dist+neighbor_dist, neighbor))
             
         return False
+
+print Solution().hasPath([[0,0,1,0,0],
+                          [0,0,0,0,0],
+                          [0,0,0,1,0],
+                          [1,1,0,1,1],
+                          [0,0,0,0,0]], [0,4], [4,4])
+print Solution().hasPath([[0,0,1,0,0],
+                          [0,0,0,0,0],
+                          [0,0,0,1,0],
+                          [1,1,0,1,1],
+                          [0,0,0,0,0]], [0,4], [3,2])

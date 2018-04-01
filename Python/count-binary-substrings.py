@@ -31,8 +31,10 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        result, prev, curr = 0, 0, 1
+        result = 0
+        prev, curr = 0, 1 #for the first char case
         for i in xrange(1, len(s)):
+            #each time alternating, add #of candidates from substring ending with last char
             if s[i-1] != s[i]:
                 result += min(prev, curr)
                 prev, curr = curr, 1
@@ -40,3 +42,43 @@ class Solution(object):
                 curr += 1
         result += min(prev, curr)
         return result
+
+    # return a list of counts of groups of 0 or 1
+    def countBinarySubstrings2(self, s):
+        result = []
+        curr = 1
+        for i in xrange(1, len(s)):
+            if s[i] == s[i-1]:
+                curr += 1
+            else:
+                result.append(curr)
+                curr = 1
+        result.append(curr)
+        return result
+
+    # Time O(n^2)
+    def countBinarySubstrings3(self, s):
+        res = 0
+        for i in xrange(len(s) - 1):
+            num0, num1 = 0, 0
+            if s[i] == '0':
+                num0 += 1
+            else:
+                num1 += 1
+            j = i + 1
+            while j < len(s):
+                if num0 and num1 and s[j] != s[j-1]: #aba pattern
+                    break
+                if s[j] == '0':
+                    num0 += 1
+                else:
+                    num1 += 1
+                if num0 == num1: #for all substrings starting w/ s[i], zero or one result
+                    res += 1
+                    break
+                j += 1
+        return res
+
+print Solution().countBinarySubstrings2('00110')
+print Solution().countBinarySubstrings2('00110011')
+print Solution().countBinarySubstrings2('10101')

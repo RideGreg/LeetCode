@@ -27,6 +27,8 @@
 # - 0 < prices[i] < 50000.
 # - 0 <= fee < 50000.
 
+# optimal substructure and overlapping sub-problem
+
 class Solution(object):
     def maxProfit(self, prices, fee):
         """
@@ -35,8 +37,7 @@ class Solution(object):
         :rtype: int
         """
         cash, hold = 0, -prices[0]
-        for i in xrange(1, len(prices)):
-            cash = max(cash, hold+prices[i]-fee)
-            hold = max(hold, cash-prices[i])
+        for p in prices[1:]:
+            cash = max(cash, hold+p-fee)
+            hold = max(hold, cash-p)
         return cash
-    

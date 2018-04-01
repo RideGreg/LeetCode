@@ -47,3 +47,8 @@ class Solution(object):
             if all_of:
                 return len(strs[i])
         return -1
+'''
+Can we do:
+1. 1-loop, i is 1st, j start from 2nd? No. ["aaabb","aaabb","xy"] => 2
+2. 2-loop j start from i+1? No. ["aaa","aaa","aa"] => -1
+'''

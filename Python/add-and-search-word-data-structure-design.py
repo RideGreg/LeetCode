@@ -1,6 +1,10 @@
 # Time:  O(min(n, h)), per operation
 # Space: O(min(n, h))
 #
+# Ming: Time Complexity:  addWord - O(L) ,   search - O(26L)，  Space Complexity - O(26L)   这里 L是单词的平均长度。
+# http://www.cnblogs.com/yrbbest/p/4979621.html
+# More follow up: http://www.cnblogs.com/EdwardLiu/p/5052887.html
+#
 # Design a data structure that supports the following two operations:
 #
 # void addWord(word)

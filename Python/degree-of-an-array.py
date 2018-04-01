@@ -25,7 +25,7 @@
 # nums[i] will be an integer between 0 and 49,999.
 
 class Solution(object):
-    def findShortestSubArray(self, nums):
+    def findShortestSubArray(self, nums): # use 3 dicts
         """
         :type nums: List[int]
         :rtype: int
@@ -40,3 +40,16 @@ class Solution(object):
                    for num in counts.keys() \
                    if counts[num] == degree)
  
+    def findShortestSubArray2(self, nums): # from leetcoder voyageck
+        times, first, last = {}, {}, {}
+        for i in range(len(nums)):
+            x = nums[i]
+            times[x] = 1 if x not in times else times[x]+1
+            first[x] = i if x not in first else first[x]
+            last[x] = i
+        maxT = max(times.values())
+        res = len(nums)
+        for x in times.keys():
+            if times[x] == maxT:
+                res = min(res, last[x] - first[x]+1)
+        return res  

@@ -39,3 +39,13 @@ class Solution(object):
             if curr == n % 2: return False
             n, curr = divmod(n, 2)
         return True
+
+class Solution_ming(object):
+    def hasAlternatingBits(self, n):
+        prevBit, n = n % 2, n >> 1
+        while n > 0:
+            bit = n % 2
+            while prevBit == bit:
+                return False
+            prevBit, n = bit, n >> 1
+        return True    

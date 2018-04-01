@@ -33,17 +33,6 @@ class Solution:
         num[k], num[l] = num[l], num[k]
         num[k + 1:] = num[:k:-1]
 
-    def nextPermutation_ming(self, nums):
-        sz = len(nums)
-        for i in reversed(xrange(1, sz)):
-            if nums[i] > nums[i-1]:
-                for j in reversed(xrange(i, sz)):
-                    if nums[j] > nums[i-1]:
-                        nums[j], nums[i-1] = nums[i-1], nums[j]
-                        nums[i:] = nums[:i-1:-1]
-                        return
-        nums.reverse()
-
 if __name__ == "__main__":
     num = [1, 4, 3, 2]
     Solution().nextPermutation(num)

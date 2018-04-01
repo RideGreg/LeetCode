@@ -26,6 +26,18 @@ class Solution(object):
             global_max = max(global_max, local_max)
         return global_max
 
+    def maxSubArray_print_index(self, nums):
+        localMax, gMax = nums[0], nums[0]
+        start, end, s = 0, 0, 0
+        for i, n in enumerate(nums[1:], 1):
+            if localMax >= 0:
+                localMax = n + localMax
+            else:
+                localMax, s = n, i
+            if localMax > gMax:
+                gMax = localMax
+                start, end = s, i
+        return gMax, start, end
 
 if __name__ == "__main__":
-    print Solution().maxSubArray([-2,1,-3,4,-1,2,1,-5,4])
+    print Solution().maxSubArray_print_index([-2,1,-3,4,-1,2,1,-5,4])

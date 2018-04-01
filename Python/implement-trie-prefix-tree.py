@@ -59,3 +59,46 @@ class Trie:
 # trie = Trie()
 # trie.insert("somestring")
 # trie.search("key")
+
+
+# Implement trie with nested dict
+# http://stackoverflow.com/questions/11015320/how-to-create-a-trie-in-python
+_end = '_end_'
+class Trie2:
+    def __init__(self):
+        self.root = {}
+
+    def make_trie(self, *words):
+        root = {}
+        for word in words:
+            cur = root
+            for c in word:
+                cur = cur.setdefault(c, {})
+            cur[_end] = _end
+        self.root = root
+
+    def search(self, word):
+        cur = self.root
+        for c in word:
+            if c not in cur:
+                return False
+            cur = cur[c]
+        else:
+            return _end in cur
+
+    def startsWith(self, prefix):
+        cur = self.root
+        for c in prefix:
+            if c not in cur:
+                return False
+            cur = cur[c]
+        return True
+
+trie2 = Trie2()
+trie2.make_trie('foo', 'bar', 'baz', 'barz')
+print trie2.search('bar') #True
+print trie2.search('baa') #False
+print trie2.search('ba')  #False
+print trie2.startsWith('baz') #True
+print trie2.startsWith('ba') #True
+print trie2.startsWith('c') #False
