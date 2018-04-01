@@ -40,3 +40,21 @@ class Solution(object):
                 if counts[s2[start]] > 0:
                     l += 1
         return False
+
+    def checkInclusion_bookshadow(self, s1, s2):
+        import collections
+        c1, c2 = collections.Counter(s1), collections.Counter()
+        p = 0
+        for q in xrange(len(s2)): #evey valid q needs to be added
+            c2[s2[q]] += 1
+            if q-p+1 < len(s1):
+                continue
+            elif q-p+1 > len(s1):
+                c2[s2[p]] -= 1
+                if c2[s2[p]] == 0: del c2[s2[p]]
+                p += 1
+            if c1 == c2: return True
+        return False
+
+print Solution().checkInclusion_bookshadow("ab", "eidbaooo")
+print Solution().checkInclusion_bookshadow("adc", "dcda")

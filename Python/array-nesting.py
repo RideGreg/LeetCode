@@ -44,3 +44,37 @@ class Solution(object):
                     count += 1
                 result = max(result, count)
         return result
+
+    def arrayNesting_bookshadow(self, nums): # DFS; readability by using index
+        ans = 1
+        for i in xrange(len(nums)):
+            j = i
+            cnt = 0
+            while nums[j] >= 0:
+                cnt += 1
+                nxt = nums[j]
+                nums[j] = -1
+                j = nxt
+            ans = max(ans, cnt)
+        return ans
+
+    def arrayNesting_union_find(self, nums): # union_find: slow
+        l = len(nums)
+        self.id, self.sz = range(l), [1] * l
+
+        def find(i):
+            if self.id[i] != i:
+                self.id[i] = find(self.id[i])
+            return self.id[i]
+
+        for i, x in enumerate(nums):
+            root_i, root_x = find(i), find(x)
+            if root_i != root_x:
+                self.id[min(root_i, root_x)] = max(root_i, root_x)
+                self.sz[max(root_i, root_x)] += self.sz[min(root_i, root_x)]
+
+        return max(self.sz)
+
+import timeit
+print timeit.timeit('Solution().arrayNesting_bookshadow([5,4,0,3,1,6,2])', 'from __main__ import Solution', number=10000)
+print timeit.timeit('Solution().arrayNesting_union_find([5,4,0,3,1,6,2])', 'from __main__ import Solution', number=10000)

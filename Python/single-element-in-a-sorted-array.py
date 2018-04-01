@@ -18,7 +18,6 @@ class Solution(object):
         """
         :type nums: List[int]
         :rtype: int
-        """
         left, right = 0, len(nums)-1
         while left <= right:
             mid = left + (right - left) / 2
@@ -29,3 +28,20 @@ class Solution(object):
             else:
                 left = mid+1
         return nums[left]
+        """
+        l, r = 0, len(nums)-1
+        while l <= r:
+            if r == l: return nums[l]
+            mid = (r-l) / 2 + l
+            if mid % 2 == 1:
+                if nums[mid] == nums[mid+1]:
+                    r = mid
+                else:
+                    l = mid + 1
+            else:
+                if nums[mid] == nums[mid+1]:
+                    l = mid + 1
+                else:
+                    r = mid
+
+print Solution().singleNonDuplicate([1,1,2])

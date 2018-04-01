@@ -46,3 +46,54 @@ class Solution(object):
 
         return dp[-1] >= 0
 
+        """
+        # print the path of picking: don't save the path along the way, after dp 2-D
+        # array is filled, find the path which only takes O(n) time
+
+        length = len(nums)
+        dp = [[0] * length] * length
+        for s in reversed(xrange(len(nums))):
+            dp[s][s] = nums[s]
+            for e in xrange(s+1, len(nums)):
+                dp[s][e] = max(nums[s] - dp[s+1][e], nums[e] - dp[s][e-1])
+        print dp
+        s, e, player1 = 0, len(nums)-1, True
+        while s < e:
+            if nums[s]-dp[s+1][e] >= nums[e]-dp[s][e-1]:
+                pick = s
+                s += 1
+            else:
+                pick = e
+                e -= 1
+            print "I" if player1 else "You", "take", nums[pick], "at", pick
+            player1 = not player1
+        print "I" if player1 else "You", "take", nums[s], "at", s
+
+        return dp[0][-1]
+        """
+
+
+        """
+        # print the index/numbers you should pick to win, store the path along the way to fill the 1-D array
+        length = len(nums)
+        dp, path = [0] * length, [[0] * length] * length # 1st list stores score, 2nd list stores selected indexes
+        for s in reversed(xrange(len(nums))):
+            dp[s] = nums[s]
+            path[s][s] = 1
+            for e in xrange(s+1, len(nums)):
+                v1 = nums[s] - dp[e]
+                v2 = nums[e] - dp[e-1]
+                if v1 >= v2:
+                    dp[e] = v1
+                    path[e] = [-x for x in path[e]]
+                    path[e][s] = 1
+                else:
+                    dp[e] = v2
+                    path[e] = [-x for x in path[e-1]]
+                    path[e][e] = 1
+        print path[-1]
+        return [i for i, x in enumerate(path[-1]) if x > 0]
+        """
+
+print Solution().PredictTheWinner([3,2,2,3,1,2])
+print Solution().PredictTheWinner([1,5,233,7])

@@ -19,3 +19,16 @@ class Solution(object):
                         dp[week % 2][cur_city] = max(dp[week % 2][cur_city], \
                                                      days[dest_city][week] + dp[(week+1) % 2][dest_city])
         return dp[0][0]
+
+    def maxVacationDays_bookshadow(self, flights, days):
+        N, K = len(days), len(days[0])
+        dp = [0] + [-1] * (N - 1)
+        for w in range(K):
+            ndp = [x for x in dp]
+            for sc in range(N):
+                if dp[sc] < 0: continue
+                for tc in range(N):
+                    if sc == tc or flights[sc][tc]:
+                        ndp[tc] = max(ndp[tc], dp[sc] + days[tc][w])
+            dp = ndp
+        return max(dp)

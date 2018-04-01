@@ -33,6 +33,20 @@ class Solution(object):
             if not root: return 0, diameter
             left, diameter = depth(root.left, diameter)
             right, diameter = depth(root.right, diameter)
-            return 1 + max(left, right), max(diameter, 1 + left + right)
+            return 1 + max(left, right), max(diameter, left + right)
+            
+        return depth(root, 0)[1]
 
-        return depth(root, 1)[1] - 1
+# leverage the classical way to calculate tree depth
+class Solution2(object):
+    def diameterOfBinaryTree(self, root):
+        self.ans = 1
+        def depth(node):
+            if not node: return 0
+            L = depth(node.left)
+            R = depth(node.right)
+            self.ans = max(self.ans, L+R)
+            return max(L, R) + 1
+
+        depth(root)
+        return self.ans
