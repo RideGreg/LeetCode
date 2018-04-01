@@ -34,16 +34,13 @@
 # M[i][i] = 1 for all students.
 # If M[i][j] = 1, then M[j][i] = 1.
 
-# https://www.cs.princeton.edu/~rs/AlgsDS07/01UnionFind.pdf
-# http://blog.csdn.net/dm_vincent/article/details/7655764
-# http://blog.csdn.net/dm_vincent/article/details/7769159
-
 class Solution(object):
-    def findCircleNum(self, M): # slowest, constructing class wastes time
+    def findCircleNum(self, M):
         """
         :type M: List[List[int]]
         :rtype: int
         """
+
         class UnionFind(object):
             def __init__(self, n):
                 self.set = range(n)

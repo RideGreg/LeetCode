@@ -1,4 +1,4 @@
-# Time:  O(n * n!) Ming: should be O(n!)?
+# Time:  O(n * n!)
 # Space: O(n)
 #
 # Given a collection of numbers, return all possible permutations.
@@ -8,7 +8,6 @@
 # [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
 #
 
-# https://www.geeksforgeeks.org/generate-all-the-permutation-of-a-list-in-python/
 
 class Solution:
     # @param num, a list of integer
@@ -40,8 +39,6 @@ class Solution:
                     new.append(p[:i]+[n]+p[i:])
             ans = new
         return ans
-if __name__ == "__main__":
-    print len(Solution().permute([1, 2, 3]))
 
 class Solution2:
     def permute(self, num):
@@ -59,11 +56,6 @@ class Solution2:
         helper(ans, len(num), num)
         return ans
 
-import time
 if __name__ == "__main__":
-    t = time.time()
-    for _ in xrange(1000):
-        print Solution().permute([1, 2, 3])
-        print Solution().permute([1, 2, 3, 4])
-    print time.time()-t, 'seconds'
+    print len(Solution().permute([1, 2, 3]))
 

@@ -74,3 +74,7 @@ if __name__ == "__main__":
     candidates, target = [10, 1, 2, 7, 6, 1, 5], 8
     result = Solution().combinationSum2(candidates, target)
     print result
+
+    candidates, target = [-8, 0, 8], 0
+    result = Solution().combinationSum2_m(candidates, target)     
+    print result       

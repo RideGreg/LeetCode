@@ -48,15 +48,3 @@ class Solution(object):
             return left+right+root.val, tilt
 
         return postOrderTraverse(root, 0)[1]
-
-    def findTilt_clear(self, root): # use a global var self.ans, but should know how to do if global var is disallowed
-        self.ans = 0
-
-        def postOrder(root):
-            if not root: return 0
-            left, right = postOrder(root.left), postOrder(root.right)
-            self.ans += abs(left - right)
-            return left + right + root.val
-
-        postOrder(root)
-        return self.ans

@@ -44,36 +44,3 @@ class Solution(object):
                 word_to_abbr[conflicts.pop()] = abbr
 
         return [word_to_abbr[word] for word in dict]
-
-    def wordsAbbreviation2(self, dict):
-        def commonPrefixLen(a, b):
-            return next(i for i, (x,y) in enumerate(zip(a,b)) if x != y)
-        def getAbbr(prefixLen, w):
-            if prefixLen + 2 < len(w):
-                return w[:prefixLen] + str(len(w)-prefixLen-1) + w[-1]
-            else:
-                return w
-
-        lookup = {} #abbr to i
-        ans = []
-        for i, word in enumerate(dict):
-            abbr = getAbbr(1, word)
-            if abbr not in lookup:
-                lookup[abbr] = i
-                ans.append(abbr)
-            else:
-                j = lookup[abbr]
-                del lookup[abbr]
-                oldword = dict[j]
-                cpl = commonPrefixLen(word, oldword)
-                ab = getAbbr(cpl+1, oldword)
-                lookup[ab] = j
-                ans[j] = ab
-                ab = getAbbr(cpl + 1, word)
-                lookup[ab] = i
-                ans.append(ab)
-        return ans
-
-
-print Solution().wordsAbbreviation2(["like", "god", "internal", "me", "internet", "interval", "intension", "face", "intrusion"])
-# ["l2e","god","internal","me","i6t","interval","inte4n","f2e","intr4n"]

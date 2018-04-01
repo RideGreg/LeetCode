@@ -57,7 +57,8 @@ class Solution(object):
         return result
 
 
-    def findBlackPixel_2(self, picture, N):
+class Solution2(object):
+    def findBlackPixel(self, picture, N):
         """
         :type picture: List[List[str]]
         :type N: int

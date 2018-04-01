@@ -33,6 +33,7 @@ try:
 except NameError:
     xrange = range  # Python 3
 
+# optimal substructure and overlapping sub-problem
 
 class Solution(object):
     def maxProfit(self, prices, fee):

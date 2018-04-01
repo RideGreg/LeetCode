@@ -14,10 +14,6 @@
 
 class Solution(object):
     def nearestPalindromic(self, n):
-        """
-        :type n: str
-        :rtype: str
-        """
         l = len(n)
         candidates = set((str(10**l + 1), str(10**(l - 1) - 1)))
         prefix = int(n[:(l + 1)/2])   # first half of string
