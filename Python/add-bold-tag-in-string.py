@@ -1,6 +1,15 @@
 # Time:  O(n * d * l), l is the average string length
 # Space: O(n)
 
+import collections
+import functools
+
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
+
 # 59ms
 class Solution(object):
     def addBoldTag(self, s, dict):
@@ -22,10 +31,10 @@ class Solution(object):
                 result.append("<b>")
             result.append(s[i])
             if lookup[i] and (i == len(s)-1 or not lookup[i+1]):
-                result.append("</b>");
+                result.append("</b>")
         return "".join(result)
 
-    
+
 # Time:  O(n * l), l is the average string length
 # Space: O(t)    , t is the size of trie
 # trie solution, 439ms
@@ -39,7 +48,7 @@ class Solution2(object):
         _trie = lambda: collections.defaultdict(_trie)
         trie = _trie()
         for i, word in enumerate(words):
-            reduce(dict.__getitem__, word, trie).setdefault("_end")
+            functools.reduce(dict.__getitem__, word, trie).setdefault("_end")
 
         lookup = [False] * len(s)
         for i in xrange(len(s)):
@@ -60,5 +69,5 @@ class Solution2(object):
                 result.append("<b>")
             result.append(s[i])
             if lookup[i] and (i == len(s)-1 or not lookup[i+1]):
-                result.append("</b>");
+                result.append("</b>")
         return "".join(result)

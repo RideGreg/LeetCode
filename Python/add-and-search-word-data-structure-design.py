@@ -9,7 +9,8 @@
 #
 # void addWord(word)
 # bool search(word)
-# search(word) can search a literal word or a regular expression string containing only letters a-z or .. 
+# search(word) can search a literal word or a regular expression string
+# containing only letters a-z or ..
 # A . means it can represent any one letter.
 #
 # For example:
@@ -25,23 +26,25 @@
 # You may assume that all words are consist of lowercase letters a-z.
 #
 
+
 class TrieNode:
     # Initialize your data structure here.
     def __init__(self):
         self.is_string = False
         self.leaves = {}
-        
+
+
 class WordDictionary:
     def __init__(self):
         self.root = TrieNode()
-        
+
     # @param {string} word
     # @return {void}
     # Adds a word into the data structure.
     def addWord(self, word):
         curr = self.root
         for c in word:
-            if not c in curr.leaves:
+            if c not in curr.leaves:
                 curr.leaves[c] = TrieNode()
             curr = curr.leaves[c]
         curr.is_string = True
@@ -52,7 +55,7 @@ class WordDictionary:
     # contain the dot character '.' to represent any one letter.
     def search(self, word):
         return self.searchHelper(word, 0, self.root)
-        
+
     def searchHelper(self, word, start, curr):
         if start == len(word):
             return curr.is_string
@@ -62,7 +65,7 @@ class WordDictionary:
             for c in curr.leaves:
                 if self.searchHelper(word, start+1, curr.leaves[c]):
                     return True
-       
+
         return False
 
 # Your WordDictionary object will be instantiated and called as such:
