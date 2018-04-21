@@ -28,14 +28,14 @@ class Solution(object):
                                    for i, num in enumerate(nums) \
                                    if ((used>>i) & 1) == 0 and num <= targ)
             return lookup[used]
-        
+
         total = sum(nums)
         if total%k or max(nums) > total//k:
             return False
         lookup = [None] * (1 << len(nums))
         lookup[-1] = True
         return dfs(nums, total//k, 0, total, lookup)
-    
+
     
 # Time:  O(k^(n-k) * k!) tree is n-k level, k vertex per level; 
 # Space: O(n)
