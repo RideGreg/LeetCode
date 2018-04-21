@@ -28,6 +28,11 @@
 # - 0 <= fee < 50000.
 
 # optimal substructure and overlapping sub-problem
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 
 class Solution(object):
     def maxProfit(self, prices, fee):
