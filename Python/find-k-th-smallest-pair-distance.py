@@ -31,6 +31,7 @@ class Solution(object):
         """
         # Sliding window solution
         def possible(guess, nums, k):
+            # Is there k or more pairs with distance <= guess?
             count, left = 0, 0
             for right, num in enumerate(nums):
                 while num-nums[left] > guess:

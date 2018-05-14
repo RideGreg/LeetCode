@@ -1,3 +1,5 @@
+# IF sorted and m<<n, use binary search O(mlogn); otherwise counter is best solution O(m+n)
+
 # If the given array is not sorted and the memory is unlimited:
 #   - Time:  O(m + n)
 #   - Space: O(min(m, n))
@@ -36,7 +38,7 @@ import collections
 
 
 class Solution(object):
-    def intersect(self, nums1, nums2):
+    def intersect(self, nums1, nums2): # counter, BEST solution for unsorted input
         """
         :type nums1: List[int]
         :type nums2: List[int]
@@ -52,7 +54,7 @@ class Solution(object):
         res = []
         for i in nums2:
             if lookup[i] > 0:
-                res += i,
+                res += i, # equivalent res += [i]
                 lookup[i] -= 1
 
         return res

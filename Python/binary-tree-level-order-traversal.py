@@ -46,3 +46,25 @@ class Solution(object):
             current = next_level
             result.append(vals)
         return result
+
+
+    def levelOrder_queue(self, root):
+        ans, vals = [], []
+        if not root: return ans
+
+        import collections
+        q = collections.deque([root, '#'])
+        while q:
+            cur = q.popleft()
+            if cur == '#':
+                ans.append(vals)
+                vals = []
+                if q:
+                    q.append('#')
+                continue
+            vals.append(cur.val)
+            if cur.left:
+                q.append(cur.left)
+            if cur.right:
+                q.append(cur.right)
+        return ans

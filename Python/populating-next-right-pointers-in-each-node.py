@@ -58,13 +58,24 @@ class Solution:
                 cur = cur.next
             head = head.left
 
+    def connect_brief(self, root): # USE THIS
+        while root:
+            cur = root
+            while cur and cur.left:
+                cur.left.next = cur.right
+                if cur.next:
+                    cur.right.next = cur.next.left
+                cur = cur.next   # iterate right
+            root = root.left     # iterate down
+
+
 # Time:  O(n)
 # Space: O(logn)
 # recusion
 class Solution2:
     # @param root, a tree node
     # @return nothing
-    def connect(self, root):
+    def connect(self, root): #top-down recursion
         if root is None:
             return
         if root.left:

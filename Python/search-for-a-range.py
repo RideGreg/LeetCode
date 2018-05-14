@@ -13,6 +13,14 @@
 #
 
 class Solution(object):
+    def searchRange_bisect(self, nums, target): # equavilent to using binarySearch API
+        import bisect
+        lindex = bisect.bisect_left(nums, target)
+        if lindex >= len(nums) or nums[lindex] != target:
+            return [-1, -1]
+        rindex = bisect.bisect(nums, target)
+        return [lindex, rindex-1]
+
     def searchRange(self, nums, target):
         """
         :type nums: List[int]
@@ -21,14 +29,14 @@ class Solution(object):
         """
         # Find the first idx where nums[idx] >= target
         left = self.binarySearch(lambda x, y: x >= y, nums, target)
-        if left >= len(nums) or nums[left] != target:
+        if left >= len(nums) or nums[left] != target: #if not check equality, [5,7,7,8,8,10] 6 return [1,0] wrong
             return [-1, -1]
         # Find the first idx where nums[idx] > target
         right = self.binarySearch(lambda x, y: x > y, nums, target)
         return [left, right - 1]
 
     def binarySearch(self, compare, nums, target):
-        left, right = 0, len(nums)
+        left, right = 0, len(nums) #if use len(nums)-1, [2,2] 2 return [0, 0] wrong
         while left < right:
             mid = left + (right - left) / 2
             if compare(nums[mid], target):

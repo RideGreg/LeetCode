@@ -59,3 +59,18 @@ class Solution(object):
         return sum(int(request(a, b)) * c[a]*(c[b]-int(a == b))
                    for a in c
                    for b in c)
+    # the above is better, because loop on c (small); below has one loop on people (large)
+
+    def numFriendRequests_bookshadow(self, ages):
+        '''
+        观察题设条件 1 <= ages[i] <= 120，年龄的范围很小, 统计每一个年龄的人数
+        遍历每个人，统计符合其年龄条件约束的人数之和
+        '''
+        cnt = collections.Counter(ages)
+        ans = 0
+        for age in ages:
+            cnt[age] -= 1
+            left, right = age / 2 + 8, age
+            ans += sum(cnt[age] for age in range(left, right + 1))
+            cnt[age] += 1
+        return ans

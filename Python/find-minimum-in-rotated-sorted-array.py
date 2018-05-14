@@ -11,11 +11,7 @@
 #
 
 class Solution(object):
-    def findMin(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
+    def findMin(self, nums):  # hard to understand!!!
         left, right = 0, len(nums)
         target = nums[-1]
 
@@ -31,21 +27,23 @@ class Solution(object):
 
 
 class Solution2(object):
-    def findMin(self, nums):
+    def findMin(self, nums):   # USE THIS
         """
         :type nums: List[int]
         :rtype: int
         """
         left, right = 0, len(nums) - 1
-        while left < right and nums[left] >= nums[right]:
+        while left < right and nums[left] >= nums[right]:  #prune: check whether search space already monotonic
             mid = left + (right - left) / 2
 
-            if nums[mid] < nums[left]:
+            # should compare to right, because: 1. left and mid may be same. 2. we check whether mid->right is
+            # mono-increasing. If right half is monotonic, then min must be left half increasing slope.
+            if nums[mid] < nums[right]:
                 right = mid
-            else:
+            else:  # right half is not monotonic, then min must be at the gap in right half.
                 left = mid + 1
 
-        return nums[left]
+        return nums[left]    #doesn't matter return left or right, because left equals to right
 
 
 if __name__ == "__main__":

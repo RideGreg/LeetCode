@@ -26,7 +26,7 @@ class TreeNode(object):
 
 # Morris Traversal Solution
 class Solution(object):
-    def preorderTraversal(self, root):
+    def preorderTraversal_morris(self, root):
         """
         :type root: TreeNode
         :rtype: List[int]
@@ -56,7 +56,7 @@ class Solution(object):
 # Space: O(h)
 # Stack Solution
 class Solution2(object):
-    def preorderTraversal(self, root):
+    def preorderTraversal(self, root): # USE THIS
         """
         :type root: TreeNode
         :rtype: List[int]
@@ -73,3 +73,33 @@ class Solution2(object):
                 stack.append((root.left, False))
                 stack.append((root, True))
         return result
+
+    def preorderTraversal_stack_ming(self, root):
+        ans, stk = [], []
+        while root or stk:
+            if not root:
+                root = stk.pop()
+            ans.append(root.val)
+            if root.right:
+                stk.append(root.right)
+            root = root.left
+        return ans
+
+    def preorderTraversal_recursive(self, root):
+        def re(root, ans):
+            if root:
+                ans.append(root.val)
+                ans = re(root.left, ans)
+                ans = re(root.right, ans)
+            return ans
+
+        return re(root, [])
+
+
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
+root.left.right.right = TreeNode(6)
+print Solution().preorderTraversal(root) #1 2 4 5 6 3

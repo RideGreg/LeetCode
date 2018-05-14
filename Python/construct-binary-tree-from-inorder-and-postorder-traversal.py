@@ -18,6 +18,21 @@ class Solution:
     # @param inorder, a list of integers
     # @param postorder, a list of integers
     # @return a tree node
+    def buildTree_ming(self, inorder, postorder): # USE THIS
+        def re(ib, ie, pe): # use inorder data is sufficient to build tree; no pb is needed, pe is used to divide inorder data
+            if ib > ie:
+                return None
+            im = lookup[postorder[pe]]  # performance boost, better than inorder.index(postorder[pe])
+            node = TreeNode(postorder[pe])
+            node.left = re(ib, im-1, pe-(ie-im+1))
+            node.right = re(im+1, ie, pe-1)
+            return node
+
+        lookup = {}
+        for i, n in enumerate(inorder):
+            lookup[n] = i
+        return re(0, len(inorder)-1, len(postorder)-1)
+
     def buildTree(self, inorder, postorder):
         lookup = {}
         for i, num in enumerate(inorder):

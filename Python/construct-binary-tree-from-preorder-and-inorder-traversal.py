@@ -18,6 +18,22 @@ class Solution:
     # @param preorder, a list of integers
     # @param inorder, a list of integers
     # @return a tree node
+    def buildTree_ming(self, preorder, inorder): #USE THIS
+        def re(ib, ie, pb):
+            if ib > ie:
+                return None
+            im = lookup[preorder[pb]]
+            node = TreeNode(preorder[pb])
+            node.left = re(ib, im-1, pb+1)
+            node.right = re(im+1, ie, pb+im+1-ib)
+            return node
+
+        lookup = {}
+        for i, n in enumerate(inorder):
+            lookup[n] = i
+        return re(0, len(inorder)-1, 0)
+
+
     def buildTree(self, preorder, inorder):
         lookup = {}
         for i, num in enumerate(inorder):

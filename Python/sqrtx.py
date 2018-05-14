@@ -24,6 +24,17 @@ class Solution(object):
 
         return left - 1
 
+    def mySqrt_ming(self, x):
+        if x<2: return x
+        l,r = 1,x/2
+        while l<=r:
+            m=(r-l)/2+l
+            if m>x/m:
+                r = m-1
+            elif x/(m+1)>=(m+1):
+                l = m+1
+            else:
+                return m
 
 if __name__ == "__main__":
     print Solution().mySqrt(10)

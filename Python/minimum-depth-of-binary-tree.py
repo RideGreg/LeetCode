@@ -25,6 +25,19 @@ class Solution:
         else:
             return max(self.minDepth(root.left), self.minDepth(root.right)) + 1
 
+    def minDepth_bfs(self, root): # USE THIS
+        if not root: return 0
+        import collections
+        queue = collections.deque([(root, 1)])
+        while queue:
+            node, step = queue.popleft()
+            if not node.left and not node.right:
+                return step
+            if node.left:
+                queue.append((node.left, step + 1))
+            if node.right:
+                queue.append((node.right, step + 1))
+
 if __name__ == "__main__":
     root = TreeNode(1)
     root.left = TreeNode(2)

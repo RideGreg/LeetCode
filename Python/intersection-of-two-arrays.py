@@ -14,7 +14,7 @@
 
 
 class Solution(object):
-    def intersection(self, nums1, nums2):
+    def intersection(self, nums1, nums2): # set, BEST solution for unsorted input
         """
         :type nums1: List[int]
         :type nums2: List[int]
@@ -47,7 +47,7 @@ class Solution(object):
 # Time:  O(max(m, n) * log(max(m, n)))
 # Space: O(1)
 # Binary search solution.
-class Solution2(object):
+class Solution2(object): # binary search, need sort
     def intersection(self, nums1, nums2):
         """
         :type nums1: List[int]
@@ -82,7 +82,7 @@ class Solution2(object):
 # Time:  O(max(m, n) * log(max(m, n)))
 # Space: O(1)
 # Two pointers solution.
-class Solution3(object):
+class Solution3(object): # two pointers, need sort
     def intersection(self, nums1, nums2):
         """
         :type nums1: List[int]

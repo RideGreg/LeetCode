@@ -58,3 +58,14 @@ class Solution(object):
                word not in lookup:
                 result = word
         return result
+
+    def mostCommonWord_bookshadow(self, paragraph, banned):  # USE THIS: clean, then most_common
+        tokens = re.sub('[\!\?\'\,;\.]', '', paragraph.lower()).split()
+        cnt = collections.Counter(tokens)
+        for ban in banned:
+            if ban in cnt:
+                del cnt[ban]            # good: clean first
+        return cnt.most_common(1)[0][0] # good: most_common
+
+print Solution().mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", ['hit'])
+print Solution().mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", ['hit', 'ball'])

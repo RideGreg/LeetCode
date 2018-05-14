@@ -67,3 +67,29 @@ class Solution(object):
                 for i in xrange(1, len(S)-2)
                 for cand in itertools.product(make(S, 1, i),
                                               make(S, i+1, len(S)-2-i))]
+
+    def ambiguousCoordinates_me(self, S): # USE THIS
+        def foo(s):
+            if len(s)==1: return [s]
+            if s[-1]=='0':
+                if s[0]=='0': return []
+                else: return [s]
+            if s[0]=='0':
+                return ['0.'+s[1:]]
+            ret = [s[:i]+'.'+s[i:] for i in xrange(1, len(s))]
+            ret.append(s)
+            return ret
+
+        ans = []
+        S = S[1:-1]
+        for i in xrange(1, len(S)):
+            for l in foo(S[:i]):
+                for r in foo(S[i:]):
+                    ans.append('({}, {})'.format(l, r))
+        return ans
+
+print Solution().ambiguousCoordinates("(0100)")
+print Solution().ambiguousCoordinates("(123)")
+print Solution().ambiguousCoordinates("(00011)")
+print Solution().ambiguousCoordinates("(0123)")
+print Solution().ambiguousCoordinates("(100)")

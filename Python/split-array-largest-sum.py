@@ -30,23 +30,25 @@ class Solution(object):
         :rtype: int
         """
         def canSplit(nums, m, s):
-            cnt, curr_sum = 1, 0
+            curr_sum = 0
             for num in nums:
+                if curr_sum + num > s:
+                    curr_sum = 0
+                    m -= 1
+                    if m <= 0: return False
                 curr_sum += num
-                if curr_sum > s:
-                    curr_sum = num
-                    cnt += 1
-            return cnt <= m
+            return True
 
         left, right = 0, 0
         for num in nums:
             left = max(left, num)
             right += num
+        left = max(left, int(math.ceil(right/m))) #optimization, search range low end is max(largest item, subarray average)
 
-        while left <= right:
+        while left < right:
             mid = left + (right - left) / 2;
             if canSplit(nums, m, mid):
-                right = mid - 1
+                right = mid
             else:
                 left = mid + 1
         return left

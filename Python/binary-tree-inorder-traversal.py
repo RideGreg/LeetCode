@@ -26,7 +26,7 @@ class TreeNode(object):
 
 # Morris Traversal Solution
 class Solution(object):
-    def inorderTraversal(self, root):
+    def inorderTraversal_morris(self, root):
         """
         :type root: TreeNode
         :rtype: List[int]
@@ -56,7 +56,7 @@ class Solution(object):
 # Space: O(h)
 # Stack Solution
 class Solution2(object):
-    def inorderTraversal(self, root):
+    def inorderTraversal(self, root): # USE THIS
         """
         :type root: TreeNode
         :rtype: List[int]
@@ -73,3 +73,14 @@ class Solution2(object):
                 stack.append((root, True))
                 stack.append((root.left, False))
         return result
+
+    def inorderTraversal_stack_ming(self, root):
+        ans, stk = [], []
+        while root or stk:
+            while root:
+                stk.append(root)
+                root = root.left
+            root = stk.pop()
+            ans.append(root.val)
+            root = root.right
+        return ans

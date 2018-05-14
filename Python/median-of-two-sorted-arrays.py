@@ -6,7 +6,35 @@
 # The overall run time complexity should be O(log (m+n)).
 
 class Solution(object):
+    '''
+          left_part          |        right_part
+    A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+    B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+    '''
     def findMedianSortedArrays(self, nums1, nums2):
+        len1, len2 = len(nums1), len(nums2)
+        if len1 > len2:
+            nums1, nums2, len1, len2 = nums2, nums1, len2, len1
+
+        # The key point is to find a proper i, such that max_in_left <= min_in_right.
+        # How to decide left? if len1+len2 is odd e.g 11, get left = 6th num; if len1+len2 is even e.g 10, get left = 5th num.
+        # How to decide i? r needs to be the total # of nums1, so i is initialized as half of nums1, although i can start anywhere.
+        l, r, left = 0, len1, (len1 + len2 + 1) / 2
+        while l <= r:
+            i = (r - l) / 2 + l
+            j = left - i
+            if i < len1 and nums2[j - 1] > nums1[i]:
+                l = i + 1
+            elif i > 0 and nums1[i - 1] > nums2[j]:
+                r = i - 1
+            else:
+                maxLeft = nums2[j - 1] if i < 1 else nums1[i - 1] if j < 1 else max(nums1[i - 1], nums2[j - 1])
+                if (len1 + len2) % 2:
+                    return maxLeft / 1.0
+                minRight = nums2[j] if i >= len1 else nums1[i] if j >= len2 else min(nums1[i], nums2[j])
+                return (maxLeft + minRight) / 2.0
+
+    def findMedianSortedArrays_kamyu(self, nums1, nums2):
         """
         :type nums1: List[int]
         :type nums2: List[int]
@@ -43,11 +71,6 @@ class Solution(object):
 # Generic solution.
 class Solution_Generic(object):
     def findMedianSortedArrays(self, nums1, nums2):
-        """
-        :type nums1: List[int]
-        :type nums2: List[int]
-        :rtype: float
-        """
         len1, len2 = len(nums1), len(nums2)
         if (len1 + len2) % 2 == 1:
             return self.getKth([nums1, nums2], (len1 + len2)/2 + 1)
@@ -83,6 +106,10 @@ class Solution_Generic(object):
 
 
 if __name__ == "__main__":
+    print Solution().findMedianSortedArrays([], [2, 3])
+    print Solution().findMedianSortedArrays([2], [1, 3])
+    print Solution().findMedianSortedArrays([1, 2], [3, 4])
+
     print Solution().findMedianSortedArrays([1, 3, 5, 7], [2, 4, 6])
     print Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
 

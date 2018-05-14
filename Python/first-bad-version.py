@@ -36,3 +36,14 @@ class Solution(object):
             else:
                 left = mid + 1
         return left
+
+    # https://leetcode.com/articles/first-bad-version/
+    def firstBadVersion(self, n):  # USE THIS
+        l, r = 1, n
+        while l < r:
+            m = (r-l) / 2 + l
+            if isBadVersion(m):
+                r = m     #discard right half which cannot be first bad
+            else:
+                l = m + 1 #discard left half which cannot be first bad
+        return l          #the only remaining item is the answer

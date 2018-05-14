@@ -64,7 +64,19 @@ class Solution:
                 cur = cur.next
             head = next_head
 
-
+    def connect_brief(self, root): # USE THIS
+        while root:
+            prev, parent, next_root = None, root, None
+            while parent:
+                if next_root is None:
+                    next_root = parent.left if parent.left else parent.right if parent.right else None
+                for cur in [parent.left, parent.right]:
+                    if cur:
+                        if prev:
+                            prev.next = cur
+                        prev = cur
+                parent = parent.next
+            root = next_root
 
 if __name__ == "__main__":
     root, root.left, root.right = TreeNode(1), TreeNode(2), TreeNode(3)

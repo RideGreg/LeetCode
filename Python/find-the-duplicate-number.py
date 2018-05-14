@@ -47,15 +47,12 @@ class Solution2(object):
         """
         left, right = 1, len(nums) - 1
 
-        while left <= right:
+        while left < right:
             mid = left + (right - left) / 2
             # Get count of num <= mid.
-            count = 0
-            for num in nums:
-                if num <= mid:
-                    count += 1
+            count = sum(x <= mid for x in nums)
             if count > mid:
-                right = mid - 1
+                right = mid
             else:
                 left = mid + 1
         return left
