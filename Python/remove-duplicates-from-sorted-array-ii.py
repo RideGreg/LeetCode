@@ -13,6 +13,15 @@
 class Solution:
     # @param a list of integers
     # @return an integer
+    def removeDuplicates_brief(self, A): # USE THIS PASSED
+        if len(nums) < 3: return len(nums)
+        prev = 0
+        for i in xrange(2, len(nums)):
+            if nums[prev] != nums[i]:
+                prev += 1
+                nums[prev+1] = nums[i]
+        return prev + 2
+
     def removeDuplicates(self, A):
         if not A:
             return 0

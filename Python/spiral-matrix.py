@@ -17,7 +17,7 @@
 class Solution:
     # @param matrix, a list of lists of integers
     # @return a list of integers
-    def spiralOrder(self, matrix):
+    def spiralOrder(self, matrix):   # OUT TO INNER LAYERS
         result = []
         if matrix == []:
             return result
@@ -39,6 +39,20 @@ class Solution:
 
         return result
 
+    def spiralOrder(self, matrix):  # USE THIS: get the next coordinates
+        if not matrix: return []
+        m, n, ans = len(matrix), len(matrix[0]), []
+        dirs, k, i, j = [[0,1],[1,0],[0,-1],[-1,0]], 0, 0, 0
+        for _ in xrange(m*n):
+            ans.append(matrix[i][j])
+            matrix[i][j] = '#'
+            ni, nj = i+dirs[k][0], j+dirs[k][1]
+            if 0<=ni<m and 0<=nj<n and matrix[ni][nj]!='#':
+                i, j = ni, nj
+            else:
+                k = (k+1) % 4
+                i, j = i+dirs[k][0], j+dirs[k][1]
+        return ans
 
 if __name__ == "__main__":
     print Solution().spiralOrder([[ 1, 2, 3 ],

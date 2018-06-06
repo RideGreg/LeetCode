@@ -23,11 +23,13 @@ class Solution:
     # @return {integer[]}
     def singleNumber(self, nums):
         x_xor_y = reduce(operator.xor, nums)
+        # the number from first non-zero lowbit. e.g. 6(0110) & -6(1010) = 2(0010)
         bit =  x_xor_y & -x_xor_y
-        result = [0, 0]
+        a = b = 0
         for i in nums:
-            result[bool(i & bit)] ^= i
-        return result
+            if i & bit: a^=i      # a diff with b, then a and b must diff on position bit
+            else:       b^=i
+        return [a, b]
 
 
 class Solution2:

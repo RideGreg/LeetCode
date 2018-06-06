@@ -114,7 +114,7 @@ class LFUCache(object):
             return
 
         if self.get(key) != -1:
-            self.__key_to_node[key].val = value
+            self.__key_to_node[key].val = value   # node is shared by __key_to_node and __freq_to_nodes
             return
 
         if self.__size == self.__capa:
@@ -124,12 +124,21 @@ class LFUCache(object):
                 del self.__freq_to_nodes[self.__min_freq]
             self.__size -= 1
 
-        self.__min_freq = 1
+        self.__min_freq = 1     # a new key
         self.__key_to_node[key] = ListNode(key, value, self.__min_freq)
         self.__freq_to_nodes[self.__key_to_node[key].freq].append(self.__key_to_node[key])
         self.__size += 1
 
 # Your LFUCache object will be instantiated and called as such:
-# obj = LFUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
+obj = LFUCache(3)
+obj.put(2,2)
+obj.put(1,1)
+print obj.get(2) # 2
+obj.put(1, 10)
+print obj.get(2) # 2
+obj.put(3,3)
+obj.put(4,4)     # evict 3
+print obj.get(3) # -1
+print obj.get(2) # 2
+print obj.get(1) # 10
+print obj.get(4) # 4

@@ -66,19 +66,13 @@ class LRUCache(object):
         self.dict = {}
         self.capacity = capacity
 
-    def _insert(self, key, val):
-        node = ListNode(key, val)
-        self.list.insert(node)
-        self.dict[key] = node
-
-
     # @return an integer
     def get(self, key):
         if key in self.dict:
-            val = self.dict[key].val
-            self.list.delete(self.dict[key])
-            self._insert(key, val)
-            return val
+            node = self.dict[key]
+            self.list.delete(node)
+            self.list.insert(node)
+            return node.val
         return -1
 
 
@@ -89,10 +83,12 @@ class LRUCache(object):
         if key in self.dict:
             self.list.delete(self.dict[key])
         elif len(self.dict) == self.capacity:
-            del self.dict[self.list.head.key]
-            self.list.delete(self.list.head)
-        self._insert(key, val)
-
+            node = self.list.head
+            del self.dict[node.key]
+            self.list.delete(node)
+        node = ListNode(key, val)
+        self.list.insert(node)
+        self.dict[key] = node  # NOTE store node not value, otherwise we cannot move the SAME node to the end of doubly linkedlist.
 
 import collections
 class LRUCache2(object):
@@ -121,7 +117,7 @@ if __name__ == "__main__":
     cache.set(1, 1)
     cache.set(2, 2)
     cache.set(3, 3)
-    print cache.get(1)
+    print cache.get(1) # 1
     cache.set(4, 4)
-    print cache.get(2)
+    print cache.get(2) # -1
 

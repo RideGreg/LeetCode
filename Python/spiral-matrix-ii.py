@@ -16,7 +16,7 @@
 
 class Solution:
     # @return a list of lists of integer
-    def generateMatrix(self, n):
+    def generateMatrix(self, n):   # OUT TO INNER LAYERS
         matrix = [[0 for _ in xrange(n)] for _ in xrange(n)]
 
         left, right, top, bottom, num = 0, n - 1, 0, n - 1, 1
@@ -40,6 +40,18 @@ class Solution:
 
         return matrix
 
+    def generateMatrix(self, n):  # USE THIS: coordinates
+        ans = [[False]*n for _ in xrange(n)]
+        dirs, k, i, j = [[0,1],[1,0],[0,-1],[-1,0]], 0, 0, 0
+        for num in xrange(1, n*n+1):
+            ans[i][j] = num
+            ni, nj = i+dirs[k][0], j+dirs[k][1]
+            if 0<=ni<n and 0<=nj<n and ans[ni][nj] is False:
+                i, j = ni, nj
+            else:
+                k = (k+1) % 4
+                i, j = i+dirs[k][0], j+dirs[k][1]
+        return ans
 
 if __name__ == "__main__":
     print Solution().generateMatrix(3)

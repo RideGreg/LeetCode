@@ -53,11 +53,7 @@ class Solution(object):
 # Hash solution. (224ms)
 class Solution2(object):
     def fourSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[List[int]]
-        """
+        import collections
         nums, result, lookup = sorted(nums), [], collections.defaultdict(list)
         for i in xrange(0, len(nums) - 1):
             for j in xrange(i + 1, len(nums)):
@@ -75,7 +71,7 @@ class Solution2(object):
                     for [a, b] in lookup[target - nums[c] - nums[d]]:
                         if b < c:
                             quad = [nums[a], nums[b], nums[c], nums[d]]
-                            quad_hash = " ".join(str(quad))
+                            quad_hash = " ".join(map(str,quad))
                             if quad_hash not in ans:
                                 ans[quad_hash] = True
                                 result.append(quad)
@@ -84,18 +80,15 @@ class Solution2(object):
 
 # Time:  O(n^2 * p) ~ O(n^4)
 # Space: O(n^2)
-class Solution3(object):
+class Solution3(object):   # USE THIS, fastest
     def fourSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[List[int]]
-        """
-        nums, result, lookup = sorted(nums), [], collections.defaultdict(list)
+        import collections
+        nums, lookup = sorted(nums), [], collections.defaultdict(list)
         for i in xrange(0, len(nums) - 1):
             for j in xrange(i + 1, len(nums)):
                 lookup[nums[i] + nums[j]].append([i, j])
 
+        result, resultSet = [], set()
         for i in lookup.keys():
             if target - i in lookup:
                 for x in lookup[i]:
@@ -104,6 +97,16 @@ class Solution3(object):
                         if a is not c and a is not d and \
                            b is not c and b is not d:
                             quad = sorted([nums[a], nums[b], nums[c], nums[d]])
-                            if quad not in result:
+                            quad_hash = ' '.join(map(str,quad))
+                            if quad_hash not in resultSet:
+                                resultSet.add(quad_hash)
                                 result.append(quad)
-        return sorted(result)
+        return result
+
+import timeit
+# 1.3177011013
+# 0.589632987976
+# 0.163089036942
+print timeit.timeit('Solution().fourSum([1, 0, -1, 0, -2, 2, 7,8,9,7,8,9,11,12,13]+range(50), 0)', 'from __main__ import Solution', number=100)
+print timeit.timeit('Solution2().fourSum([1, 0, -1, 0, -2, 2, 7,8,9,7,8,9,11,12,13]+range(50), 0)', 'from __main__ import Solution2', number=100)
+print timeit.timeit('Solution3().fourSum([1, 0, -1, 0, -2, 2, 7,8,9,7,8,9,11,12,13]+range(50), 0)', 'from __main__ import Solution3', number=100)

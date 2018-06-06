@@ -22,7 +22,7 @@
 from itertools import izip  # Generator version of zip.
 
 class Solution(object):
-    def isIsomorphic(self, s, t):
+    def isIsomorphic(self, s, t):  # USE THIS
         """
         :type s: str
         :type t: str
@@ -32,15 +32,28 @@ class Solution(object):
             return False
 
         s2t, t2s = {}, {}
-        for p, w in izip(s, t):
-            if w not in s2t and p not in t2s:
+        for w, p in izip(s, t):
+            wmap, pmap = s2t.get(w), t2s.get(p)
+            if wmap is None and pmap is None:
                 s2t[w] = p
                 t2s[p] = w
-            elif w not in s2t or s2t[w] != p:
-                # Contradict mapping.
+            elif wmap != p:
+                # Contradict mapping. Check one direction is sufficient, because setting is for both dict.
                 return False
         return True
 
+    def isIsomorphic_ming(self, s, t):
+        s2t, usedt = {}, set()
+        for x, y in izip(s, t):
+            if x in s2t:
+                if s2t[x] != y:
+                    return False
+            else:
+                if y in usedt:
+                    return False
+            s2t[x] = y
+            usedt.add(y)
+        return True
 
 # Time:  O(n)
 # Space: O(1)

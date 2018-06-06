@@ -34,6 +34,21 @@ import collections
 
 class Solution(object):
     def findDuplicateSubtrees(self, root):
+        trees = collections.defaultdict()
+        trees.default_factory = trees.__len__
+        count = collections.Counter()
+        ans = []
+        def lookup(node):
+            if node:
+                uid = trees[(node.val, lookup(node.left), lookup(node.right))]
+                count[uid] += 1
+                if count[uid] == 2:
+                    ans.append(node)
+                return uid
+
+        lookup(root)
+        return ans
+    def findDuplicateSubtrees_2(self, root):
         """
         :type root: TreeNode
         :rtype: List[TreeNode]
@@ -76,3 +91,32 @@ class Solution2(object):
         result = []
         postOrderTraversal(root, lookup, result)
         return result
+
+class Solution3(object):     # USE THIS
+    def findDuplicateSubtrees(self, root):
+        import collections
+        def preOrder(node):
+            if not node:
+                return '#'
+            serial = '{},{},{}'.format(node.val, preOrder(node.left), preOrder(node.right))
+            map[serial] += 1
+            if map[serial] == 2:
+                ans.append(node)
+
+            return serial
+
+        ans, map = [], collections.Counter()
+        preOrder(root)
+        return ans
+
+
+root = TreeNode(1)
+root.left, root.right = TreeNode(2), TreeNode(3)
+root.left.left, root.right.left, root.right.right = TreeNode(4), TreeNode(2), TreeNode(4)
+root.right.left.left = TreeNode(4)
+
+root2 = TreeNode(1)
+root2.left, root2.right = TreeNode(2), TreeNode(3)
+root2.right.left = TreeNode(2)
+
+print Solution().findDuplicateSubtrees(root2)

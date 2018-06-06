@@ -33,6 +33,10 @@ class TreeNode(object):
         self.left = None
         self.right = None
 class Codec: # USE THIS: preorder
+    def serialize(self, root):  # BEST
+        if not root:
+            return '#'
+        return '{} {} {}'.format(root.val, self.serialize(root.left), self.serialize(root.right))
 
     def serialize(self, root):
         """Encodes a tree to a single string.
@@ -40,7 +44,6 @@ class Codec: # USE THIS: preorder
         :type root: TreeNode
         :rtype: str
         """
-        ''' recursion: Memory Limit Exceeded
         def serializeHelper(node):
             if not node:
                 vals.append('#')
@@ -51,8 +54,21 @@ class Codec: # USE THIS: preorder
         vals = []
         serializeHelper(root)
         return ' '.join(vals)
-        '''
-        # iteration: PASS
+        ''' Memory Limit Exceeded if pass the array as param
+    def serialize(self, root):  #MLE
+        def preOrder(n, vals):
+            if not n:
+                vals.append('#')
+            else:
+                vals.append(str(n.val))
+                vals = preOrder(n.left, vals)
+                vals = preOrder(n.right, vals)
+            return vals
+
+        vals = preOrder(root, [])
+        return ' '.join(vals)
+
+        # iteration solution:
         vals, stk = [], [(root, False)]
         while stk:
             node, visited = stk.pop()
@@ -66,6 +82,7 @@ class Codec: # USE THIS: preorder
                 stk.append((node.left, False))
                 stk.append((node, True))
         return ' '.join(vals)
+        '''
 
 
     def deserialize(self, data):
@@ -93,9 +110,22 @@ class Codec: # USE THIS: preorder
                     return
                 yield source[start:idx]
                 start = idx + sepsize
-        vals = iter(isplit(data, ' '))
+        vals = iter(isplit(data, ' ')) # should use data.split(), otherwise MEMORY LIMIT EXCEED
         return deserializeHelper()
 
+        ''' if not familiar with iter/next
+        def helper(i): # pass the index
+            i += 1
+            if vals[i] == '#':
+                return (None, i)
+            root = TreeNode(vals[i])
+            root.left, i = helper(i)
+            root.right, i = helper(i)
+            return (root, i)
+
+        vals = data.split()
+        return helper(-1)[0]
+        '''
 
 class Codec_levelorder: # Memory Limit Exceeded
     def serialize(self, root):
@@ -141,7 +171,9 @@ root.right.left, root.right.right = TreeNode(4), TreeNode(5)
 root.right.right.left = TreeNode(6)
 
 codec = Codec()
-print codec.serialize(root) #: 1 2 # # 3 4 # # 5 6 # # #
+data = codec.serialize(root) #: 1 2 # # 3 4 # # 5 6 # # #
+print data
+codec.deserialize(data)
 
 codec = Codec_levelorder()
 data = codec.serialize(root)

@@ -32,3 +32,14 @@ class Solution:
         for char in str(n):
             new += int(char)**2
         return new
+
+    def isHappy2(self, n):    # USE THIS
+        ht = set()
+        while n != 1 and n not in ht:
+            ht.add(n)
+            m = 0
+            while n:
+                n, p = divmod(n, 10)
+                m += p**2
+            n = m
+        return n == 1

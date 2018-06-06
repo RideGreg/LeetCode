@@ -28,11 +28,11 @@
 # Output: False
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 class Solution(object):
     def findTarget(self, root, k):
@@ -75,3 +75,21 @@ class Solution(object):
             else:
                 right.next()
         return False
+
+    def findTarget2(self, root, k):
+        nums = []
+        def preOrder(root):
+            if not root: return False
+            if k-root.val in ht:
+                return True
+            ht.add(root.val)
+            return preOrder(root.left) or preOrder(root.right)
+
+        ht = set()
+        return preOrder(root)
+
+root = TreeNode(5)
+root.left, root.right = TreeNode(3), TreeNode(6)
+root.left.left, root.left.right = TreeNode(2), TreeNode(4)
+root.right.right = TreeNode(7)
+print Solution().findTarget(root, 9)

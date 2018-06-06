@@ -61,5 +61,13 @@ class Solution2(object):
 
 
 if __name__ == "__main__":
+    # debug KMP algorithm
+    print Solution().strStr("abababcdab", "abcd") # prefix [-1,-1,-1,-1]
+    print Solution().strStr("abababcdab", "abab")  # prefix [-1,-1,0,1]
+    print Solution().strStr("abababcdab", "abcdabc") # prefix [-1,-1,-1,-1,0,1,2]
+    print Solution().strStr("abababcdab", "ababab") # prefix [-1,-1,0,1,2,3]
     print Solution().strStr("a", "")
-    print Solution().strStr("abababcdab", "ababcdx")
+    print Solution().strStr("abababcdab", "abcacba") # prefix [-1,-1,-1,0,-1,-1,0]
+    print Solution().strStr("abababcdab", "abcaac") # prefix [-1,-1,-1,0,0,-1]
+    print Solution().strStr("abababcdab", "abbcc") # prefix [-1,-1,-1,-1,-1]
+    print Solution().strStr("abababcdab", "ababcdx") # prefix [-1,-1,0,1,-1,-1,-1]

@@ -19,14 +19,14 @@ class Solution(object):
         :type board: List[List[str]]
         :rtype: bool
         """
-        for i in xrange(9):
-            if not self.isValidList([board[i][j] for j in xrange(9)]) or \
-               not self.isValidList([board[j][i] for j in xrange(9)]):
-                return False
-        for i in xrange(3):
-            for j in xrange(3):
-                if not self.isValidList([board[m][n] for n in xrange(3 * j, 3 * j + 3) \
-                                                     for m in xrange(3 * i, 3 * i + 3)]):
+        for r in board:
+            if not self.isValidList(r): return False
+        for c in zip(*board):
+            if not self.isValidList(c): return False
+        for i in (0, 3, 6):
+            for j in (0, 3, 6):
+                box = [board[x][y] for x in range(i, i+3) for y in range(j, j+3)]
+                if not self.isValidList(box):
                     return False
         return True
 

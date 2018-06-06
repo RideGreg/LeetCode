@@ -73,18 +73,18 @@ class Twitter(object):
         """
         max_heap = []
         if self.__messages[userId]:
-            heapq.heappush(max_heap, (-self.__messages[userId][-1][0], userId, 0))
+            heapq.heappush(max_heap, (-self.__messages[userId][-1][0], userId, -1))
         for uid in self.__followings[userId]:
             if self.__messages[uid]:
-                heapq.heappush(max_heap, (-self.__messages[uid][-1][0], uid, 0))
+                heapq.heappush(max_heap, (-self.__messages[uid][-1][0], uid, -1))
 
         result = []
         while max_heap and len(result) < self.__number_of_most_recent_tweets:
-            t, uid, curr = heapq.heappop(max_heap)
-            nxt = curr + 1;
-            if nxt != len(self.__messages[uid]):
-                heapq.heappush(max_heap, (-self.__messages[uid][-(nxt+1)][0], uid, nxt))
-            result.append(self.__messages[uid][-(curr+1)][1]);
+            t, uid, pos = heapq.heappop(max_heap)
+            result.append(self.__messages[uid][pos][1]);
+            if abs(pos) < len(self.__messages[uid]):
+                pos -= 1;
+                heapq.heappush(max_heap, (-self.__messages[uid][pos][0], uid, pos))
         return result
 
     def follow(self, followerId, followeeId):
@@ -108,8 +108,11 @@ class Twitter(object):
 
 
 # Your Twitter object will be instantiated and called as such:
-# obj = Twitter()
-# obj.postTweet(userId,tweetId)
-# param_2 = obj.getNewsFeed(userId)
-# obj.follow(followerId,followeeId)
-# obj.unfollow(followerId,followeeId)
+obj = Twitter()
+obj.postTweet(1,5)
+print obj.getNewsFeed(1) # 5
+obj.follow(1, 2)
+obj.postTweet(2, 6)
+print obj.getNewsFeed(1) # 6, 5
+obj.unfollow(1, 2)
+print obj.getNewsFeed(1) # 5

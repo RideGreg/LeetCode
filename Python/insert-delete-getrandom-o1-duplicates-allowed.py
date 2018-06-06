@@ -65,15 +65,19 @@ class RandomizedCollection(object):
         :type val: int
         :rtype: bool
         """
-        if val not in self.__used:
+        if val not in self.__used or not self.__used[val]:
             return False
 
-        self.__used[self.__list[-1]][-1] = self.__used[val][-1]
-        self.__list[self.__used[val][-1]], self.__list[-1] = self.__list[-1], self.__list[self.__used[val][-1]]
+        if val != self.__list[-1]:
+            end = len(self.__list) - 1
+            pos = self.__used[val].pop()
+            self.__used[val].append(end)
+            self.__used[self.__list[-1]].remove(end)
+            self.__used[self.__list[-1]].append(pos)
 
-        self.__used[val].pop()
-        if not self.__used[val]:
-            self.__used.pop(val)
+            self.__list[-1], self.__list[pos] = self.__list[pos], self.__list[-1]
+
+        self.__used[val].remove(len(self.__list) - 1)
         self.__list.pop()
 
         return True
@@ -87,7 +91,17 @@ class RandomizedCollection(object):
 
 
 # Your RandomizedCollection object will be instantiated and called as such:
-# obj = RandomizedCollection()
-# param_1 = obj.insert(val)
-# param_2 = obj.remove(val)
-# param_3 = obj.getRandom()
+obj = RandomizedCollection()
+print obj.insert(1)
+print obj.insert(1)
+print obj.insert(2)
+print obj.insert(2)
+print obj.insert(2)
+
+print obj.remove(1)
+print obj.remove(1)
+print obj.remove(2)
+
+print obj.insert(1)
+
+print obj.remove(2)
