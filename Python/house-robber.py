@@ -26,7 +26,7 @@ class Solution:
 
         return num_i
 
-    def rob2(self, nums):
+    def rob2(self, nums): # USE THIS
         """
         :type nums: List[int]
         :rtype: int
@@ -36,6 +36,21 @@ class Solution:
             last, now = now, max(last + i, now)
         return now
 
+    '''
+    Storing both take and skip for each i is the same to the above. Proof: assume dp[i] = max(skip[i], take[i]).
+    State transfer function:
+       skip[i] = max(take[i-1], skip[i-1])   = dp[i-1]
+       take[i] = skip[i-1]+n                 = dp[i-2]+n
+    => dp[i] = max(dp[i-1], dp[i-2]+n)
+    
+    In fact, for each i, only the max from [take[i], skip[i]] is used to eval the later decision,
+    so no need to store both take and skip for each i, only need to store the max for each i. 
+    '''
+    def rob_ming(self, nums):
+        take, skip = 0, 0
+        for n in nums:
+            take, skip = skip + n, max(take, skip)
+        return max(take, skip)
 
 if __name__ == '__main__':
         print Solution().rob([8,4,8,5,9,6,5,4,4,10])

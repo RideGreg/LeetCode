@@ -600,6 +600,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 530|[Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)| [C++](./C++/minimum-absolute-difference-in-bst.cpp) [Python](./Python/minimum-absolute-difference-in-bst.py)| _O(n)_ | _O(h)_ | Easy | | |
 776|[Split BST](https://leetcode.com/problems/split-bst/)| [C++](./C++/split-bst.cpp) [Python](./Python/split-bst.py)| _O(n)_ | _O(h)_ | Medium | 📖 | |
 783|[Minimum Distance Between BST Nodes](https://leetcode.com/problems/minimum-distance-between-bst-nodes/)| [C++](./C++/minimum-distance-between-bst-nodes.cpp) [Python](./Python/minimum-distance-between-bst-nodes.py)| _O(n)_ | _O(h)_ | Easy | | |
+xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/)| [Python](./Python/kth-largest-element-in-a-stream.py)| | | Medium |
 
 ## Breadth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -709,6 +710,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 ## Dynamic Programming
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
+xxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | |
 010| [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | [Python](./Python/regular-expression-matching.py) | _O(m * n)_ | _O(n)_ | Hard ||
 053| [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)|[Python](./Python/maximum-subarray.py)| _O(n)_     | _O(1)_         | Medium         ||
 062| [Unique Paths](https://leetcode.com/problems/unique-paths/)    | [Python](./Python/unique-paths.py)| _O(m * n)_      | _O(m + n)_   | Medium         ||

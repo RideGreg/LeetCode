@@ -22,6 +22,21 @@ class Solution:
     # @param {TreeNode} root
     # @param {integer} k
     # @return {integer}
+    def kthSmallest_inOrder_clean(self, root, k): # USE THIS
+        def pushLeft(node):
+            while node:
+                stack.append(node)
+                node = node.left
+
+        stack = []
+        pushLeft(root)
+        while stack and k > 0:
+            node = stack.pop()
+            k -= 1
+            pushLeft(node.right)
+        return node.val
+
+
     def kthSmallest(self, root, k):
         s, cur, rank = [], root, 0
 

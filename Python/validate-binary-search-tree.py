@@ -63,6 +63,34 @@ class Solution2:
             and self.isValidBSTRecu(root.left, low, root.val) \
             and self.isValidBSTRecu(root.right, root.val, high)
 
+    def isValidBST_simpleIteratpreion(self, root):
+        prev, stk = [float("-inf")], [(root, False)]
+
+        while stk:
+            cur, visited = stk.pop()
+            if cur:
+                if not visited:
+                    stk.append((cur.right, False))
+                    stk.append((cur, True))
+                    stk.append((cur.left, False))
+                else:
+                    if prev[0] >= cur.val:
+                        return False
+                    prev[0] = cur.val
+        return True
+
+    def isValidBST_simpleRecursion(self, root):
+        def inOrder(root):
+            if root:
+                if not inOrder(root.left):
+                    return False
+                if prev[0] >= root.val:
+                    return False
+                prev[0] = root.val
+                if not inOrder(root.right):
+                    return False
+            return True
+        return inOrder(root)
 
 if __name__ == "__main__":
     root = TreeNode(2)

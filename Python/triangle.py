@@ -19,6 +19,16 @@
 class Solution:
     # @param triangle, a list of lists of integers
     # @return an integer
+    def minimumTotal_bottomup(self, triangle): # USE THIS
+        if not triangle:
+            return 0
+        dp = triangle[-1]
+        for i in reversed(xrange(len(triangle)-1)):
+            for j in xrange(i+1):
+                dp[j] = triangle[i][j] + min(dp[j], dp[j+1])
+        return dp[0]
+
+    # Top Down
     def minimumTotal(self, triangle):
         if not triangle:
             return 0
@@ -34,5 +44,6 @@ class Solution:
         return reduce(min, cur)
 
 if __name__ == "__main__":
-    print Solution().minimumTotal([[-1], [2, 3], [1, -1, -3]])
+    print Solution().minimumTotal_ming([[-1], [2, 3], [1, -1, -3]]) # -1
+    print Solution().minimumTotal_ming([[2], [3,4], [6,5,7], [4,1,8,3]]) # 11
 

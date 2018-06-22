@@ -17,6 +17,22 @@ class TreeNode(object):
         self.left = None
         self.right = None
 
+# USE THIS: single responsibility
+class Solution_ming(object):
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        if not root: return True
+        leftD, rightD = self.getDepth(root.left), self.getDepth(root.right)
+        return abs(leftD - rightD) <= 1 and self.isBalanced(root.left) and self.isBalanced(root.right)
+
+    def getDepth(self, node):
+        if not node:
+            return 0
+        return max(self.getDepth(node.left), self.getDepth(node.right)) + 1
+
 
 class Solution(object):
     # @param root, a tree node
