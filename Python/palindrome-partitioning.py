@@ -66,5 +66,27 @@ class Solution2:
                 return False
         return True
 
+
+class Solution3(object):   # USE THIS: backtracking + memorization
+    def partition(self, s):
+        n = len(s)
+        lookup = [[False] * n for _ in xrange(n)]
+        for i in reversed(xrange(n)):
+            for j in xrange(i, n):
+                lookup[i][j] = (s[i] == s[j] and (j - i < 2 or lookup[i + 1][j - 1]))
+
+        def dfs(start, cur):
+            if start == len(s):
+                ans.append(cur)
+                return
+
+            for j in xrange(start, len(s)):
+                if lookup[start][j]:
+                    dfs(j + 1, cur + [s[start:j + 1]])
+
+        ans = []
+        dfs(0, [])
+        return ans
+
 if __name__ == "__main__":
     print Solution().partition("aab")

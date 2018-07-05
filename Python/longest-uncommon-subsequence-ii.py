@@ -21,6 +21,23 @@
 # The length of the given list will be in the range of [2, 50].
 
 class Solution(object):
+    def findLUSlength_bookshadow(self, strs): # USE THIS
+        def isSubsequence(a, b):
+            m, n, pa, pb = len(a), len(b), 0, 0
+            while pa < m and pb < n:
+                if a[pa] == b[pb]:
+                    pa += 1
+                pb += 1
+            return pa == m
+
+        from collections import Counter
+        cnt = Counter(strs)
+        slist = sorted(set(strs), key=len, reverse=True)
+        for i, s in enumerate(slist):
+            if cnt[s] == 1 and not any(isSubsequence(s, p) for p in slist[:i]):
+                return len(s)
+        return -1
+
     def findLUSlength(self, strs):
         """
         :type strs: List[str]

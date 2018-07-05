@@ -39,6 +39,19 @@ class Solution(object):
 
 
 class Solution2(object):
+    def combine_ming(self, n, k):  # USE THIS
+        def dfs(start, cur, k, n):
+            if len(cur) == k:
+                ans.append(cur)
+                return
+            for i in xrange(start, n + 1 - (k - len(cur)) + 1):
+            # this is optmization of: for i in xrange(start, n + 1):
+                dfs(i + 1, cur + [i], k, n)
+
+        ans = []
+        dfs(1, [], k, n)
+        return ans
+
     def combine(self, n, k):
         """
         :type n: int

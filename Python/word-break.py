@@ -33,6 +33,17 @@ class Solution(object):
 
         return can_break[-1]
 
+    def wordBreak_ming(self, s, wordDict):  # USE THIS
+        n = len(s)
+        dset = set(wordDict)
+        maxlen = max(len(w) for w in dset) if dset else 0
+
+        dp = [False] * (n+1)
+        dp[0] = True
+        for j in xrange(1, n+1):
+            dp[j] = any(dp[i] and s[i:j] in dset \
+                        for i in xrange(max(0, j-maxlen), j))
+        return dp[n]
 
 if __name__ == "__main__":
     print Solution().wordBreak("leetcode", ["leet", "code"])

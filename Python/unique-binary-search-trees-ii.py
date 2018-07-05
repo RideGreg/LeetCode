@@ -65,5 +65,22 @@ class Solution:
                     result.append(cur)
         return result
 
+    def generateTrees_ming(self, n): # USE THIS
+        def rec(nums):
+            if not nums: return [None]
+            ans = []
+            for i in xrange(len(nums)):
+                lefts, rights = rec(nums[:i]), rec(nums[i+1:])
+                for l in lefts:
+                    for r in rights:
+                        root = TreeNode(nums[i])
+                        root.left, root.right = l, r
+                        ans.append(root)
+            return ans
+
+        if n<1: return []
+        return rec(range(1,n+1))
+
 if __name__ == "__main__":
-    print Solution().generateTrees(3)
+    print Solution().generateTrees_ming(0)
+    print Solution().generateTrees(0)

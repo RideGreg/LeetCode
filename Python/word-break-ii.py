@@ -15,6 +15,55 @@
 #
 
 class Solution(object):
+    def wordBreak_memorization(self, s, wordDict): # USE THIS
+        def dfs(s):
+            ans = []
+            if s in dset:
+                ans.append(s)
+            for i in xrange(1, len(s)):
+                prefix, suffix = s[:i], s[i:]
+                if prefix in dset:
+                    rest = tokenDict.get(suffix)
+                    if rest is None:
+                        rest = dfs(suffix)
+                    for x in rest:
+                        ans.append("{} {}".format(prefix, x))
+            tokenDict[s] = ans
+            return ans
+
+        n, dset = len(s), set(wordDict)
+        maxlen = max(len(w) for w in dset) if dset else 0
+        dp = [False] * (n + 1)
+        dp[0] = True
+        for j in xrange(1, n + 1):
+            dp[j] = any(dp[i] and s[i:j] in dset \
+                        for i in xrange(max(0, j - maxlen), j))
+
+        tokenDict = {}
+        return dfs(s) if dp[n] else []
+
+    def wordBreak_backtrack(self, s, wordDict):
+        def dfs(start, cur):
+            if start == len(s):
+                ans.append(' '.join(cur))
+                return
+            for i in xrange(start + 1, len(s) + 1):
+                if s[start:i] in dset:
+                    dfs(i, cur + [s[start:i]])
+
+        n, dset = len(s), set(wordDict)
+        maxlen = max(len(w) for w in dset) if dset else 0
+        dp = [False] * (n + 1)
+        dp[0] = True
+        for j in xrange(1, n + 1):
+            dp[j] = any(dp[i] and s[i:j] in dset \
+                        for i in xrange(max(0, j - maxlen), j))
+        ans = []
+        if dp[n]:
+            dfs(0, [])
+        return ans
+
+class Solution2(object):
     def wordBreak(self, s, wordDict):
         """
         :type s: str
@@ -53,4 +102,12 @@ class Solution(object):
 
 
 if __name__ == "__main__":
-    print Solution().wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
+    print Solution2().wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
+
+import timeit
+#2.99112820625
+print timeit.timeit('Solution().wordBreak_backtrack("aaaaaaaaaaaaaaaaaaaaa", \
+                    ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"])', 'from __main__ import Solution', number=1)
+#1.07430911064
+print timeit.timeit('Solution().wordBreak_memorization("aaaaaaaaaaaaaaaaaaaaa", \
+                    ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"])', 'from __main__ import Solution', number=1)
