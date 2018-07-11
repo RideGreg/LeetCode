@@ -83,7 +83,27 @@ class Solution3:
                     break
             start += 1
 
-class Solution4:
+
+# Time:  O(n)
+# Space: O(n)
+class Solution4(object):
+    """
+    :type nums: List[int]
+    :type k: int
+    :rtype: void Do not return anything, modify nums in-place instead.
+    """
+    def rotate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        nums[:] = nums[len(nums) - k:] + nums[:len(nums) - k]
+        
+
+# Time:  O(k * n)
+# Space: O(1)
+class Solution5(object):
     """
     :type nums: List[int]
     :type k: int
