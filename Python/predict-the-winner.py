@@ -35,9 +35,11 @@ class Solution(object):
         :type nums: List[int]
         :rtype: bool
         """
+        # if the count of nums is even, player 1 can choose either all odd indices or all even indices, ganrantee to win.
         if len(nums) % 2 == 0 or len(nums) == 1:
             return True
 
+        # dp is optimized from 2D list. In 2D dp[i,j] stores "player1's score minus player2's score" when there is nums[i:j+1] to choose.
         dp = [0] * len(nums);
         for i in reversed(xrange(len(nums))):
             dp[i] = nums[i]
@@ -45,4 +47,59 @@ class Solution(object):
                 dp[j] = max(nums[i] - dp[j], nums[j] - dp[j - 1])
 
         return dp[-1] >= 0
+
+    def PredictTheWinner2(self, nums):
+        """
+        print the path of picking: don't save the path along the way, after dp 2-D
+        array is filled, find the path which only takes O(n) time
+        """
+        length = len(nums)
+        dp = [[0] * length for _ in xrange(length)]
+        for s in reversed(xrange(len(nums))):
+            dp[s][s] = nums[s]
+            for e in xrange(s+1, len(nums)):
+                dp[s][e] = max(nums[s] - dp[s+1][e], nums[e] - dp[s][e-1])
+        print dp
+        s, e, player1 = 0, len(nums)-1, True
+        while s < e:
+            if nums[s]-dp[s+1][e] >= nums[e]-dp[s][e-1]:
+                pick = s
+                s += 1
+            else:
+                pick = e
+                e -= 1
+            print "I" if player1 else "You", "take", nums[pick], "at", pick
+            player1 = not player1
+        print "I" if player1 else "You", "take", nums[s], "at", s
+
+        return dp[0][-1]
+
+    def PredictTheWinner3(self, nums):
+        """
+        print the index/numbers you should pick to win: Hard to understand by the following to store the path
+        along the way to fill the 1-D array; better to modify PredictTheWinner2.
+        """
+        length = len(nums)
+        dp, path = [0] * length, [[0]*length for _ in xrange(length)] # 1st list stores score, 2nd list stores selected indexes
+        for s in reversed(xrange(len(nums))):
+            dp[s] = nums[s]
+            path[s][s] = 1
+            for e in xrange(s+1, len(nums)):
+                v1 = nums[s] - dp[e]
+                v2 = nums[e] - dp[e-1]
+                if v1 >= v2:
+                    dp[e] = v1
+                    path[e] = [-x for x in path[e]]
+                    path[e][s] = 1
+                else:
+                    dp[e] = v2
+                    path[e] = [-x for x in path[e-1]]
+                    path[e][e] = 1
+        print path
+        return [i for i, x in enumerate(path[-1]) if x > 0]
+
+#print Solution().PredictTheWinner([3,2,2,3,1,2])
+print Solution().PredictTheWinner([1,5,233,7])
+print Solution().PredictTheWinner2([1,5,233,7])
+print Solution().PredictTheWinner3([1,5,233,7])
         

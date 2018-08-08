@@ -38,6 +38,10 @@ class Solution(object):
     def __init__(self, w):
         """
         :type w: List[int]
+
+        1. Convert PDF (Probability Density Function) to CDF (Cumulative Density Function).
+        2. Uniformly sample a value s in [1, sum(weights)].
+        3. Use binary search to find first index such that PDF[index] >= s.
         """
         self.__prefix_sum = list(w)
         for i in xrange(1, len(w)):
@@ -47,8 +51,8 @@ class Solution(object):
         """
         :rtype: int
         """
-        target = random.randint(0, self.__prefix_sum[-1]-1)
-        return bisect.bisect_right(self.__prefix_sum, target)
+        target = random.randint(1, self.__prefix_sum[-1])
+        return bisect.bisect_left(self.__prefix_sum, target)
 
 
 # Your Solution object will be instantiated and called as such:

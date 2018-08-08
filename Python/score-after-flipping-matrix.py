@@ -33,6 +33,18 @@ except NameError:
 
 
 class Solution(object):
+    def matrixScore_ming(self, A):  # USE THIS
+        R, C = len(A), len(A[0])
+        for r in xrange(R):
+            if A[r][0] == 0:
+                A[r] = [1-x for x in A[r]]
+
+        ans = 0
+        for c in xrange(C):
+            s = sum(A[r][c] for r in xrange(R))
+            ans += max(s, R-s) * (2**(C-1-c))
+        return ans
+
     def matrixScore(self, A):
         """
         :type A: List[List[int]]

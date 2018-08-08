@@ -125,6 +125,35 @@ class ExamRoom(object):
         self.__seats[neighbors[LEFT]][RIGHT] = neighbors[RIGHT]
         self.__seats[neighbors[RIGHT]][LEFT] = neighbors[LEFT]
 
+class ExamRoom_sortedArray(object):  # USE THIS
+    # Partition the whole array into sorted available ranges.
+    # Time:  seat:  O(s), leave: O(s), s is the number of students already seated
+    # Space: O(s)
+
+    def __init__(self, N):
+        self.N = N
+        self.seated = []
+
+    def seat(self):
+        import bisect
+        if not self.seated:
+            self.seated.append(0)
+            return 0
+
+        # can sit in the mid of each pair of adjacent students, and left-most and right-most seat.
+        ans, maxdis = 0, self.seated[0]
+        for i in xrange(1, len(self.seated)):
+            dis = (self.seated[i] - self.seated[i-1]) // 2
+            if dis > maxdis: # don't need to check (dis == maxdis and cur < ans), because cur is mono-increasing
+                maxdis, ans = dis, self.seated[i-1] + dis
+        if self.N - 1 - self.seated[-1] > maxdis:
+            ans = self.N - 1
+
+        bisect.insort(self.seated, ans)
+        return ans
+
+    def leave(self, p):
+        self.seated.remove(p)
 
 # Your ExamRoom object will be instantiated and called as such:
 # obj = ExamRoom(N)

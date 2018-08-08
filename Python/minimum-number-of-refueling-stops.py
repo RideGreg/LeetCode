@@ -52,6 +52,22 @@ import heapq
 
 
 class Solution(object):
+
+    # heap
+    # Intuition
+    # When driving past a gas station, remember the amount of fuel it contained by pushing to max_heap. We don't need to
+    # decide yet whether to fuel up here or not - for example, there could be a bigger gas station up ahead that we would rather refuel at.
+    #
+    # When we run out of fuel before reaching the next station, we retroactively fuel up: greedily choosing the largest gas stations first.
+    # This is guaranteed to succeed because we drive the largest distance possible before each refueling stop,
+    # and therefore have the largest choice of gas stations to (retroactively) stop at.
+    #
+    # Algorithm
+    # A max-heap of the capacity of each gas station we've driven by. We'll also keep track of startFuel (actually tank).
+    # When we reach a station but have negative fuel (ie. we needed to have refueled at some point in the past), we will
+    # add the capacity of the largest gas stations we've driven by until the fuel is non-negative.
+    #
+    # If at any point this process fails (that is, no more gas stations), then the task is impossible.
     def minRefuelStops(self, target, startFuel, stations):
         """
         :type target: int
@@ -59,13 +75,13 @@ class Solution(object):
         :type stations: List[List[int]]
         :rtype: int
         """
-        max_heap = []
+        max_heap = [] # A maxheap is simulated using negative values
         stations.append((target, float("inf")))
 
         result = prev = 0
         for location, capacity in stations:
             startFuel -= location - prev
-            while max_heap and startFuel < 0:
+            while max_heap and startFuel < 0:  # must refuel in past
                 startFuel += -heapq.heappop(max_heap)
                 result += 1
             if startFuel < 0:
@@ -74,3 +90,21 @@ class Solution(object):
             prev = location
 
         return result
+
+    # DP: Time O(n^2), Space O(n)
+    #
+    # Assume dp[i] is the farthest location we can get to using i refueling stops. This is motivated
+    # by the fact we want the smallest i for which dp[i] >= target.
+    #
+    # Update dp as we consider each station in order. When adding station[i] = (location, capacity),
+    # any time we can reach this location w/ t refueling stops, we can now reach a place with 'capacity' further w/ t+1 refueling stops.
+    def minRefuelStops_dp(self, target, startFuel, stations):
+        dp = [startFuel] + [0] * len(stations)
+        for i, (location, capacity) in enumerate(stations):
+            for t in xrange(i, -1, -1):
+                if dp[t] >= location:
+                    dp[t+1] = max(dp[t+1], dp[t] + capacity)
+
+        for i, d in enumerate(dp):
+            if d >= target: return i
+        return -1

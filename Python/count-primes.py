@@ -6,7 +6,10 @@
 # Count the number of prime numbers less than a non-negative number, n
 #
 # Hint: The number n could be in the order of 100,000 to 5,000,000.
-
+#
+# How Many Primes Are There? (https://primes.utm.edu/howmany.html)
+# Sieve of Eratosthenes (http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) 埃拉托斯特尼筛法
+# http://open.163.com/movie/2012/10/0/6/M99VJKUHC_M9ENDUB06.html
 
 class Solution:
     # @param {integer} n
@@ -33,7 +36,7 @@ class Solution:
 
         return num
 
-    def countPrimes2(self, n):
+    def countPrimes2(self, n):  # USE THIS
         """
         :type n: int
         :rtype: int
@@ -44,5 +47,10 @@ class Solution:
         primes[0] = primes[1] = False
         for i in range(2, int(n ** 0.5) + 1):
             if primes[i]:
+                # mark all composite numbers which are multiple of prime number i
                 primes[i * i: n: i] = [False] * len(primes[i * i: n: i])
+                #p = i * i
+                #while p < n:
+                #    primes[p] = False
+                #    p += i
         return sum(primes)

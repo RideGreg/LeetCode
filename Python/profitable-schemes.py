@@ -55,3 +55,32 @@ class Solution(object):
                 for j in reversed(xrange(G-g+1)):
                     dp[min(i+p, P)][j+g] += dp[i][j]
         return sum(dp[P]) % (10**9 + 7)
+
+    def profitableSchemes(self, G, P, group, profit): # same as the above, just easy to understand
+        '''
+        We don't care if the profit of the schemes > P and the number of people required > G, so the bounds are small enough to use DP.
+        Keep track of cur[p][g] (the # of schemes with profitability p and requiring g gang members, except the last row when p==P,
+        it is all schemes profit at least P instead of exactly P). For each new scheme (p, g), we update the DP table.
+        '''
+        dp = [[0] * (G + 1) for _ in xrange(P + 1)]
+        dp[0][0] = 1
+
+        for p, g in zip(profit, group):
+            # p, g : the current crime profit and group size
+            dp2 = [row[:] for row in dp]
+            for i in xrange(P + 1):
+                # i : the current profit
+                # p2 : the new profit after committing this crime
+                p2 = min(i + p, P)
+                for j in xrange(G - g + 1):
+                    # j : the current group size
+                    # g2 : the new group size after committing this crime
+                    g2 = j + g
+                    dp2[p2][g2] += dp2[i][j]
+                    dp2[p2][g2] %= (10**9 + 7)
+            dp = dp2
+
+        # Sum all schemes with profit P and group size 0 <= g <= G.
+        return sum(dp[-1]) % (10**9 + 7)
+
+print(Solution().profitableSchemes(5,3,[2,2],[2,3]))

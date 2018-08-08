@@ -41,7 +41,7 @@ except NameError:
 
 
 class Solution(object):
-    def distanceK(self, root, target, K):
+    def distanceK_kamyu(self, root, target, K): # waste space to store neighbors
         """
         :type root: TreeNode
         :type target: TreeNode
@@ -67,3 +67,30 @@ class Solution(object):
                    if nei not in lookup]
             lookup |= set(bfs)
         return bfs
+
+    def distanceK(self, root, target, K): # USE THIS
+        def dfs(node, par):
+            if node:
+                node.par = par
+                dfs(node.left, node)
+                dfs(node.right, node)
+
+        dfs(root, None)
+        bfs, seen = [target], {target}
+        for _ in xrange(K):
+            bfs = [nei for n in bfs for nei in (n.left, n.right, n.par) if nei and nei not in seen]
+            seen |= set(bfs)
+        return [n.val for n in bfs]
+
+root = TreeNode(3)
+root.left, root.right = TreeNode(5), TreeNode(1)
+root.left.left, root.left.right = TreeNode(6), TreeNode(2)
+root.left.right.left, root.left.right.right = TreeNode(7), TreeNode(4)
+root.right.left, root.right.right = TreeNode(0), TreeNode(8)
+
+print(Solution().distanceK(root, root.left, 0))
+print(Solution().distanceK(root, root.left, 1))
+print(Solution().distanceK(root, root.left, 2))
+print(Solution().distanceK(root, root.left, 3))
+print(Solution().distanceK(root, root.left, 4))
+print(Solution().distanceK(root, root.left, 50))

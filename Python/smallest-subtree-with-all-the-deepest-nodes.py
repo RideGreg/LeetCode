@@ -39,7 +39,24 @@ import collections
 
 
 class Solution(object):
-    def subtreeWithAllDeepest(self, root):
+    def subtreeWithAllDeepest(self, root): # USE THIS
+        # alternative: 2 pass dfs: 1st dfs annotates depth on each node, 2nd dfs pick node based on
+        # depth stored on nodes. The following solution is doing dpeth and node at the same time.
+        def dfs(node):
+            if not node:
+                return (None, 0)
+
+            l, r = dfs(node.left), dfs(node.right)
+            if l[1] > r[1]:
+                return (l[0], l[1] + 1)
+            elif l[1] < r[1]:
+                return (r[0], r[1] + 1)
+            else:
+                return (node, l[1] + 1)
+
+        return dfs(root)[0]
+
+    def subtreeWithAllDeepest_namedtuple(self, root):
         """
         :type root: TreeNode
         :rtype: TreeNode

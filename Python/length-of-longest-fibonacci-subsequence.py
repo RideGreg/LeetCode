@@ -1,5 +1,5 @@
-# Time:  O(n^2)
-# Space: O(n)
+# Time:  O(n^2*logm) n is length of A, m is largest value of A
+# Space: O(n) space used by the hashSet
 
 # A sequence X_1, X_2, ..., X_n is fibonacci-like if:
 #
@@ -34,6 +34,8 @@
 # - (The time limit has been reduced by 50% for submissions in Java, C, and C++.)
 
 class Solution(object):
+    # Brute Force with HashSet
+    # Due to the exponential growth of terms in Fibonacci-like sequence, at most 43 terms in seq w/ maximum value 10^9.
     def lenLongestFibSubseq(self, A):
         """
         :type A: List[int]
@@ -48,3 +50,31 @@ class Solution(object):
                     x, y, l = y, x+y, l+1
                 result = max(result, l)
         return result if result > 2 else 0
+
+    # Similar to problem "Longest Increasing Subsequenc",
+    # time O(N^2),
+    # space O(NlogM), each item in longest may require a logM-length sequence.
+    #
+    # Think of two consecutive terms A[i], A[j] in a fibonacci-like sequence as a single node (i, j),
+    # and the entire subsequence is a path between these consecutive nodes. E.g, with the fibonacci-like subsequence
+    # (A[1] = 2, A[2] = 3, A[4] = 5, A[7] = 8, A[10] = 13), the path is from nodes (1, 2) <-> (2, 4) <-> (4, 7) <-> (7, 10).
+    # The motivation for this is that two nodes (i, j) and (j, k) are connected if and only if A[i] + A[j] == A[k].
+    #
+    # Algorithm
+    # Let longest[i,j] be the longest path ending in [i,j] (default to 2). Then longest[j,k] = longest[i,j] + 1 if (i,j) and (j,k)
+    # are connected. Since i is uniquely determined as A.index(A[k] - A[j]), we can efficiently check for each j < k for potential i,
+    # and update longest[j,k] accordingly.
+    def lenLongestFibSubseq_dp(self, A):
+        import collections
+        index = {x: i for i, x in enumerate(A)}
+        longest = collections.defaultdict(lambda: 2)
+
+        ans = 0
+        for k, z in enumerate(A):
+            for j in xrange(k):
+                i = index.get(z - A[j], None)
+                if i is not None and i < j:
+                    cand = longest[j, k] = longest[i, j] + 1
+                    ans = max(ans, cand)
+
+        return ans if ans >= 3 else 0

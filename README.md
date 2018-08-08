@@ -844,6 +844,7 @@ xxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | 
 847 | [Shortest Path Visiting All Nodes](https://leetcode.com/problems/shortest-path-visiting-all-nodes/) | [C++](./C++/shortest-path-visiting-all-nodes.cpp) [Python](./Python/shortest-path-visiting-all-nodes.py) | _O(n *2^n)_ | _O(n * 2^n)_ | Hard || BFS |
 877 | [Stone Game](https://leetcode.com/problems/stone-game/) | [C++](./C++/stone-game.cpp) [Python](./Python/stone-game.py) | _O(n^2)_ | _O(n)_ | Medium | variant of [Predict the Winner](https://leetcode.com/problems/predict-the-winner/) | |
 879 | [Profitable Schemes](https://leetcode.com/problems/profitable-schemes/) | [C++](./C++/profitable-schemes.cpp) [Python](./Python/profitable-schemes.py) | _O(n * p * g)_ | _O(p * g)_ | || |
+xxx | [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [Python](./longest-common-subsequence.py) | _O(m*n)_ | _O(m*n)_ | Easy | | |
 
 ## Greedy
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 

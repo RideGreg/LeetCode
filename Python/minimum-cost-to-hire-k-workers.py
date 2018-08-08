@@ -44,17 +44,48 @@ class Solution(object):
         :type wage: List[int]
         :type K: int
         :rtype: float
+
+        Every worker has some minimum ratio of "dollars to quality" that they demand. The key insight is to iterate over
+        the ratio. For a given ratio R, we know the workers hired all have a ratio R or lower. Then, we want to keep
+        the K workers with lowest quality. Use a heap to remove K+1-th workers in terms of high quality.
         """
         workers = [[float(w)/q, q] for w, q in itertools.izip(wage, quality)]
+        # default sorting by 1st element, then 2nd element and so on. We need sorting by ratio then quality.
         workers.sort()
-        result = float("inf")
-        qsum = 0
-        max_heap = []
-        for r, q in workers:
-            qsum += q
-            heapq.heappush(max_heap, -q)
-            if len(max_heap) > K:
-                qsum -= -heapq.heappop(max_heap)
-            if len(max_heap) == K:
+
+        max_heap = [-q for r, q in workers[:K]]
+        qsum = -sum(max_heap)
+        result = qsum * workers[K - 1][0]
+        heapq.heapify(max_heap)
+        for r, q in workers[K:]:
+            z = - heapq.heappushpop(max_heap, -q)
+            if z != q:
+                qsum += q - z
                 result = min(result, qsum*r)
         return result
+
+    def mincostToHireWorkers_buteForceGreedy(self, quality, wage, K): # TLE
+        '''
+        Time O(n*nlogn), space O(n)
+
+        Intuition
+        At least one worker will be paid their minimum wage expectation. If not, we could scale all payments down
+        and still keep everyone earning more than their wage expectation.
+
+        Algorithm
+        Loop all workers, take each as captain that will be paid their minimum wage expectation, calculate the cost of
+        hiring K workers where each point of quality is worth wage[captain] / quality[captain] dollars.
+        '''
+        ans = float('inf')
+        for i in xrange(len(wage)):
+            factor = 1.0 * wage[i] / quality[i]
+            prices = []
+            for j in xrange(len(wage)):
+                price = factor * quality[j]
+                if price >= wage[j]:
+                    prices.append(price)
+
+            if len(prices) >= K:
+                prices.sort()
+                ans = min(ans, sum(prices[:K]))
+        return ans

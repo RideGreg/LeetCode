@@ -57,18 +57,41 @@ class Solution(object):
         :type richer: List[List[int]]
         :type quiet: List[int]
         :rtype: List[int]
-        """
-        def dfs(graph, quiet, node, result):
-            if result[node] is None:
-                result[node] = node
-                for nei in graph[node]:
-                    smallest_person = dfs(graph, quiet, nei, result)
-                    if quiet[smallest_person] < quiet[result[node]]:
-                        result[node] = smallest_person
-            return result[node]
 
-        graph = [[] for _ in xrange(len(quiet))]
+        Cached Depth-First Search:
+        Consider the directed graph with edge x->y if y is richer than x. For each person x, find the quietest person in the subtree at x.
+        Construct the graph. Notice because the richerness is inherited, the graph must be a DAG - a directed graph with no cycles.
+        dfs(person) is either person, or min(dfs(child) for child in person).
+        We must cache values of dfs(person), when performing post-order traversal of the graph. This technique reduces
+        a quadratic time algorithm down to linear time.
+        """
+        N = len(quiet)
+        graph = [[] for _ in xrange(N)]
         for u, v in richer:
             graph[v].append(u)
-        result = [None]*len(quiet)
-        return map(lambda x: dfs(graph, quiet, x, result), xrange(len(quiet)))
+        cache = [None]*N  # cache
+
+        def dfs(node):
+            if cache[node] is None:
+                cache[node] = node
+                for child in graph[node]:
+                    cand = dfs(child)
+                    if quiet[cand] < quiet[cache[node]]:
+                        cache[node] = cand
+            return cache[node]
+
+        return map(dfs, xrange(N))
+
+        ''' BFS: TLE due to repeat work, no cache used
+        def bfs(x):
+            minQuiet, ans = quiet[x], x
+            q = collections.deque(richDict[x])
+            while q:
+                cur = q.popleft()
+                if quiet[cur] < minQuiet:
+                    minQuiet, ans = quiet[cur], cur
+                q.extend(richDict[cur])
+            return ans
+        
+        return map(bfs, range(N))
+        '''

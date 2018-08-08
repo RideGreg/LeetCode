@@ -28,13 +28,25 @@
 # Solution's constructor has three arguments, the radius, x-position of the center,
 # and y-position of the center of the circle. randPoint has no arguments.
 # Arguments are always wrapped with a list, even if there aren't any.
-    
+
 
 import random
 import math
 
 class Solution(object):
+    '''
+    Polar coordinate:
+    1. uniform sample an angle a: [0, 2*Pi). Note 2*Pi radians = 360 degree
+    Trigonometric functions use radian (a decimal real number).
+      math.cos(math.pi / 4) == 1 / math.sqrt(2)
+      math.cos(45) != 1 / math.sqrt(2)
 
+    2. uniform sample a radius r: [0, 1)
+    The probability of the radius distance is proportional to the area of the circle, i.e.
+    the square of distance to the center. e.g. there are 4 times of points within area of distance d
+    than points within area of distance d/2.
+    Thus sqrt(random(0,1)) is uniformly distributed regards to the points in the circle.
+    '''
     def __init__(self, radius, x_center, y_center):
         """
         :type radius: float
