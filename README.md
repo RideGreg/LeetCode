@@ -311,6 +311,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 856| [Score of Parentheses](https://leetcode.com/problems/score-of-parentheses/) | [C++](./C++/score-of-parentheses.cpp) [Python](./Python/score-of-parentheses.py) | _O(n)_  | _O(1)_         | Medium           ||
 872| [Leaf-Similar Trees](https://leetcode.com/problems/leaf-similar-trees/) | [C++](./C++/leaf-similar-trees.cpp) [Python](./Python/leaf-similar-trees.py) | _O(n)_  | _O(h)_         | Easy           ||
 895| [Maximum Frequency Stack](https://leetcode.com/problems/maximum-frequency-stack/) | [C++](./C++/maximum-frequency-stack.cpp) [Python](./Python/maximum-frequency-stack.py) | _O(1)_  | _O(n)_         | Hard           || Hash
+901| [Online Stock Span](https://leetcode.com/problems/online-stock-span/) | [C++](./C++/online-stock-span.cpp) [Python](./Python/online-stock-span.py) | _O(n)_  | _O(n)_         | Medium           ||
 
 ## Queue
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -523,6 +524,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 887 | [Super Egg Drop](https://leetcode.com/problems/super-egg-drop/) | [C++](./C++/super-egg-drop.cpp) [Python](./Python/super-egg-drop.py) | _O(klogn)_ | _O(1)_ | Hard |||
 891 | [Sum of Subsequence Widths](https://leetcode.com/problems/sum-of-subsequence-widths/) | [C++](./C++/sum-of-subsequence-widths.cpp) [Python](./Python/sum-of-subsequence-widths.py) | _O(n)_ | _O(1)_ | Hard |||
 899 | [Orderly Queue](https://leetcode.com/problems/orderly-queues/) | [C++](./C++/orderly-queue.cpp) [Python](./Python/orderly-queue.py) | _O(n^2)_ | _O(n)_ | Hard |||
+902 | [Numbers At Most N Given Digit Set](https://leetcode.com/problems/numbers-at-most-n-given-digit-set/) | [C++](./C++/numbers-at-most-n-given-digit-set.cpp) [Python](./Python/numbers-at-most-n-given-digit-set.py) | _O(logn)_ | _O(logn)_ | Hard |||
 
 ## Sort
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -646,6 +648,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 ## Binary Search Tree
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
+xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/)| [Python](./Python/kth-largest-element-in-a-stream.py)| | | Medium |
 220| [Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii/)  | [C++](./C++/contains-duplicate-iii.cpp) [Python](./Python/contains-duplicate-iii.py) | _O(nlogk)_        | _O(k)_          | Medium           ||
 230 | [Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) | [C++](./C++/kth-smallest-element-in-a-bst.cpp) [Python](./Python/kth-smallest-element-in-a-bst.py) | _O(max(h, k))_ | _O(min(h, k))_ | Medium ||
 235 | [Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/) | [C++](./C++/lowest-common-ancestor-of-a-binary-search-tree.cpp) [Python](./Python/lowest-common-ancestor-of-a-binary-search-tree.py) | _O(h)_ | _O(1)_ | Easy | EPI |
@@ -657,11 +660,11 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 530|[Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)| [C++](./C++/minimum-absolute-difference-in-bst.cpp) [Python](./Python/minimum-absolute-difference-in-bst.py)| _O(n)_ | _O(h)_ | Easy | | |
 776|[Split BST](https://leetcode.com/problems/split-bst/)| [C++](./C++/split-bst.cpp) [Python](./Python/split-bst.py)| _O(n)_ | _O(h)_ | Medium | 📖 | |
 783|[Minimum Distance Between BST Nodes](https://leetcode.com/problems/minimum-distance-between-bst-nodes/)| [C++](./C++/minimum-distance-between-bst-nodes.cpp) [Python](./Python/minimum-distance-between-bst-nodes.py)| _O(n)_ | _O(h)_ | Easy | | |
-xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/)| [Python](./Python/kth-largest-element-in-a-stream.py)| | | Medium |
 
 ## Breadth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
+xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python](./Python/dijkstra.py)|||Medium| `Dijkstra's algorithm` |
 102| [Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)| [C++](./C++/binary-tree-level-order-traversal.cpp) [Python](./Python/binary-tree-level-order-traversal.py)| _O(n)_| _O(n)_| Easy  || 
 107| [Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/)| [Python](./Python/binary-tree-level-order-traversal-ii.py) | _O(n)_| _O(n)_| Easy  ||
 103| [Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)| [Python](./Python/binary-tree-zigzag-level-order-traversal.py) | _O(n)_| _O(n)_| Medium  ||  
@@ -691,8 +694,6 @@ xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/in
 865|[Shortest Path to Get All Keys](https://leetcode.com/problems/shortest-path-to-get-all-keys/)| [C++](./C++/shortest-path-to-get-all-keys.cpp) [Python](./Python/shortest-path-to-get-all-keys.py)| _O(k * r * c + k^3*2^k)_ | _O(k*2^k)_ | Hard | | `Dijkstra's algorithm` |
 882|[Reachable Nodes In Subdivided Graph](https://leetcode.com/problems/reachable-nodes-in-subdivided-graph/)| [C++](./C++/reachable-nodes-in-subdivided-graph.cpp) [Python](./Python/reachable-nodes-in-subdivided-graph.py)| _O(\|E\| * log\|V\|)_ | _O(\|E\|)_ | Hard | | `Dijkstra's algorithm` |
 886|[Possible Bipartition](https://leetcode.com/problems/possible-bipartition/)| [C++](./C++/possible-bipartition.cpp) [Python](./Python/possible-bipartition.py)| _O(\|V\| + \|E\|)_ | _O(\|V\| + \|E\|)_ | Medium | | |
-
-xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python](./Python/dijkstra.py)|||Medium| `Dijkstra's algorithm` |
 
 ## Depth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -775,6 +776,7 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
 xxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | |
+xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [Python](./longest-common-subsequence.py) | _O(m*n)_ | _O(m*n)_ | Easy | | |
 010| [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | [Python](./Python/regular-expression-matching.py) | _O(m * n)_ | _O(n)_ | Hard ||
 053| [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)|[Python](./Python/maximum-subarray.py)| _O(n)_     | _O(1)_         | Medium         ||
 062| [Unique Paths](https://leetcode.com/problems/unique-paths/)    | [Python](./Python/unique-paths.py)| _O(m * n)_      | _O(m + n)_   | Medium         ||
@@ -863,8 +865,8 @@ xxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | 
 838 | [Push Dominoes](https://leetcode.com/problems/push-dominoes/) | [C++](./C++/push-dominoes.cpp) [Python](./Python/push-dominoes.py) | _O(n)_ | _O(n)_ | Medium || |
 847 | [Shortest Path Visiting All Nodes](https://leetcode.com/problems/shortest-path-visiting-all-nodes/) | [C++](./C++/shortest-path-visiting-all-nodes.cpp) [Python](./Python/shortest-path-visiting-all-nodes.py) | _O(n *2^n)_ | _O(n * 2^n)_ | Hard || BFS |
 877 | [Stone Game](https://leetcode.com/problems/stone-game/) | [C++](./C++/stone-game.cpp) [Python](./Python/stone-game.py) | _O(n^2)_ | _O(n)_ | Medium | variant of [Predict the Winner](https://leetcode.com/problems/predict-the-winner/) | |
-879 | [Profitable Schemes](https://leetcode.com/problems/profitable-schemes/) | [C++](./C++/profitable-schemes.cpp) [Python](./Python/profitable-schemes.py) | _O(n * p * g)_ | _O(p * g)_ | || |
-xxx | [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [Python](./longest-common-subsequence.py) | _O(m*n)_ | _O(m*n)_ | Easy | | |
+879 | [Profitable Schemes](https://leetcode.com/problems/profitable-schemes/) | [C++](./C++/profitable-schemes.cpp) [Python](./Python/profitable-schemes.py) | _O(n * p * g)_ | _O(p * g)_ | Hard || |
+903 | [Valid Permutations for DI Sequence](https://leetcode.com/problems/valid-permutations-for-di-sequence/) | [C++](./C++/valid-permutations-for-di-sequence.cpp) [Python](./Python/valid-permutations-for-di-sequence.py) | _O(n^2)_ | _O(n)_ | Hard || |
 
 ## Greedy
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -945,6 +947,7 @@ xxx | [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/l
 715| [Range Module](https://leetcode.com/problems/range-module/) | [C++](./C++/range-module.cpp) [Python](./Python/range-module.py) | add: _O(n)_<br> remove: _O(n)_<br> query: _O(logn)_ | _O(n)_ | Hard || |
 716| [Max Stack](https://leetcode.com/problems/max-stack/) | [C++](./C++/max-stack.cpp) [Python](./Python/max-stack.py) | push: _O(logn)_<br> pop: _O(logn)_<br> popMax: _O(logn)_<br> top: _O(1)_<br> peekMax: _O(1)_ | _O(n)_ | Easy || |
 745| [Prefix and Suffix Search](https://leetcode.com/problems/prefix-and-suffix-search/) | [C++](./C++/prefix-and-suffix-search.cpp) [Python](./Python/prefix-and-suffix-search.py) | ctor: _O(w * l^2)_<br> search : _O(p + s)_ | _O(t)_ | Hard || Trie |
+900| [RLE Iterator](https://leetcode.com/problems/rle-iterator/) | [C++](./C++/rle-iterator.cpp) [Python](./Python/rle-iterator.py) | _O(n)_ | _O(1)_ | Medium |||
 
 ## SQL
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
