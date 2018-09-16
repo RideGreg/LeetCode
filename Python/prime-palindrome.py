@@ -1,4 +1,4 @@
-# Time:  O(n^(3/2))
+# Time:  O(n^(1/2) * (logn + n^(1/2)))
 # Space: O(logn), space used by str(i)
 # Remember: check whether is a palindrome O(logN) time, check whether it is prime O(sqrt(N)) time.
 
