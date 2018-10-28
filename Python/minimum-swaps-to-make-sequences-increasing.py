@@ -30,14 +30,28 @@ class Solution(object):
         :type A: List[int]
         :type B: List[int]
         :rtype: int
+
+        Dynamic Programming
+        Intuition
+        The cost of making both sequences increasing up to the first i columns can be expressed in terms of the cost of
+        making both sequences increasing up to the first i-1 columns. Because the only thing that matters to the ith column
+        is whether the previous column was swapped or not. This makes dynamic programming an ideal choice.
+
+        Let's remember n1 (natural1), the cost of making the first i-1 columns increasing and not swapping the i-1th column;
+        and s1 (swapped1), the cost of making the first i-1 columns increasing and swapping the i-1th column.
+
+        Now we want candidates n2 and s2. There are three possibilities: 1. A[i] must stay with A[i-1], B[i] must stay with
+        B[i-1], i.e. swap both or none; 2. A[i] must stay w/ B[i-1], B[i] must stay w/ A[i-1], i.e. must swap 1 and only 1 column;
+        3. A[i]/B[i] can stay w/ either A[i-1] or B[i-1], i.e. use min value from last column.
+
+        In fact, n1/s1 and n2/s2 can use the same pair of vars.
         """
-        dp_no_swap, dp_swap = [0]*2, [1]*2
+        n, s = 0, 1
         for i in xrange(1, len(A)):
-            dp_no_swap[i%2], dp_swap[i%2] = float("inf"), float("inf")
-            if A[i-1] < A[i] and B[i-1] < B[i]:
-                dp_no_swap[i%2] = min(dp_no_swap[i%2], dp_no_swap[(i-1)%2])
-                dp_swap[i%2] = min(dp_swap[i%2], dp_swap[(i-1)%2]+1)
-            if A[i-1] < B[i] and B[i-1] < A[i]:
-                dp_no_swap[i%2] = min(dp_no_swap[i%2], dp_swap[(i-1)%2])
-                dp_swap[i%2] = min(dp_swap[i%2], dp_no_swap[(i-1)%2]+1)
-        return min(dp_no_swap[(len(A)-1)%2], dp_swap[(len(A)-1)%2])
+            if A[i] <= B[i-1] or B[i] <= A[i-1]: # must swap both columns or no swap
+                n, s = n, s + 1
+            elif A[i] <= A[i-1] or B[i] <= B[i-1]: # must swap 1 column
+                n, s = s, n + 1
+            else: # can swap or not
+                n, s = min(n, s), min(n, s) + 1
+        return min(n, s)

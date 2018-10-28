@@ -30,6 +30,7 @@
 # - 1 <= people[i] <= limit <= 30000
 
 class Solution(object):
+    # two pointer / greedy
     def numRescueBoats(self, people, limit):
         """
         :type people: List[int]
@@ -45,3 +46,29 @@ class Solution(object):
                 left += 1
             right -= 1
         return result
+
+    def numRescueBoats_bisect(self, people, limit):
+        # time: n*logn
+        import bisect
+        N = len(people)
+        people.sort(reverse=True)
+        l, r = (N + 1) // 2, N
+
+        def can(m):
+            boats = [limit - x for x in people[:m]]
+            for x in reversed(people[m:]):
+                i = bisect.bisect_left(boats, x)
+                if i >= len(boats):
+                    return False
+                else:
+                    boats[i] = 0 # maybe a bug, boats is no longer sorted after this. Doing sort here will TLE.
+
+            return True
+
+        while l < r:
+            m = l + (r - l) // 2
+            if can(m):
+                r = m
+            else:
+                l = m + 1
+        return l

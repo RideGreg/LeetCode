@@ -37,7 +37,28 @@ import heapq
 
 
 class Solution(object):
-    def findCheapestPrice(self, n, flights, src, dst, K):
+    def findCheapestPrice(self, n, flights, src, dst, K): # USE THIS
+        graph = [{} for _ in xrange(n)]
+        for u, v, p in flights:
+            graph[u][v] = p
+
+        # K stops means can move K+1 steps, store and update the best price for each step separately
+        best = [[float('inf')] * (K + 2) for _ in xrange(n)]
+        minHeap = [(0, src, 0)]  # (price, node-to-reach, step-needed)
+        while minHeap:
+            price, node, step = heapq.heappop(minHeap)
+            if node == dst:
+                return price
+            if price > best[node][step]:
+                continue
+            for nei, p in graph[node].items():
+                if step + 1 <= K + 1 and price + p < best[nei][step + 1]:
+                    heapq.heappush(minHeap, (price + p, nei, step + 1))
+                    best[nei][step + 1] = price + p
+
+        return -1
+
+    def findCheapestPrice_kamyu(self, n, flights, src, dst, K):
         """
         :type n: int
         :type flights: List[List[int]]
@@ -62,3 +83,5 @@ class Solution(object):
                     best[v][k-1] = result+w                    
                     heapq.heappush(min_heap, (result+w, v, k-1))
         return -1
+
+print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 0))

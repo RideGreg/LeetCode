@@ -80,3 +80,32 @@ class Solution2(object):
             if i - palindrome[i] == 1:
                 max_len = palindrome[i]
         return s[len(s)-1:max_len-1:-1] + s
+
+# Brute force: Time O(n^2), Space O(n) for reverse string
+#
+# Find the longest palindrome from the beginning, then reverse the remaining segment and append to the beginning.
+# This must be the required answer as no shorter palindrome could be found than this by just appending at the beginning.
+class Solution4(object):
+    def shortestPalindrome(self, s):
+        rev = s[::-1]
+        for i in xrange(len(s)):
+            if s[:len(s)-i] == rev[i:]:
+                return rev[:i] + s
+        return ''
+
+    def shortestPalindrome_TLE(self, s):
+        def isPalindrome(s):
+            if len(s) < 2:
+                return True
+            i, j = 0, len(s) - 1
+            while i < j:
+                if s[i] != s[j]:
+                    return False
+                i += 1
+                j -= 1
+            return True
+
+        for i in xrange(len(s)):
+            if isPalindrome(s[:len(s) - i]):
+                return s[len(s) - i:][::-1] + s
+        return ''

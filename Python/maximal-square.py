@@ -12,7 +12,7 @@
 # 1 0 0 1 0
 # Return 4.
 #
-# Follow up: Given a 2D binary matrix filled with 0’s and 1’s, find the largest square
+# Follow up: Given a 2D binary matrix filled with 0's and 1's, find the largest square
 # # which diagonal is all 1 and others is 0. Only consider the main diagonal situation.
 #
 # For example, given the following matrix:
@@ -47,7 +47,33 @@ class Solution:
                     ans = max(ans, dp[i % 2][j])
             return ans ** 2
 
+    # wrong for [["0","0","0","1"],["1","1","0","1"],["1","1","1","1"],["0","1","1","1"],["0","1","1","1"]]
     def maximalSquare(self, matrix):
+        def foo(i, j, n):
+            ret = 1
+            for k in xrange(n):
+                if matrix[i][j-1-k] == '1' and matrix[i-1-k][j] == '1':
+                    ret += 1
+                else:
+                    break
+            return ret
+
+        if not matrix: return 0
+        m, n, dp = len(matrix), len(matrix[0]), [int(c) for c in matrix[0]]
+        ans = max(dp)
+        for i in xrange(1, m):
+            for j in reversed(xrange(0, n)):
+                if matrix[i][j] == '0':
+                    dp[j] = 0
+                elif j == 0:
+                    dp[j] = 1
+                else:
+                    dp[j] = foo(i, j, dp[j-1])
+                ans = max(ans, dp[j])
+            print(dp)
+        return ans ** 2
+
+    def maximalSquare_kamyu(self, matrix):
         if not matrix:
             return 0
 
@@ -155,3 +181,4 @@ class Solution3:
 
         return max_square_area;
 
+print(Solution().maximalSquare([["0","0","0","1"],["1","1","0","1"],["1","1","1","1"],["0","1","1","1"],["0","1","1","1"]]))

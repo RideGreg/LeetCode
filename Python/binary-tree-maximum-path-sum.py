@@ -39,3 +39,16 @@ class Solution(object):
         right = max(0, self.maxPathSumRecu(root.right))
         self.maxSum = max(self.maxSum, root.val + left + right)
         return root.val + max(left, right)
+
+# not use global var, pass/update the var in recursion
+class Solution_passReturnVal(object):
+    def maxPathSum(self, root):
+        def getMax(node, ans):
+            if not node: return (ans, 0)
+            ans, leftM = getMax(node.left, ans)
+            ans, rightM = getMax(node.right, ans)
+            cur = node.val + max(0, leftM) + max(0, rightM)
+            ans = max(ans, cur)
+            return (ans, node.val+max(0, leftM, rightM))
+        
+        return getMax(root, float('-inf'))[0] if root else 0

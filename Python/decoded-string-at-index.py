@@ -46,19 +46,47 @@ class Solution(object):
         :type K: int
         :rtype: str
         """
-        i = 0
-        for c in S:
+        size = 0
+        for i, c in enumerate(S):
             if c.isdigit():
-                i *= int(c)
+                size *= int(c)
             else:
-                i += 1
+                size += 1
 
-        for c in reversed(S):
-            K %= i
+            if size >= K: break
+
+        for c in S[i::-1]:
+            # keep reducing K to (K % size), as the string size may shrink due to repeatedness
+            K %= size
             if K == 0 and c.isalpha():
                 return c
 
             if c.isdigit():
-                i /= int(c)
+                size /= int(c)
             else:
-                i -= 1
+                size -= 1
+
+    # Worse time complexity: recursion may have much more than n calculation, n is the length of S.
+    def decodeAtIndex_mingTest(self, S, K):
+        cur = 0
+        for i, c in enumerate(S):
+            if 'a'<=c<='z':
+                cur += 1
+                if cur >= K:
+                    return c
+            else:
+                mult = int(c)
+                cur *= mult
+                if cur >= K:
+                    z = K%(cur/mult)
+                    if z == 0: z = cur/mult
+                    return self.decodeAtIndex(S[:i], z)
+
+print(Solution().decodeAtIndex('ha22', 1))
+print(Solution().decodeAtIndex('ha22', 2))
+print(Solution().decodeAtIndex('ha22', 3))
+print(Solution().decodeAtIndex('ha22', 4))
+print(Solution().decodeAtIndex('ha22', 5))
+print(Solution().decodeAtIndex('ha22', 6))
+print(Solution().decodeAtIndex('ha22', 7))
+print(Solution().decodeAtIndex('ha22', 8))

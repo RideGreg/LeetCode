@@ -53,6 +53,10 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
+        return sum(v > 0 for row in grid for v in row) \
+            + sum(map(max, grid)) + sum(map(max, zip(*grid)))
+
+        """
         result = 0
         for i in xrange(len(grid)):
             max_row, max_col = 0, 0
@@ -63,3 +67,4 @@ class Solution(object):
                 max_col = max(max_col, grid[j][i])
             result += max_row + max_col
         return result
+        """

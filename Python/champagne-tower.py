@@ -40,7 +40,7 @@
 # - query_glass and query_row will be in the range of [0, 99].
 
 class Solution(object):
-    def champagneTower(self, poured, query_row, query_glass):
+    def champagneTower_kamyu(self, poured, query_row, query_glass): # 1-D space is hard to understand
         """
         :type poured: int
         :type query_row: int
@@ -50,6 +50,23 @@ class Solution(object):
         result = [poured] + [0] * query_row
         for i in xrange(1, query_row+1):
             for j in reversed(xrange(i+1)):
+                print j, result
                 result[j] = max(result[j]-1, 0)/2.0 + \
                             max(result[j-1]-1, 0)/2.0
+                print result
         return min(result[query_glass], 1)
+
+    # Simulation: keep track of the total amount of champagne that flows through a glass.
+    def champagneTower(self, poured, query_row, query_glass): # USE THIS
+        dp = [[0] * (r + 1) for r in xrange(query_row + 1)]
+        dp[0][0] = poured
+        for r in xrange(query_row):
+            for c in xrange(r + 1):
+                q = (dp[r][c] - 1) / 2.0
+                if q > 0:
+                    dp[r + 1][c] += q
+                    dp[r + 1][c + 1] += q
+
+        return min(1.0, dp[query_row][query_glass])
+
+print(Solution().champagneTower(4,2,0))

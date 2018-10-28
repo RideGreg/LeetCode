@@ -46,7 +46,39 @@ import collections
 import heapq
 
 class Solution(object):
-    def reachableNodes(self, edges, M, N):
+    def reachableNodes(self, edges, M, N):  # USE THIS, more clear
+        graph = [{} for _ in xrange(N)]
+        for u, v, w in edges:
+            graph[u][v] = [w, 0]  # (weight, used-nodes-on-this-directed-edge), regular Dijkstra only save w
+            graph[v][u] = [w, 0]
+
+        minHeap = [(0, 0)]
+        dist = [M + 1] * N
+        dist[0] = 0
+        ans = 0
+
+        while minHeap:
+            d, node = heapq.heappop(minHeap)
+            if d > dist[node]: continue
+
+            ans += 1
+            for nei, prop in graph[node].items():
+                # M - d is how much further we can walk from this node, prop[0] is how many new nodes
+                # there are on this edge. prop[1] is the maximum nodes we can use of this edge.
+                prop[1] = min(prop[0], M - d)
+
+                d2 = d + prop[0] + 1 # total distance to reach 'nei' node
+                if d2 < dist[nei]:
+                    heapq.heappush(minHeap, (d2, nei))
+                    dist[nei] = d2
+
+        for u, v, w in edges:
+            ans += min(w, graph[u][v][1] + graph[v][u][1])
+
+        return ans
+
+
+    def reachableNodes_kamyu(self, edges, M, N):
         """
         :type edges: List[List[int]]
         :type M: int
@@ -78,3 +110,8 @@ class Solution(object):
         for u, v, w in edges:
             result += min(w, count[u][v]+count[v][u])
         return result
+
+print(Solution().reachableNodes([[0,1,10],[0,2,1],[1,2,2]], 6, 3)) #13
+print(Solution().reachableNodes([[0,1,4],[1,2,6],[0,2,8],[1,3,1]], 10, 4)) #23
+print(Solution().reachableNodes([[1,2,5],[0,3,3],[1,3,2],[2,3,4],[0,4,1]], 7, 5)) #13
+print(Solution().reachableNodes([[0,3,8],[0,1,4],[2,4,3],[1,2,0],[1,3,9],[0,4,7],[3,4,9],[1,4,4],[0,2,7],[2,3,1]], 8, 5)) #40

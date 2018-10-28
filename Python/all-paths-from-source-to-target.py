@@ -1,5 +1,5 @@
-# Time:  O(p + r * n), p is the count of all the possible paths in graph,
-#                      r is the count of the result.
+# Time:  O(p + r * n), p is the count of all the possible paths in graph (all paths are traversed),
+#                      r is the count of the result (r results (each is up to n nodes) need to copy into return value).
 # Space: O(n)
 
 # Given a directed, acyclic graph of N nodes.
@@ -32,15 +32,15 @@ class Solution(object):
         :type graph: List[List[int]]
         :rtype: List[List[int]]
         """
-        def dfs(graph, curr, path, result):
-            if curr == len(graph)-1:
+        def dfs(path):
+            if path[-1] == len(graph)-1:
                 result.append(path[:])
                 return
-            for node in graph[curr]:
+            for node in graph[path[-1]]:
                 path.append(node)
-                dfs(graph, node, path, result)
+                dfs(path)
                 path.pop()
 
         result = []
-        dfs(graph, 0, [0], result)
+        dfs([0])
         return result

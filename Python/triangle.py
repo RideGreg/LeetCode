@@ -33,6 +33,16 @@ class Solution:
         if not triangle:
             return 0
 
+        n = len(triangle)
+        dp = [0]*n
+        dp[0] = triangle[0][0]
+        for i in xrange(1, n):
+            dp[i] = dp[i-1] + triangle[i][i]
+            for j in reversed(xrange(1, i)):
+                dp[j] = min(dp[j], dp[j-1]) + triangle[i][j]
+            dp[0] += triangle[i][0]
+        return min(dp)
+        '''
         cur = triangle[0] + [float("inf")]
         for i in xrange(1, len(triangle)):
             next = []
@@ -42,6 +52,7 @@ class Solution:
             cur = next + [float("inf")]
 
         return reduce(min, cur)
+        '''
 
 if __name__ == "__main__":
     print Solution().minimumTotal_ming([[-1], [2, 3], [1, -1, -3]]) # -1
