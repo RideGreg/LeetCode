@@ -1,4 +1,4 @@
-# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/RideGreg) ![Travis](https://travis-ci.org/RideGreg/LeetCode.svg?branch=master)
+# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-953%20%2F%20953-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
 
 The number of LeetCode questions is increasing every week.
 For more questions and solutions, you can see my [LintCode](https://github.com/RideGreg/LintCode) repository.
@@ -276,6 +276,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 944 | [Delete Columns to Make Sorted](https://leetcode.com/problems/delete-columns-to-make-sorted/) | [C++](./C++/delete-columns-to-make-sorted.cpp) [Python](./Python/delete-columns-to-make-sorted.py) | _O(n * l)_ | _O(1)_      | Medium         ||
 953 | [Verifying an Alien Dictionary](https://leetcode.com/problems/verifying-an-alien-dictionary/) | [C++](./C++/verifying-an-alien-dictionary.cpp) [Python](./Python/verifying-an-alien-dictionary.py) | _O(n * l)_ | _O(1)_      | Easy         ||
 955 | [Delete Columns to Make Sorted II](https://leetcode.com/problems/delete-columns-to-make-sorted-ii/) | [C++](./C++/delete-columns-to-make-sorted-ii.cpp) [Python](./Python/delete-columns-to-make-sorted-ii.py) | _O(n * l)_ | _O(n)_      | Medium         ||
+960 | [Delete Columns to Make Sorted III](https://leetcode.com/problems/delete-columns-to-make-sorted-iii/) | [C++](./C++/delete-columns-to-make-sorted-iii.cpp) [Python](./Python/delete-columns-to-make-sorted-iii.py) | _O(n * l^2)_ | _O(l)_      | Hard         ||
 
 ## Linked List
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -411,6 +412,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 919| [Complete Binary Tree Inserter](https://leetcode.com/problems/complete-binary-tree-inserter/) | [C++](./C++/complete-binary-tree-inserter.cpp) [Python](./Python/complete-binary-tree-inserter.py) | ctor: _O(n)_ <br> insert: _O(1)_ <br> get_root: _O(1)_      | _O(n)_          | Medium           |||
 938| [Range Sum of BST](https://leetcode.com/problems/range-sum-of-bst/) | [C++](./C++/range-sum-of-bst.cpp) [Python](./Python/range-sum-of-bst.py) | _O(n)_          | _O(h)_          | Medium           || DFS |
 951| [Flip Equivalent Binary Trees](https://leetcode.com/problems/flip-equivalent-binary-trees/) | [C++](./C++/flip-equivalent-binary-trees.cpp) [Python](./Python/flip-equivalent-binary-trees.py) | _O(n)_          | _O(h)_          | Medium           || DFS |
+958| [Check Completeness of a Binary Tree](https://leetcode.com/problems/check-completeness-of-a-binary-tree/) | [C++](./C++/check-completeness-of-a-binary-tree.cpp) [Python](./Python/check-completeness-of-a-binary-tree.py) | _O(n)_          | _O(w)_          | Medium           || BFS |
 
 ## Hash Table
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -473,6 +475,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 825 | [Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages/) | [C++](./C++/friends-of-appropriate-ages.cpp) [Python](./Python/friends-of-appropriate-ages.py) | _O(a^2 + n)_ | _O(a)_ | Medium ||
 869 | [Reordered Power of 2](https://leetcode.com/problems/reordered-power-of-2/) | [C++](./C++/reordered-power-of-2.cpp) [Python](./Python/reordered-power-of-2.py) | _O(1)_ | _O(1)_ | Medium ||
 873 | [Length of Longest Fibonacci Subsequence](https://leetcode.com/problems/length-of-longest-fibonacci-subsequence/) | [C++](./C++/length-of-longest-fibonacci-subsequence.cpp) [Python](./Python/length-of-longest-fibonacci-subsequence.py) | _O(n^2)_ | _O(n)_ | Medium ||
+957 | [Prison Cells After N Days](https://leetcode.com/problems/prison-cells-after-n-days/) | [C++](./C++/prison-cells-after-n-days.cpp) [Python](./Python/prison-cells-after-n-days.py) | _O(1)_ | _O(1)_ | Medium ||
 
 ## Math
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -961,6 +964,7 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 765 | [Couples Holding Hands](https://leetcode.com/problems/couples-holding-hands/)  | [C++](./C++/couples-holding-hands.cpp) [Python](./Python/couples-holding-hands.py) | _O(n)_| _O(n)_| Hard           ||| 
 924 | [Minimize Malware Spread](https://leetcode.com/problems/minimize-malware-spread/)  | [C++](./C++/minimize-malware-spread.cpp) [Python](./Python/minimize-malware-spread.py) | _O(n^2)_| _O(n)_| Hard           || Union Find | 
 928 | [Minimize Malware Spread II](https://leetcode.com/problems/minimize-malware-spread-ii/)  | [C++](./C++/minimize-malware-spread-ii.cpp) [Python](./Python/minimize-malware-spread-ii.py) | _O(n^2)_| _O(n)_| Hard           || Union Find | 
+959 | [Regions Cut By Slashes](https://leetcode.com/problems/regions-cut-by-slashes/)  | [C++](./C++/regions-cut-by-slashes.cpp) [Python](./Python/regions-cut-by-slashes.py) | _O(n^2)_| _O(n^2)_| Medium           || Union Find | 
 
 ## Geometry
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
