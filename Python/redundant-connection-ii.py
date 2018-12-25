@@ -51,7 +51,7 @@ class UnionFind(object):
         if x_root == y_root or \
            y != y_root:  # already has a father
             return False
-        self.set[y_root] = x_root
+        self.set[min(x_root, y_root)] = max(x_root, y_root)
         return True
 
 
