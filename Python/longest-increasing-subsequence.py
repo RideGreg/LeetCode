@@ -15,7 +15,13 @@
 # Follow up: Could you improve it to O(n log n) time complexity?
 #
 
-# Binary search solution.
+# Binary search solution. LIS stores the longest increasing subsequence: when new
+# elem is larger than all elems in LIS, append to the end of LIS; otherwise replace
+# the first LIS elem which is larger than it. e.g. given [10, 9, 2, 5, 3, 7, 101, 18],
+# [10] -> [9] -> [2] -> [2,5] -> [2,3] -> [2,3,7] -> [2,3,7,101] -> [2,3,7,18]
+
+# the method in this geeksforgeeks article is similar but not straightforward https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
+
 class Solution(object):
     def lengthOfLIS(self, nums):
         """

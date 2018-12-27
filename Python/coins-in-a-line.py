@@ -11,6 +11,7 @@ class Solution(object):
     n = 5, return true.
 
     Solution: dp[i] is whether first player wins when i coins left. dp[i] is True if dp[i-1] or db[i-2] is False.
+              dp[i] is False if dp[i-1] and dp[i-2] are True.
     '''
     def coinsI(self, n):
         if n==0: return False
@@ -41,20 +42,6 @@ class Solution(object):
     of i coins left. dp[i] = postfixSum[i] - min(dp[i-1], dp[i-2]). return True if dp[n] * 2 >= allsum
     '''
     def coinsII(self, coins):
-        n = len(coins)
-        if n <= 2: return True
-
-        sums = [0] * (n + 1)
-        for i, c in enumerate(coins):
-            sums[i+1] = sums[i] + c
-        prev, curr = 0, coins[-1]
-        for i in xrange(2, n+1): # i coins left
-            prev, curr = curr, (sums[-1]-sums[-1-i]) - min(prev, curr)
-
-        print curr
-        return curr * 2 >= sums[-1]
-
-        '''
         if len(coins) <= 2: return True
 
         postfixSum = [0]*(len(coins)+1)
@@ -67,6 +54,20 @@ class Solution(object):
 
         print dp[-1]
         return dp[-1] * 2 >= sum(coins)
+
+        '''
+        n = len(coins)
+        if n <= 2: return True
+
+        sums = [0] * (n + 1)
+        for i, c in enumerate(coins):
+            sums[i+1] = sums[i] + c
+        prev, curr = 0, coins[-1]
+        for i in xrange(2, n+1): # i coins left
+            prev, curr = curr, (sums[-1]-sums[-1-i]) - min(prev, curr)
+
+        print curr
+        return curr * 2 >= sums[-1]
         '''
 
     ''''

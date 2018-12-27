@@ -75,7 +75,8 @@ class NumArray(object):
 #        update: O(logn),
 #        query:  O(logn)
 # Space: O(n)
-# Segment Tree solutoin.
+# Segment Tree solutoin implemented using a tree.
+
 class NumArray2(object):
     def __init__(self, nums):
         """
@@ -158,6 +159,44 @@ class NumArray2(object):
         def __init__(self, i, j, s):
             self.start, self.end, self.sum = i, j, s
 
+# Time:  ctor:   O(n),
+#        update: O(logn),
+#        query:  O(logn)
+# Space: O(n)
+# Segment Tree solutoin implemented using an array.
+# input [2,4,5,7,8,9] will be stored as [0,35,29,6,12,17,2,4,5,7,8,9]. Left-right children are always even-odd indices of the underlying array.
+
+class NumArray3(object):
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.trees = [0] * self.n + nums
+        for i in reversed(range(1, self.n)):
+            self.trees[i] = self.trees[2*i] + self.trees[2*i+1]
+
+    def update(self, i, val):
+        i += self.n
+        if self.trees[i] == val: return
+
+        self.trees[i] = val
+        while i > 1:
+            sibling = i-1 if i % 2 else i+1  # this is general for min/max/sum/gcd/lcm
+            self.trees[i/2] = self.trees[i] + self.trees[sibling]
+            i /= 2
+
+    def sumRange(self, i, j):
+        i += self.n
+        j += self.n
+        sum = 0
+        while i <= j:
+            if i % 2 == 1:
+                sum += self.trees[i]
+                i += 1
+            if j % 2 == 0:
+                sum += self.trees[j]
+                j -= 1
+            i /= 2
+            j /= 2
+        return sum
 
 # Your NumArray object will be instantiated and called as such:
 # numArray = NumArray(nums)
