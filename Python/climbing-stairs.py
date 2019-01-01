@@ -29,7 +29,6 @@ class Solution(object):
 
         T = [[1, 1],
              [1, 0]]
-
         return matrix_expo(T, n)[0][0]
 
 
