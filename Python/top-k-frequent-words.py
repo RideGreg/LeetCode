@@ -1,6 +1,7 @@
 # Time:  O(n + klogk) on average
 # Space: O(n)
 
+# 692
 # Given a non-empty list of words, return the k most frequent elements.
 #
 # Your answer should be sorted by frequency from highest to lowest.
@@ -91,10 +92,13 @@ class Solution2(object):
             def __lt__(self,other):
                 return self.val[1] > other.val[1] if self.val[0] == other.val[0] else \
                        self.val < other.val
+            # the following can be removed
+            '''
             def __eq__(self,other):
                 return self.val == other.val
             def __str__(self):
                 return str(self.val)
+            '''
 
         counts = collections.Counter(words)
         min_heap = []

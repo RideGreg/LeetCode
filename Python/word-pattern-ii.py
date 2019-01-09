@@ -10,30 +10,33 @@ class Solution(object):
         :type str: str
         :rtype: bool
         """
-        w2p, p2w = {}, {}
-        return self.match(pattern, str, 0, 0, w2p, p2w)
+        p2w, usedw = {}, set()
+        return self.match(pattern, str, 0, 0, p2w, usedw)
 
 
-    def match(self, pattern, str, i, j, w2p, p2w):
-        is_match = False
+    def match(self, pattern, str, i, j, p2w, usedw):
         if i == len(pattern) and j == len(str):
-            is_match = True
+            return True
         elif i < len(pattern) and j < len(str):
             p = pattern[i]
             if p in p2w:
                 w = p2w[p]
                 if w == str[j:j+len(w)]:  # Match pattern.
-                    is_match = self.match(pattern, str, i + 1, j + len(w), w2p, p2w)
-                # Else return false.
+                    return self.match(pattern, str, i + 1, j + len(w), p2w, usedw)
+                return False
             else:
                 for k in xrange(j, len(str)):  # Try any possible word
-                    w = str[j:k+1]
-                    if w not in w2p:
-                        # Build mapping. Space: O(n + c)
-                        w2p[w], p2w[p] = p, w;
-                        is_match = self.match(pattern, str, i + 1, k + 1, w2p, p2w)
-                        w2p.pop(w), p2w.pop(p);
-                    if is_match:
+                    if len(str) - k < len(pattern) - i:
                         break
-        return is_match
+                    w = str[j:k+1]
+                    if w not in usedw:
+                        # Build mapping. Space: O(n + c)
+                        p2w[p] = w
+                        usedw.add(w)
+                        if self.match(pattern, str, i + 1, k + 1, p2w, usedw):
+                            return True
+                        # backtrack
+                        p2w.pop(p, None)
+                        usedw.remove(w)
+        return False
 

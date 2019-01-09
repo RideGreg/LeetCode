@@ -70,13 +70,17 @@ class Solution2(object):
         if len(pattern) != len(words):
             return False
 
-        w2p, p2w = {}, {}
-        for p, w in izip(pattern, words):
-            if w not in w2p and p not in p2w:
-                # Build mapping. Space: O(c)
-                w2p[w] = p
-                p2w[p] = w
-            elif w not in w2p or w2p[w] != p:
-                # Contradict mapping.
+        p2s, usedword = {}, set()
+        for c, word in zip(pattern, words):
+            if c in p2s:
+                if word != p2s[c]:
+                    return False
+                continue
+
+            if word in usedword:
                 return False
+
+            # Build mapping. Space: O(c)
+            p2s[c] = word
+            usedword.add(word)
         return True

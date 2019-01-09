@@ -24,7 +24,7 @@
 # dp with rolling window
 class Solution:
     # @return a boolean
-    def isMatch(self, s, p):
+    def isMatchO(self, s, p):
         k = 3
         result = [[False for j in xrange(len(p) + 1)] for i in xrange(k)]
 
@@ -43,6 +43,7 @@ class Solution:
                     result[i % k][j] = result[i % k][j-2] or (result[(i-1) % k][j] and (s[i-1] == p[j-2] or p[j-2] == '.'))
 
         return result[len(s) % k][len(p)]
+
 
 # dp
 # Time:  O(m * n)
@@ -100,10 +101,38 @@ class Solution3:
 
         return p_ptr == len(p)
 
-# recursive
+# recursive, backtrack
 class Solution4:
     # @return a boolean
-    def isMatch(self, s, p):
+    def isMatch(self, s, p): # Ming
+        if len(p) == 0:
+            return len(s) == 0
+        if len(p) == 1:
+            return len(s) == 1 and (p[0] == '.' or s[0] == p[0])
+
+        if p[1] != '*':
+            if len(s) > 0 and (p[0] == '.' or s[0] == p[0]): # cannot be len(s)>1: "a", "ab*"
+                return self.isMatch(s[1:], p[1:])
+            return False
+        else:
+            if self.isMatch(s, p[2:]):                # .* match 0 char in s
+                return True
+            if p[0] == '.':
+                for j in xrange(len(s)):
+                    if self.isMatch(s[j + 1:], p[2:]):  # .* match 1,2,3... chars in s
+                        return True
+            else:
+                if not s or s[0] != p[0]: return False
+
+                for j in xrange(len(s)):
+                    if s[j] != s[0]:
+                        break
+                    if self.isMatch(s[j + 1:], p[2:]):
+                        return True
+
+            return False
+
+    def isMatch_kamyu(self, s, p):
         if not p:
             return not s
 
@@ -120,12 +149,12 @@ class Solution4:
             return self.isMatch(s, p[2:])
 
 if __name__ == "__main__":
-    print Solution3().isMatch("abab", "a*b*")
-    print Solution().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c")
-    print Solution().isMatch("aa","a")
-    print Solution().isMatch("aa","aa")
-    print Solution().isMatch("aaa","aa")
-    print Solution().isMatch("aa", "a*")
-    print Solution().isMatch("aa", ".*")
-    print Solution().isMatch("ab", ".*")
-    print Solution().isMatch("aab", "c*a*b")
+    print Solution().isMatch("abab", "a*b*") # False
+    print Solution().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c") # False
+    print Solution().isMatch("aa","a") # False
+    print Solution().isMatch("aa","aa") # True
+    print Solution().isMatch("aaa","aa") # False
+    print Solution().isMatch("aa", "a*") # True
+    print Solution().isMatch("aa", ".*") # True
+    print Solution().isMatch("ab", ".*") # True
+    print Solution().isMatch("aab", "c*a*b") # True

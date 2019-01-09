@@ -5,13 +5,16 @@
 # Find the median of the two sorted arrays.
 # The overall run time complexity should be O(log (m+n)).
 
+# Follow up: find the kth largest number of the two sorted arrays.
+
 class Solution(object):
     '''
           left_part          |        right_part
     A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
     B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
     '''
-    def findMedianSortedArrays(self, nums1, nums2):
+    # this solution is good for understand the idea, but it cannot be directly used to getKth (need some boundary check)
+    def findMedianSortedArrays_leetcodeOfficial(self, nums1, nums2):
         len1, len2 = len(nums1), len(nums2)
         if len1 > len2:
             nums1, nums2, len1, len2 = nums2, nums1, len2, len1
@@ -34,31 +37,46 @@ class Solution(object):
                 minRight = nums2[j] if i >= len1 else nums1[i] if j >= len2 else min(nums1[i], nums2[j])
                 return (maxLeft + minRight) / 2.0
 
-    def findMedianSortedArrays_kamyu(self, nums1, nums2):
+    def findMedianSortedArrays(self, nums1, nums2): # USE THIS
         """
         :type nums1: List[int]
         :type nums2: List[int]
         :rtype: float
         """
+        def getKth(A, B, k):
+            m, n = len(A), len(B)
+            l, r = 0, m
+            while l <= r:
+                i = l + (r-l)//2
+                j = k - i
+                if j < 0 or (i>0 and 0<=j<n and A[i-1] > B[j]): # boundary check for general k
+                    r = i - 1
+                elif j > n or (i<m and j>0 and A[i] < B[j-1]):
+                    l = i + 1
+                else:
+                    return A[i-1] if j<1 else B[j-1] if i<1 else max(A[i-1], B[j-1])
+
         len1, len2 = len(nums1), len(nums2)
+        if len1 > len2:
+            return self.findMedianSortedArrays(nums2, nums1)
+
         if (len1 + len2) % 2 == 1:
-            return self.getKth(nums1, nums2, (len1 + len2)/2 + 1)
+            return getKth(nums1, nums2, (len1 + len2)/2 + 1)
         else:
-            return (self.getKth(nums1, nums2, (len1 + len2)/2) + \
-                    self.getKth(nums1, nums2, (len1 + len2)/2 + 1)) * 0.5
+            return (getKth(nums1, nums2, (len1 + len2)/2) +
+                    getKth(nums1, nums2, (len1 + len2)/2 + 1)) * 0.5
 
-    def getKth(self, A, B, k):
+
+    def getKth_kamyu(self, A, B, k): # hard to understand
         m, n = len(A), len(B)
-        if m > n:
-            return self.getKth(B, A, k)
-
         left, right = 0, m
         while left < right:
-            mid = left + (right - left) / 2
-            if 0 <= k - 1 - mid < n and A[mid] >= B[k - 1 - mid]:
-                right = mid
+            i = left + (right - left) / 2
+            j = k - 1 - i
+            if 0 <= j < n and A[i] >= B[j]:
+                right = i
             else:
-                left = mid + 1
+                left = i + 1
 
         Ai_minus_1 = A[left - 1] if left - 1 >= 0 else float("-inf")
         Bj = B[k - 1 - left] if k - 1 - left >= 0 else float("-inf")
@@ -70,12 +88,12 @@ class Solution(object):
 # Space: O(1)
 # Generic solution.
 class Solution_Generic(object):
-    def findMedianSortedArrays(self, nums1, nums2):
+    def findMedianSortedArrays(self, nums1, nums2): # too complex
         len1, len2 = len(nums1), len(nums2)
         if (len1 + len2) % 2 == 1:
             return self.getKth([nums1, nums2], (len1 + len2)/2 + 1)
         else:
-            return (self.getKth([nums1, nums2], (len1 + len2)/2) + \
+            return (self.getKth([nums1, nums2], (len1 + len2)/2) +
                     self.getKth([nums1, nums2], (len1 + len2)/2 + 1)) * 0.5
 
     def getKth(self, arrays, k):
@@ -92,7 +110,7 @@ class Solution_Generic(object):
             res = 0
             for array in arrays:
                 if array:
-                    res += len(array) - binary_search(array, 0, len(array) - 1, num, \
+                    res += len(array) - binary_search(array, 0, len(array) - 1, num,
                                                       lambda array, x, y: array[x] > y)
             return res < target
 
@@ -104,7 +122,7 @@ class Solution_Generic(object):
 
         return binary_search(arrays, left, right, k, match)
 
-class Solution_3(object):
+class Solution_3(object): # good to get median from MORE THAN 2 sorted lists
     def findMedianSortedArrays(self, A, B):
 
         if A is None and B is None:
@@ -144,11 +162,12 @@ class Solution_3(object):
             return C[indexM2] / 1.0
 
 if __name__ == "__main__":
+    print(Solution().findMedianSortedArrays([3], [4]))
     print Solution().findMedianSortedArrays([], [2, 3])
     print Solution().findMedianSortedArrays([2], [1, 3])
     print Solution().findMedianSortedArrays([1, 2], [3, 4])
 
     print Solution().findMedianSortedArrays([1, 3, 5, 7], [2, 4, 6])
-    print Solution_Generic().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
-    print Solution_3().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
+    print Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
+    print Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
 

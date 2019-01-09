@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 735
 # We are given an array asteroids of integers representing asteroids
 # in a row.
 #
@@ -45,6 +46,10 @@
 # - The length of asteroids will be at most 10000.
 # - Each asteroid will be a non-zero integer in the range [-1000, 1000].
 
+# Idea: A row of asteroids is stable if no further collisions will occur. After adding a new asteroid 
+# to the right, some more collisions may happen before it becomes stable again, and all of those 
+# collisions (if they happen) must occur right to left. This is the perfect situation for using a stack.
+
 try:
     xrange          # Python 2
 except NameError:
@@ -57,6 +62,25 @@ class Solution(object):
         :type asteroids: List[int]
         :rtype: List[int]
         """
+        # USE THIS, easy to understand
+        stack = []
+        for n in asteroids:
+            if n > 0:
+                stack.append(n)
+            else:
+                while stack and stack[-1] > 0:
+                    if abs(stack[-1]) > abs(n):
+                        break
+                    elif abs(stack[-1]) == abs(n):
+                        stack.pop()
+                        break
+                    else:
+                        stack.pop()
+                else:
+                    stack.append(n)
+        return stack
+
+    def asteroidCollision_kamyu(self, asteroids):
         result = []
         for asteroid in asteroids:
             while result and asteroid < 0 < result[-1]:

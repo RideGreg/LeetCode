@@ -1,6 +1,7 @@
 # Time:  O(1), per operation
 # Space: O(k)
 
+# 432
 # Implement a data structure supporting the following operations:
 #
 # Inc(Key) - Inserts a new key with value 1. Or increments an existing
@@ -30,7 +31,8 @@ class Node(object):
 class LinkedList(object):
     def __init__(self):
         self.head, self.tail = Node(0, set()), Node(0, set())
-        self.head.next, self.tail.prev = self.tail, self.head
+        self.head.next = self.tail
+        self.tail.prev = self.head
 
     def insert(self, pos, node):
         node.prev, node.next = pos.prev, pos
@@ -44,18 +46,6 @@ class LinkedList(object):
     def empty(self):
         return self.head.next is self.tail
 
-    def begin(self):
-        return self.head.next
-
-    def end(self):
-        return self.tail
-
-    def front(self):
-        return self.head.next
-
-    def back(self):
-        return self.tail.prev
-
 
 class AllOne(object):
 
@@ -63,7 +53,9 @@ class AllOne(object):
         """
         Initialize your data structure here.
         """
-        self.bucket_of_key = {}
+        # a DLinkedList node stores count and all keys with the same count
+        # next node stores next count.
+        self.key2bucket = {} # dict: key -> a node in DLinkedList, to guarantee O(1)
         self.buckets = LinkedList()
 
     def inc(self, key):
@@ -72,18 +64,20 @@ class AllOne(object):
         :type key: str
         :rtype: void
         """
-        if key not in self.bucket_of_key:
-            self.bucket_of_key[key] = self.buckets.insert(self.buckets.begin(), Node(0, set([key])))
-
-        bucket, next_bucket = self.bucket_of_key[key], self.bucket_of_key[key].next
-        if next_bucket is self.buckets.end() or next_bucket.value > bucket.value+1:
+        # Move key from current bucket to next bucket, and update key2bucket mapping
+        if key not in self.key2bucket:
+            self.key2bucket[key] = self.buckets.insert(self.buckets.head.next, Node(0, set([key])))
+        bucket = self.key2bucket[key]
+        next_bucket = bucket.next
+        if next_bucket is self.buckets.tail or next_bucket.value > bucket.value+1:
             next_bucket = self.buckets.insert(next_bucket, Node(bucket.value+1, set()))
-        next_bucket.keys.add(key)
-        self.bucket_of_key[key] = next_bucket
 
+        next_bucket.keys.add(key)
         bucket.keys.remove(key)
         if not bucket.keys:
             self.buckets.erase(bucket)
+
+        self.key2bucket[key] = next_bucket
 
     def dec(self, key):
         """
@@ -91,16 +85,19 @@ class AllOne(object):
         :type key: str
         :rtype: void
         """
-        if key not in self.bucket_of_key:
+        if key not in self.key2bucket:
             return
 
-        bucket, prev_bucket = self.bucket_of_key[key], self.bucket_of_key[key].prev
-        self.bucket_of_key.pop(key, None)
+        # Move key from current bucket to prev bucket (if key count still > 0), and update key2bucket mapping
+        bucket = self.key2bucket[key]
+        prev_bucket = bucket.prev
+
+        self.key2bucket.pop(key, None)
         if bucket.value > 1:
-            if bucket is self.buckets.begin() or prev_bucket.value < bucket.value-1:
+            if bucket is self.buckets.head or prev_bucket.value < bucket.value-1:
                 prev_bucket = self.buckets.insert(bucket, Node(bucket.value-1, set()))
             prev_bucket.keys.add(key)
-            self.bucket_of_key[key] = prev_bucket
+            self.key2bucket[key] = prev_bucket
 
         bucket.keys.remove(key)
         if not bucket.keys:
@@ -113,7 +110,7 @@ class AllOne(object):
         """
         if self.buckets.empty():
             return ""
-        return iter(self.buckets.back().keys).next()
+        return iter(self.buckets.tail.prev.keys).next()
 
     def getMinKey(self):
         """
@@ -122,4 +119,15 @@ class AllOne(object):
         """
         if self.buckets.empty():
             return ""
-        return iter(self.buckets.front().keys).next()
+        return iter(self.buckets.head.next.keys).next()
+
+ds = AllOne()
+ds.inc('aa')
+ds.inc('aa')
+print ds.getMaxKey() # aa
+print ds.getMinKey() # aa
+ds.inc('bb')
+ds.inc('bb')
+ds.dec('aa')
+print ds.getMaxKey() # bb
+print ds.getMinKey() # aa

@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 #
+# 151
 # Given an input string, reverse the string word by word.
 #
 # For example,
@@ -17,6 +18,9 @@
 # How about multiple spaces between two words?
 # Reduce them to a single space in the reversed string.
 #
+
+# TO handle leading/trailing spaces and multi spaces, use str.split()
+# list(str) is also important for this problem family, as string cannot be assigned. list(" ab c") = [' ', 'a', 'b', ' ', ' ', 'c']
 
 class Solution:
     # @param s, a string

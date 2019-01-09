@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 699
 # On an infinite number line (x-axis), we drop given squares in the order they are given.
 #
 # The i-th square dropped (positions[i] = (left, side_length)) is a square
@@ -65,27 +66,82 @@
 # 1 <= positions[0] <= 10^8.
 # 1 <= positions[1] <= 10^6.
 
-# Time:  O(nlogn) ~ O(n^2)
+# Time:  O(nlogn) ~ O(n^2), 120 ms
 # Space: O(n)
 import bisect
 
 
 class Solution(object):
     def fallingSquares(self, positions):
-        result = []
-        pos = [-1]
+        # two helper lists
+        pos = [-1] # x index for each new height
         heights = [0]
-        maxH = 0
+        maxH, result = 0, []
         for left, side in positions:
-            l = bisect.bisect_right(pos, left)
-            r = bisect.bisect_left(pos, left+side)
-            high = max(heights[l-1:r] or [0]) + side
+            # BISECT to determine the interval to be affected by new square. Index r is excluded.
+            l = bisect.bisect_right(pos, left)   # cannot be bisect_left: [[100,100],[200,100]] => [100, 100]
+            r = bisect.bisect_left(pos, left+side) # cannot be bisect_right: [[200,100], [100,100]] => [100, 100]
+            high = max(heights[l-1:r]) + side
+            # update. list slice assignment, previous indices in the interval were replaced
+            # https://stackoverflow.com/questions/10623302/how-assignment-works-with-python-list-slice
             pos[l:r] = [left, left+side]         # Time: O(n)
             heights[l:r] = [high, heights[r-1]]  # Time: O(n)
             maxH = max(maxH, high)
             result.append(maxH)
         return result
 
+# Time:  O(nlogn), 1800 ms
+# Space: O(n)
+# Segment Tree solution.
+class mingSegmentTree(object):
+    def __init__(self, n):
+        # this segment tree cannot be pre-built. It stores max height for each
+        # interval and is dynamically updated when a new square falls.
+        self.n = n
+        self.tree = [0] * 2*n
+
+    def update(self, i, val):
+        i += self.n
+        if val != self.tree[i]:
+            self.tree[i] = val
+            while i > 0:
+                sibling = i - 1 if i % 2 else i + 1
+                self.tree[i / 2] = max(self.tree[i], self.tree[sibling])
+                i /= 2
+
+    def query(self, i, j):
+        i, j, maxv = i + self.n, j + self.n, 0
+        while i <= j:
+            if i % 2:
+                maxv = max(maxv, self.tree[i])
+                i += 1
+            if j % 2 == 0:
+                maxv = max(maxv, self.tree[j])
+                j -= 1
+            i /= 2
+            j /= 2
+        return maxv
+
+class SolutionMing(object):
+    def fallingSquares(self, positions):
+        index = set()
+        for left, size in positions:
+            index.add(left)
+            index.add(left+size-1)
+        index = sorted(list(index))
+        tree = mingSegmentTree(len(index))
+
+        max_height = 0
+        result = []
+        for left, size in positions:
+            # determine the interval
+            L, R = bisect.bisect_left(index, left), bisect.bisect_left(index, left+size-1)
+            h = tree.query(L, R) + size
+            for i in xrange(L, R+1):
+                tree.update(i, h)
+            max_height = max(max_height, h)
+            result.append(max_height)
+        return result
 
 class SegmentTree(object):
     def __init__(self, N, update_fn, query_fn):
@@ -265,3 +321,6 @@ class Solution_voyageck(object):
             maxH = max(maxH, h[i])
             res.append(maxH)
         return res
+
+print(Solution().fallingSquares([[200,100], [100,100]])) # [100, 100]
+print(Solution().fallingSquares([[1,2], [2,3], [6,1]])) # [2, 5, 5]
