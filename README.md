@@ -835,7 +835,7 @@ xxx| [Minimax Sample] | [Python](./Python/minimax.py) | | | Medium | | |
 xxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | |
 xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [Python](./longest-common-subsequence.py) | _O(m*n)_ | _O(m*n)_ | Easy | | |
 010| [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | [Python](./Python/regular-expression-matching.py) | _O(m * n)_ | _O(n)_ | Hard ||
-044| [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/) | [Python](./Python/wildcard-matching.py) | _O(m * n)_ | _O(n)_    | Hard           ||
+044| [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/) | [Python](./Python/wildcard-matching.py) | _O(m * n)_ | _O(1)_    | Hard           || Greedy
 053| [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)|[Python](./Python/maximum-subarray.py)| _O(n)_     | _O(1)_         | Medium         ||
 062| [Unique Paths](https://leetcode.com/problems/unique-paths/)    | [Python](./Python/unique-paths.py)| _O(m * n)_      | _O(m + n)_   | Medium         ||
 063| [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/) | [Python](./Python/unique-paths-ii.py) |  _O(m * n)_ | _O(m + n)_   | Medium         ||
