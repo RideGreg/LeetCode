@@ -65,3 +65,13 @@ class Solution2:
     # @return {boolean}
     def isAnagram(self, s, t):
         return sorted(s) == sorted(t)
+
+
+# Time:  O(n)
+# Space: O(n)
+class Solution3(object):
+    # @param {string} s
+    # @param {string} t
+    # @return {boolean}
+    def isAnagram(self, s, t):
+        return collections.Counter(s) == collections.Counter(t)
