@@ -76,8 +76,31 @@ class MinStack2:
     def getMin(self):
         return self.minStack[-1][0]
 
+# time: O(1)
+# space: O(n)
+
+class MinStack3(object):
+
+    def __init__(self):
+        self.stack = []
+
+    def push(self, x):
+        if self.stack:
+            current_min = min(x, self.stack[-1][0])
+            self.stack.append((current_min, x))
+        else:
+            self.stack.append((x, x))
+
+    def pop(self):
+        return self.stack.pop()[1]
+
+    def top(self):
+        return self.stack[-1][1]
+
+    def getMin(self):
+        return self.stack[-1][0]
+
 if __name__ == "__main__":
     stack = MinStack()
     stack.push(-1)
     print [stack.top(), stack.getMin()]
-
