@@ -61,3 +61,20 @@ class Solution(object):
             if j == 0:
                 push(i + 1, 0)  # at most queue min(n, m) space
         return pairs
+
+
+# time: O(mn * log k)
+# space: O(k)
+from heapq import nsmallest
+from itertools import product
+
+
+class Solution2(object):
+    def kSmallestPairs(self, nums1, nums2, k):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :type k: int
+        :rtype: List[List[int]]
+        """
+        return nsmallest(k, product(nums1, nums2), key=sum)
