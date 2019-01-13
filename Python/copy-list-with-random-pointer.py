@@ -65,6 +65,27 @@ class Solution2:
 
         return dummy.next
 
+# time: O(n)
+# space: O(n)
+from collections import defaultdict
+
+class Solution3(object):
+    def copyRandomList(self, head):
+        """
+        :type head: RandomListNode
+        :rtype: RandomListNode
+        """
+        clone = defaultdict(lambda: RandomListNode(0))
+        clone[None] = None
+        cur = head
+
+        while cur:
+            clone[cur].label = cur.label
+            clone[cur].next = clone[cur.next]
+            clone[cur].random = clone[cur.random]
+            cur = cur.next
+
+        return clone[head]
 
 if __name__ == "__main__":
     head = RandomListNode(1)
@@ -74,3 +95,5 @@ if __name__ == "__main__":
     print result.label
     print result.next.label
     print result.random.label
+
+
