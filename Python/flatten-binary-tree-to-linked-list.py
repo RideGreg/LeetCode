@@ -36,10 +36,10 @@ class Solution:
     # @param root, a tree node
     # @return nothing, do it in place
     def flatten(self, root):
-        return self.flattenRecu(root, None)
+        self.flattenRecu(root, None)
 
     def flattenRecu(self, root, list_head):
-        if root != None:
+        if root:
             list_head = self.flattenRecu(root.right, list_head)
             list_head = self.flattenRecu(root.left, list_head)
             root.right = list_head
@@ -53,13 +53,12 @@ class Solution2:
     # @param root, a tree node
     # @return nothing, do it in place
     def flatten(self, root):
-        if root != None:
+        if root:
             self.flatten(root.right)
             self.flatten(root.left)
             root.right = self.list_head
             root.left = None
             self.list_head = root
-            return root
 
 if __name__ == "__main__":
     root = TreeNode(1)
