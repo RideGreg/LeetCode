@@ -50,7 +50,7 @@ class Solution:
     def connect(self, root):
         head = root
         while head:
-            prev, cur, next_head = None, head, None
+            cur = head
             while cur and cur.left:
                 cur.left.next = cur.right
                 if cur.next:
