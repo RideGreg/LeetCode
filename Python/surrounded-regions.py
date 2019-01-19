@@ -29,7 +29,8 @@ class Solution(object):
         """
         if not board:
             return
-        q = collections.deque([])
+
+        q = collections.deque()
 
         for i in xrange(len(board)):
             if board[i][0] == 'O':
