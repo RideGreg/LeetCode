@@ -35,7 +35,7 @@
 # Topological sort could also be done via BFS.
 #
 
-import collections
+from collections import defaultdict, deque
 
 
 class Solution(object):
@@ -45,13 +45,10 @@ class Solution(object):
         :type prerequisites: List[List[int]]
         :rtype: List[int]
         """
-        res, zero_in_degree_queue, in_degree, out_degree = [], collections.deque(), {}, {}
+        res, zero_in_degree_queue = [], deque()
+        in_degree, out_degree = defaultdict(set), defaultdict(set)
 
         for i, j in prerequisites:
-            if i not in in_degree:
-                in_degree[i] = set()
-            if j not in out_degree:
-                out_degree[j] = set()
             in_degree[i].add(j)
             out_degree[j].add(i)
 
