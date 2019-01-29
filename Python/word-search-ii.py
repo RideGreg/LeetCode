@@ -51,8 +51,7 @@ class Solution(object):
 
         for i in xrange(len(board)):
             for j in xrange(len(board[0])):
-                if self.findWordsRecu(board, trie, 0, i, j, visited, [], result):
-                    return True
+                self.findWordsRecu(board, trie, 0, i, j, visited, [], result)
 
         return result.keys()
 
