@@ -1,5 +1,16 @@
 # Time:  O(f * n), f is the max number of unique prime factors
-# Soace: O(p + n), p is the total number of unique primes
+# Space: O(p + n), p is the total number of unique primes
+
+# 952
+# Given a non-empty array of unique positive integers A, consider the following graph:
+# There are A.length nodes, labelled A[0] to A[A.length - 1];
+# There is an edge between A[i] and A[j] if and only if A[i] and A[j] share a common factor greater than 1.
+
+# Return the size of the largest connected component in the graph.
+
+
+# Solution: Union-Find + prime factor decomposition. Doing n^2 times gcd will TLE.
+
 
 import collections
 
@@ -32,26 +43,26 @@ class Solution(object):
         def primeFactors(i):  # prime factor decomposition
             result = []
             d = 2
-            if i%d == 0:
-                while i%d == 0:
-                    i //= d
-                result.append(d)
-            d = 3
             while d*d <= i:
                 if i%d == 0:
                     while i%d == 0:
                         i //= d
                     result.append(d)
-                d += 2
-            if i > 2:
+                d += 1
+            if i > 1:
                 result.append(i)
             return result
         
         union_find = UnionFind(len(A))
-        nodesWithCommonFactor = collections.defaultdict(int)
+        nodesWithCommonFactor = {}
         for i in xrange(len(A)):
             for factor in primeFactors(A[i]):
                 if factor not in nodesWithCommonFactor:
                     nodesWithCommonFactor[factor] = i
-                union_find.union_set(nodesWithCommonFactor[factor], i)
+                else:
+                    union_find.union_set(nodesWithCommonFactor[factor], i)
         return max(union_find.size)
+
+print(Solution().largestComponentSize([4,6,15,35]))
+print(Solution().largestComponentSize([20,50,9,63]))
+print(Solution().largestComponentSize([2,3,6,7,4,12,21,39]))

@@ -41,6 +41,17 @@ class Solution(object):
             name, domain = email.split('@')
             #name, _, domain = email.partition('@')
 
+            # partition also ok: it returns a 3-tuple, the middle is separator itself; only partition once (split does many times)
+            # e.g. >>> "Python is fun, isn't it".partition("is")
+            # ('Python ', 'is', " fun, isn't it") # not partition 2nd is
+            # >>> "Python i fun, in't it".partition("is")
+            # ("Python i fun, in't it", '', '')
+
+            # >>> "Python is fun, isn't it".split("is")
+            # ['Python ', ' fun, ', "n't it"] # no separator is return value, split many times
+            # >>> "Python i fun, in't it".split("is")
+            # ["Python i fun, in't it"]
+
             if '+' in name:
                 name = name[:name.index('+')]
             #name = name.split('+')[0]

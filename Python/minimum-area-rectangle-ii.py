@@ -6,11 +6,13 @@
 # with sides not necessarily parallel to the x and y axes.
 # If there isn't any rectangle, return 0.
 
-# Basic Idea: group points by some observations, check the points in the same group meets requirement.
+# Basic Idea: group pairs of points by some observations, check the points in the same group meets requirement.
+# 1. group by vector (diff of 2 complex #)
+# 2. group by center+radius
 
 # Learned: 1. use vector (a complex number) instead of slope+length.
 # 2. To tell perpendicular, check dot product of 2 vectors equals to 0, instead compare slope (horizontal edge case).
-# 3. Use itertools.combinations(list, repeat).
+# 3. Use itertools.combinations(list, repeat), instead of double loop.
 # 4. Use abs() < EPS (1e-7) to compare float numbers.
 
 import collections
@@ -30,6 +32,7 @@ class Solution(object):
         for P, Q in itertools.combinations(points, 2):
             lookup[P-Q].append((P+Q) / 2)
             # key(P-Q) is a vector. Append P+Q/2 is better than append P, no worry for order of points
+            # note we cannot use //, imaginary part // always returns 0, e.g. complext(10,10)//2 = (5+0j)
 
         result = float("inf")
         for A, candidates in lookup.iteritems():
@@ -75,7 +78,7 @@ class Solution(object):
 
     # Consider opposite points AC and BD of a rectangle ABCD. They both have the same center and same radius. A necessary
     # and sufficient condition to form a rectangle with 2 opposite pairs of points is that the points have the same center and radius.
-    # For each pair of points, classify them by center and radius. Only need to record one point P, since the other point is P' = 2 * center - P
+    # For each pair of points, classify them by center & radius. Only need to record 1 point P, as the other point is P' = 2*center-P
     # (using vector notation). For each center and radius, look at every possible rectangle (two pairs of points P, P', Q, Q').
     # The area of this rectangle dist(P, Q) * dist(P, Q') is a candidate answer.
     # Time: O(N^2logN). It can be shown that the number of pairs of points with the same classification is bounded by logN

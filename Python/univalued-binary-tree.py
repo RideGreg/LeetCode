@@ -1,6 +1,10 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 965
+# A binary tree is univalued if every node in the tree has the same value.
+# Return true if and only if the given tree is univalued.
+
 # Definition for a binary tree node.
 class TreeNode(object):
     def __init__(self, x):
@@ -25,7 +29,15 @@ class Solution(object):
             s.append(node.left)
             s.append(node.right)
         return True
-    
+
+    # A tree is univalued if both its children are univalued, plus the root node has the same value as the child nodes.
+    def isUnivalTree_ming(self, root):
+        def preorder(root, v):
+            if not root:
+                return True
+            return root.val == v and preorder(root.left, v) and preorder(root.right, v)
+
+        return preorder(root, root.val)
 
 # Time:  O(n)
 # Space: O(h)

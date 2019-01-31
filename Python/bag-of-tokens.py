@@ -1,6 +1,7 @@
-# Time:  O(nlogn)
+# Time:  O(nlogn), sorting is needed
 # Space: O(1)
 
+# 948
 # You have an initial power P, an initial score of 0 points, and a bag of tokens.
 #
 # Each token can be used at most once, has a value token[i], and has potentially two ways to use it.
@@ -10,8 +11,8 @@
 # Return the largest number of points we can have after playing any number of tokens.
 
 # Solution: Greedy:
-# We want to collect points as much as possible, so we should always play tokens face up until power exhaustion,
-# then play one token face down and continue. Final answer could be any of the intermediate answers we got
+# We want to collect points as much as possible, so we should always collect point until power exhaustion,
+# then increase power and continue. Final answer could be any of the intermediate answers we got
 # after playing tokens face up (but before spending point to play them face down.)
 
 class Solution(object):

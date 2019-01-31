@@ -18,13 +18,12 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        if max(nums) < 0:
-            return max(nums)
-        global_max, local_max = 0, 0
-        for x in nums:
-            local_max = max(0, local_max + x)
-            global_max = max(global_max, local_max)
-        return global_max
+        # Kadane's algorithm
+        ans, cur = float('-inf'), 0
+        for n in nums:
+            cur = max(0, cur) + n
+            ans = max(ans, cur)
+        return ans
 
     def maxSubArray_print_index(self, nums):
         localMax, gMax = nums[0], nums[0]
@@ -33,10 +32,10 @@ class Solution(object):
             if localMax >= 0:
                 localMax = n + localMax
             else:
-                localMax, s = n, i
+                localMax = n
+                s = i
             if localMax > gMax:
-                gMax = localMax
-                start, end = s, i
+                gMax, start, end = localMax, s, i
         return gMax, start, end
 
 if __name__ == "__main__":

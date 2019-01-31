@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 918
 # Given a circular array C of integers represented by A,
 # find the maximum possible sum of a non-empty subarray of C.
 #
@@ -41,17 +42,36 @@
 # - -30000 <= A[i] <= 30000
 # - 1 <= A.length <= 30000
 
+
+# The answer is a subarray either not cross boundary (max-sum non-circular subarray) or cross boundary (max-sum
+# circular subarray). We take the max from the above two. The first is a classical problem LeetCode 53,
+# the second can be got by (sum of array - min-sum non-circular subarray).
 class Solution(object):
     def maxSubarraySumCircular(self, A):
         """
         :type A: List[int]
         :rtype: int
         """
-        total, max_sum, cur_max, min_sum, cur_min = 0, -float("inf"), 0, float("inf"), 0
+        total, cur_max, cur_min = 0, 0, 0
+        global_max, global_min = -float("inf"), float("inf")
         for a in A:
-            cur_max = max(cur_max+a, a)
-            max_sum = max(max_sum, cur_max)
-            cur_min = min(cur_min+a, a)
-            min_sum = min(min_sum, cur_min)
+            cur_max = max(cur_max, 0) + a
+            global_max = max(global_max, cur_max)
+            cur_min = min(cur_min, 0) + a
+            global_min = min(global_min, cur_min)
             total += a
-        return max(max_sum, total-min_sum) if max_sum > 0 else max_sum
+        return max(global_max, total-global_min) if global_max > 0 else global_max
+
+    # Time O(n^2)
+    def maxSubarraySumCircular_TLE(self, A):
+        def helper(nums):
+            ans, cur = nums[0], nums[0]
+            for n in nums[1:]:
+                cur = max(0, cur) + n
+                ans = max(ans, cur)
+            return ans
+
+        B = A * 2
+        return max(helper(B[i:i + len(A)]) for i in xrange(A))
+
+print(Solution().maxSubarraySumCircular([5,-3,6]))

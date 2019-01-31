@@ -3,6 +3,7 @@
 #        get_root: O(1)
 # Space: O(n)
 
+# 919
 # A complete binary tree is a binary tree in which every level,
 # except possibly the last, is completely filled,
 # and all nodes are as far left as possible.
@@ -44,25 +45,37 @@ class CBTInserter(object):
         """
         :type root: TreeNode
         """
-        self.__tree = [root]
-        for i in self.__tree:
-            if i.left:
-                self.__tree.append(i.left)
-            if i.right:
-                self.__tree.append(i.right)        
+        self.__tree = []
+        level = [root]
+        while level:
+            nextLevel = []
+            for node in level:
+                self._addNode(node) # if input tree is not complete, otherwise self.seq.append(node)
+                if node.left:
+                    nextLevel.append(node.left)
+                if node.right:
+                    nextLevel.append(node.right)
+            level = nextLevel
 
     def insert(self, v):
         """
         :type v: int
         :rtype: int
         """
+        cur = TreeNode(v)
+        return self._addNode(cur)
+
+    def _addNode(self, cur):
         n = len(self.__tree)
-        self.__tree.append(TreeNode(v))
+        self.__tree.append(cur)
+        if n == 0: return None
+
+        par = self.__tree[(n-1)//2]
         if n % 2:
-            self.__tree[(n-1)//2].left = self.__tree[-1]
+            par.left = cur
         else:
-            self.__tree[(n-1)//2].right = self.__tree[-1]
-        return self.__tree[(n-1)//2].val
+            par.right = cur
+        return par.val
 
     def get_root(self):
         """

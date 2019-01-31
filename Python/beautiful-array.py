@@ -24,7 +24,7 @@
 #First, notice that the condition is equivalent to saying that A has no **arithmetic subsequence (等差数列)**. 
 #We'll use the term "arithmetic-free" interchangeably with "beautiful".
 
-#One way is to guess that we should divide and conquer. One reason for this is that the condition is linear, 
+#One way is to guess that we should divide and conquer. One reason for this is that the condition is *linear*,
 #so if the condition is satisfied by variables taking on values (1, 2, ..., n), it is satisfied by those variables 
 #taking on values (a + b, a + 2*b, a + 3*b, ..., a + n*b) instead.
 
@@ -57,3 +57,14 @@ class Solution(object):
         while len(result) < N:
             result = [i*2 - 1 for i in result] + [i*2 for i in result]
         return [i for i in result if i <= N]
+
+    # memoization to solve repeat computation in recursion.
+    def beautifulArray_LeetCodeOfficial(self, N):
+        memo = {1: [1]}
+        def f(N):
+            if N not in memo:
+                odds = f((N+1)/2)
+                evens = f(N/2)
+                memo[N] = [2*x-1 for x in odds] + [2*x for x in evens]
+            return memo[N]
+        return f(N)

@@ -37,9 +37,7 @@ class Solution(object):
         n = len(A)
         dp = [A[0], [0]*n]
         for i in xrange(1, n):
-            for j in xrange(n):
-                start = max(j-1, 0)
-                dp[i%2][j] = min(dp[(i-1)%2][start:j+2]) + A[i][j]
+            dp[i%2] = [A[i][j]+min(dp[(i-1)%2][max(0,j-1):j+2]) for j in xrange(n)]
         return min(dp[(n-1)%2])
 
 print(Solution().minFallingPathSum([[1,2,3],[4,5,6],[7,8,9]])) # 12

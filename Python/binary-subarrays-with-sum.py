@@ -67,6 +67,17 @@ class Solution(object):
     # Space: O(u), u is the number of unique numbers in A
     def numSubarraysWithSum_prefixSum(self, A, S): # USE THIS: easy to understand, worse space complexity
         import collections
+        lookup = collections.defaultdict(int)
+        lookup[0] = 1
+        psum, ans = 0, 0
+        for a in A:
+            psum += a
+            ans += lookup[psum-S]
+            lookup[psum] += 1
+        return ans
+
+    def numSubarraysWithSum_prefixSumAnother(self, A, S): # count all prefix sum upfront, edge case of S=0: not very good
+        import collections
         count = collections.Counter({0:1})
         psum = 0
         for a in A:
