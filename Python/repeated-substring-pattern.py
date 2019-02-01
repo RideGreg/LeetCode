@@ -55,5 +55,4 @@ class Solution(object):
             return False
 
         ss = (str + str)[1:-1]
-        print ss
         return ss.find(str) != -1
