@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(26) = O(1)
 
+<<<<<<< HEAD
 # Given a char array representing tasks CPU need to do.
 # It contains capital letters A to Z where different letters represent
 # different tasks.Tasks could be done without original order.
@@ -32,14 +33,11 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        count = collections.defaultdict(int)
-        max_count = 0
-        for task in tasks:
-            count[task] += 1
-            max_count = max(max_count, count[task])
+        counter = collections.Counter(tasks)
+        _, max_count = counter.most_common(1)[0]
 
         result = (max_count-1) * (n+1)
-        for count in count.values():
+        for count in counter.values():
             if count == max_count:
                 result += 1
         return max(result, len(tasks))
