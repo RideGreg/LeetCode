@@ -14,7 +14,7 @@
 # Given "cbacdcbc"
 # Return "acdb"
 
-import collections
+from collections import Counter
 
 
 class Solution(object):
@@ -23,9 +23,7 @@ class Solution(object):
         :type s: str
         :rtype: str
         """
-        remaining = collections.defaultdict(int)
-        for c in s:
-            remaining[c] += 1
+        remaining = Counter(s)
 
         in_stack, stk = set(), []
         for c in s:
