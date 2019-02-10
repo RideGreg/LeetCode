@@ -1,4 +1,4 @@
-# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-982%20%2F%20982-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
+# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-987%20%2F%20987-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
 
 The number of LeetCode questions is increasing every week.
 For more questions and solutions, you can see my [LintCode](https://github.com/RideGreg/LintCode) repository.
@@ -200,6 +200,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 961 | [N-Repeated Element in Size 2N Array](https://leetcode.com/problems/n-repeated-element-in-size-2n-array/) | [C++](./C++/n-repeated-element-in-size-2n-array.cpp) [Python](./Python/n-repeated-element-in-size-2n-array.py) | _O(n)_ | _O(1)_      | Easy         ||
 978 | [Longest Turbulent Subarray](https://leetcode.com/problems/longest-turbulent-subarray/) | [C++](./C++/longest-turbulent-subarray.cpp) [Python](./Python/longest-turbulent-subarray.py) | _O(n)_ | _O(1)_      | Medium         ||
 985 | [Sum of Even Numbers After Queries](https://leetcode.com/problems/sum-of-even-numbers-after-queries/) | [C++](./C++/sum-of-even-numbers-after-queries.cpp) [Python](./Python/sum-of-even-numbers-after-queries.py) | _O(n + q)_ | _O(1)_      | Easy         ||
+989 | [Add to Array-Form of Integer](https://leetcode.com/problems/add-to-array-form-of-integer/) | [C++](./C++/add-to-array-form-of-integer.cpp) [Python](./Python/add-to-array-form-of-integer.py) | _O(n + logk)_ | _O(1)_      | Easy         ||
 
 ## String
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -495,6 +496,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 966 | [Vowel Spellchecker](https://leetcode.com/problems/vowel-spellchecker/) | [C++](./C++/vowel-spellchecker.cpp) [Python](./Python/vowel-spellchecker.py) | _O(n)_ | _O(w)_ | Medium ||
 974| [Subarray Sums Divisible by K](https://leetcode.com/problems/subarray-sums-divisible-by-k/) |[C++](./C++/subarray-sums-divisible-by-k.cpp)  [Python](./Python/subarray-sums-divisible-by-k.py) | _O(n)_ | _O(k)_ | Medium         | variant of [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/) |
 982| [Triples with Bitwise AND Equal To Zero](https://leetcode.com/problems/triples-with-bitwise-and-equal-to-zero/) |[C++](./C++/triples-with-bitwise-and-equal-to-zero.cpp)  [Python](./Python/triples-with-bitwise-and-equal-to-zero.py) | _O(nlogn)_ | _O(n)_ | Hard         || Math, FWT
+992| [Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/) |[C++](./C++/subarrays-with-k-different-integers.cpp)  [Python](./Python/subarrays-with-k-different-integers.py) | _O(n)_ | _O(k)_ | Hard         ||
 
 ## Math
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -729,6 +731,7 @@ xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/in
 530|[Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)| [C++](./C++/minimum-absolute-difference-in-bst.cpp) [Python](./Python/minimum-absolute-difference-in-bst.py)| _O(n)_ | _O(h)_ | Easy | | |
 776|[Split BST](https://leetcode.com/problems/split-bst/)| [C++](./C++/split-bst.cpp) [Python](./Python/split-bst.py)| _O(n)_ | _O(h)_ | Medium | 📖 | |
 783|[Minimum Distance Between BST Nodes](https://leetcode.com/problems/minimum-distance-between-bst-nodes/)| [C++](./C++/minimum-distance-between-bst-nodes.cpp) [Python](./Python/minimum-distance-between-bst-nodes.py)| _O(n)_ | _O(h)_ | Easy | | |
+510| [Inorder Successor in BST II](https://leetcode.com/problems/inorder-successor-in-bst-ii/)| [C++](./C++/inorder-successor-in-bst-ii.cpp) [Python](./Python/inorder-successor-in-bst-ii.py)   | _O(h)_          | _O(1)_          | Medium         | 🔒 |
 
 ## Breadth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -998,6 +1001,7 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 962 | [Maximum Width Ramp](https://leetcode.com/problems/maximum-width-ramp/) | [C++](./C++/maximum-width-ramp.cpp) [Python](./Python/maximum-width-ramp.py) | _O(n)_ | _O(n)_ | Medium || Descending Stack
 968 | [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/) | [C++](./C++/binary-tree-cameras.cpp) [Python](./Python/binary-tree-cameras.py) | _O(n)_ | _O(h)_ | Hard || DFS, Tree Dynamic Programming
 984 | [String Without AAA or BBB](https://leetcode.com/problems/string-without-aaa-or-bbb/) | [C++](./C++/string-without-aaa-or-bbb.cpp) [Python](./Python/string-without-aaa-or-bbb.py) | _O(a + b)_ | _O(1)_ | Easy ||
+991 | [Broken Calculator](https://leetcode.com/problems/broken-calculator/) | [C++](./C++/broken-calculator.cpp) [Python](./Python/broken-calculator.py) | _O(logy)_ | _O(1)_ | Medium ||
 
 ## Graph
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1006,6 +1010,8 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 924 | [Minimize Malware Spread](https://leetcode.com/problems/minimize-malware-spread/)  | [C++](./C++/minimize-malware-spread.cpp) [Python](./Python/minimize-malware-spread.py) | _O(n^2)_| _O(n)_| Hard           || Union Find | 
 928 | [Minimize Malware Spread II](https://leetcode.com/problems/minimize-malware-spread-ii/)  | [C++](./C++/minimize-malware-spread-ii.cpp) [Python](./Python/minimize-malware-spread-ii.py) | _O(n^2)_| _O(n)_| Hard           || Union Find | 
 959 | [Regions Cut By Slashes](https://leetcode.com/problems/regions-cut-by-slashes/)  | [C++](./C++/regions-cut-by-slashes.cpp) [Python](./Python/regions-cut-by-slashes.py) | _O(n^2)_| _O(n^2)_| Medium           || Union Find | 
+959 | [Regions Cut By Slashes](https://leetcode.com/problems/regions-cut-by-slashes/)  | [C++](./C++/regions-cut-by-slashes.cpp) [Python](./Python/regions-cut-by-slashes.py) | _O(n^2)_| _O(n^2)_| Medium           || Union Find | 
+990 | [Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/) | [C++](./C++/satisfiability-of-equality-equations.cpp) [Python](./Python/satisfiability-of-equality-equations.py) | _O(n)_ | _O(1)_ | Medium           ||
 
 ## Geometry
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
