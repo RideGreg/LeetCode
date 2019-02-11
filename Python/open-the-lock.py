@@ -72,6 +72,6 @@ class Solution(object):
                         if neighbor not in lookup:
                             lookup.add(neighbor)
                             next_q.append(neighbor)
-            q, next_q = next_q, []
+            q = next_q
             depth += 1
         return -1
