@@ -1,6 +1,7 @@
-# Time:  O(32 * n)
+# Time:  O(32 * n), each intermediate set have no more than 32 unique values.
 # Space: O(1)
 
+# 898
 # We have an array A of non-negative integers.
 #
 # For every (contiguous) subarray B = [A[i], A[i+1], ...,
@@ -35,14 +36,20 @@
 # - 1 <= A.length <= 50000
 # - 0 <= A[i] <= 10^9
 
+# Solution: note of the fact that for subarray A[i], ... A[j+1],
+# result(i, j+1) = result(i, j) | A[j+1].
+# Time complexity is not bounded by O(n^2). In fact, any result set can have
+# unique values at most 32, because when building a result set, each new inserted
+# value must have more 1s' in its binary representation (to a maximum of 32 ones).
+
 class Solution(object):
     def subarrayBitwiseORs(self, A):
         """
         :type A: List[int]
         :rtype: int
         """
-        result, curr = set(), {0}
-        for i in A:
-            curr = {i} | {i | j for j in curr}
-            result |= curr
-        return len(result)
+        ans, curr = set(), set()
+        for x in A:
+            curr = {x} | {x | y for y in curr}
+            ans |= curr
+        return len(ans)

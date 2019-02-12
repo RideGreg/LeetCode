@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 917
 # Given a string S, return the "reversed" string where
 # all characters that are not a letter stay in the same place,
 # and all letters reverse their positions.
@@ -29,6 +30,20 @@ class Solution(object):
         :type S: str
         :rtype: str
         """
+        # USE THIS: two pointers, only one pass
+        i, j = 0, len(S)-1
+        A = list(S)
+        while i<j:
+            while i<j and not A[i].isalpha():
+                i += 1
+            while i<j and not A[j].isalpha():
+                j -= 1
+            A[i], A[j] = A[j], A[i]
+            i += 1
+            j -= 1
+        return ''.join(A)
+
+    def reverseOnlyLetters_kamyu(self, S):
         def getNext(S):
             for i in reversed(xrange(len(S))):
                 if S[i].isalpha():
@@ -42,3 +57,13 @@ class Solution(object):
             else:
                 result.append(S[i])
         return "".join(result)
+
+    def reverseOnlyLetters_stack(self, S): # similar to the above generator solution, but take stack SPACE
+        letters = [c for c in S if c.isalpha()]
+        ans = []
+        for c in S:
+            if c.isalpha():
+                ans.append(letters.pop())
+            else:
+                ans.append(c)
+        return "".join(ans)

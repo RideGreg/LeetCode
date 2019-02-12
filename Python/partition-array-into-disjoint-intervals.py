@@ -1,6 +1,7 @@
 # Time:  O(n)
-# Space: O(n)
+# Space: O(1)
 
+# 915
 # Given an array A, partition it into two (contiguous) subarrays
 # left and right so that:
 #
@@ -26,18 +27,39 @@
 # - 0 <= A[i] <= 10^6
 # - It is guaranteed there is at least one way to partition A as described.
 
-
 class Solution(object):
+    # USE THIS. Ming solution Time O(n) Space(n)
     def partitionDisjoint(self, A):
         """
         :type A: List[int]
         :rtype: int
         """
-        B = A[:]
-        for i in reversed(xrange(len(A)-1)):
-            B[i] = min(B[i], B[i+1])
-        p_max = 0
+        leftMax, curMax, ans = A[0], A[0], 1
         for i in xrange(1, len(A)):
-            p_max = max(p_max, A[i-1])
-            if p_max <= B[i]:
+            curMax = max(curMax, A[i])
+            if A[i] < leftMax:
+                ans = i+1
+                leftMax = curMax
+        return ans
+
+    def partitionDisjoint_LeetCodeOfficial(self, A):
+        # check max(left) <= min(right).
+        # Time: O(n), Space: O(n)
+        N = len(A)
+        maxleft = [None] * N
+        minright = [None] * N
+
+        m = A[0]
+        for i in xrange(N):
+            m = max(m, A[i])
+            maxleft[i] = m
+
+        m = A[-1]
+        for i in xrange(N-1, -1, -1):
+            m = min(m, A[i])
+            minright[i] = m
+
+        for i in xrange(1, N):
+            if maxleft[i-1] <= minright[i]:
                 return i
+

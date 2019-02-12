@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 897
 # Given a tree, rearrange the tree in in-order so that the leftmost node
 # in the tree is now the root of the tree, and every node has no left child and only 1 right child.
 #
@@ -52,6 +53,21 @@ class Solution(object):
         :type root: TreeNode
         :rtype: TreeNode
         """
+        def inorder(node):
+            if not node: return
+
+            inorder(node.left)
+            node.left = None #KENG: if don't set left to None, cycle is formed
+            self.cur.right = node
+            self.cur = node
+            inorder(node.right)
+
+        self.cur = head = TreeNode(-1)
+        inorder(root)
+        return head.right
+
+    # hard to understand: result is obtained, then continue to modify the tree.
+    def increasingBST_kamyu(self, root):
         def increasingBSTHelper(root, tail):
             if not root:
                 return tail
@@ -60,3 +76,8 @@ class Solution(object):
             root.right = increasingBSTHelper(root.right, tail)
             return result
         return increasingBSTHelper(root, None)
+
+root=TreeNode(5)
+root.left, root.right = TreeNode(3), TreeNode(6)
+root.left.right = TreeNode(4)
+print(Solution().increasingBST(root))

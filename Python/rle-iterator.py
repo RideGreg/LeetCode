@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 900
 # Write an iterator that iterates through a run-length encoded sequence.
 #
 # The iterator is initialized by RLEIterator(int[] A),
@@ -44,14 +45,37 @@
 # - Each call to RLEIterator.next(int n) will have 1 <= n <= 10^9.
 
 class RLEIterator(object):
+    # init stores the prefix sum of length, so iterator can use bisect
+    def __init__(self, A):
+        """
+        :type A: List[int]
+        """
+        self.total = 0
+        self.length = [] # list of tuple [(prefix sum length, value)]
+        for i in xrange(0, len(A), 2):
+            if A[i]:
+                length = A[i] + self.length[-1][0] if self.length else A[i]
+                self.length.append((length, A[i + 1]))
 
+    def next(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        import bisect
+        self.total += n
+        if self.total > self.length[-1][0]: return -1
+        pos = bisect.bisect_left(self.length, (self.total, -1))
+        return self.length[pos][1]
+
+class RLEIterator_kamyu(object):
     def __init__(self, A):
         """
         :type A: List[int]
         """
         self.__A = A
         self.__i = 0
-        self.__cnt = 0
+        self.__used = 0
 
     def next(self, n):
         """
@@ -59,16 +83,19 @@ class RLEIterator(object):
         :rtype: int
         """
         while self.__i < len(self.__A):
-            if  n > self.__A[self.__i] - self.__cnt:
-                n -= self.__A[self.__i] - self.__cnt
-                self.__cnt = 0
+            if  n > self.__A[self.__i] - self.__used:
+                n -= self.__A[self.__i] - self.__used
+                self.__used = 0
                 self.__i += 2
             else:
-                self.__cnt += n
+                self.__used += n
                 return self.__A[self.__i+1]
         return -1
 
 
 # Your RLEIterator object will be instantiated and called as such:
-# obj = RLEIterator(A)
-# param_1 = obj.next(n)
+obj = RLEIterator([3,8,0,9,2,5])
+print(obj.next(2))
+print(obj.next(1))
+print(obj.next(1))
+print(obj.next(2))

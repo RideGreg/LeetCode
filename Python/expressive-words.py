@@ -1,6 +1,7 @@
 # Time:  O(n + s), n is the sum of all word lengths, s is the length of S
 # Space: O(l + s), l is the max word length
 
+# 809
 # Sometimes people repeat letters to represent extra feeling,
 # such as "hello" -> "heeellooo", "hi" -> "hiiii".
 # Here, we have groups, of adjacent letters that are all the same character,
@@ -58,3 +59,27 @@ class Solution(object):
             result += all(c1 >= max(c2, 3) or c1 == c2
                           for c1, c2 in itertools.izip(count, count2))
         return result
+
+    # two poniters
+    def expressiveWords_ming(self, S, words):
+        def helper(S, word):
+            si, wi = 0, 0
+            while si < len(S) and wi < len(word):
+                if S[si] != word[wi]:
+                    return False
+
+                scnt = wcnt = 1
+                while si+scnt < len(S) and S[si+scnt] == S[si]:
+                    scnt += 1
+                while wi+wcnt < len(word) and word[wi+wcnt] == word[wi]:
+                    wcnt += 1
+                if not(scnt==wcnt or (scnt>wcnt and scnt >= 3)):
+                    return False
+
+                si += scnt
+                wi += wcnt
+            return si == len(S) and wi == len(word)
+
+        return sum(1 for word in words if helper(S, word))
+
+print(Solution().expressiveWords("heeellooo", ["hello", "hi", "helo"]))

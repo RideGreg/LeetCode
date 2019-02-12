@@ -19,6 +19,7 @@
 # - 0 <= A[i] <= 5000
 
 class Solution(object):
+    # good: fill the slots
     def sortArrayByParity(self, A):
         """
         :type A: List[int]
@@ -29,4 +30,29 @@ class Solution(object):
             if A[j] % 2 == 0:
                 A[i], A[j] = A[j], A[i]
                 i += 1
+        return A
+
+    def sortArrayByParity_LeetCodeOfficial(self, A):
+        i, j = 0, len(A) - 1
+        while i < j:
+            if A[i] % 2 == 1 and A[j] % 2 == 0:
+                A[i], A[j] = A[j], A[i]
+
+            if A[i] % 2 == 0: i += 1 # don't use while here, one while in top is enough
+            if A[j] % 2 == 1: j -= 1
+
+        return A
+
+    # not good: too many while
+    def sortArrayByParity_ming(self, A):
+        l, r = 0, len(A)-1
+        while l<r:
+            while l<r and A[l]%2==0:
+                l += 1
+            while l<r and A[r]%2:
+                r -= 1
+            if l<r:
+                A[l], A[r] = A[r], A[l]
+                l += 1
+                r -= 1
         return A

@@ -796,6 +796,7 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 ## Backtracking
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
+xxx| [Minimax Sample] | [Python](./Python/minimax.py) | | | Medium | | |
 017| [Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)| [Python](./Python/letter-combinations-of-a-phone-number.py) | _O(n * 4^n)_ | _O(n)_ | Medium ||
 022| [Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)| [Python](./Python/generate-parentheses.py)| _O(4^n / n^(3/2))_ | _O(n)_   | Medium         ||
 037| [Sudoku Solver](https://leetcode.com/problems/sudoku-solver/) | [Python](./Python/sudoku-solver.py) | _O((9!)^9)_  | _O(1)_          | Hard           ||
@@ -922,7 +923,7 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 847 | [Shortest Path Visiting All Nodes](https://leetcode.com/problems/shortest-path-visiting-all-nodes/) | [C++](./C++/shortest-path-visiting-all-nodes.cpp) [Python](./Python/shortest-path-visiting-all-nodes.py) | _O(n *2^n)_ | _O(n * 2^n)_ | Hard || BFS |
 877 | [Stone Game](https://leetcode.com/problems/stone-game/) | [C++](./C++/stone-game.cpp) [Python](./Python/stone-game.py) | _O(n^2)_ | _O(n)_ | Medium | variant of [Predict the Winner](https://leetcode.com/problems/predict-the-winner/) | |
 879 | [Profitable Schemes](https://leetcode.com/problems/profitable-schemes/) | [C++](./C++/profitable-schemes.cpp) [Python](./Python/profitable-schemes.py) | _O(n * p * g)_ | _O(p * g)_ | Hard || |
-903 | [Valid Permutations for DI Sequence](https://leetcode.com/problems/valid-permutations-for-di-sequence/) | [C++](./C++/valid-permutations-for-di-sequence.cpp) [Python](./Python/valid-permutations-for-di-sequence.py) | _O(n^2)_ | _O(n)_ | Hard || |
+903 | [Valid Permutations for DI Sequence](https://leetcode.com/problems/valid-permutations-for-di-sequence/) | [C++](./C++/valid-permutations-for-di-sequence.cpp) [Python](./Python/valid-permutations-for-di-sequence.py) | _O(n^2)_ | _O(n)_ | Hard || 2D Dynamic Programming|
 920 | [Number of Music Playlists](https://leetcode.com/problems/number-of-music-playlists/) | [C++](./C++/number-of-music-playlists.cpp) [Python](./Python/number-of-music-playlists.py) | _O(n * l)_ | _O(l)_ | Hard || |
 926| [Flip String to Monotone Increasing](https://leetcode.com/problems/flip-string-to-monotone-increasing/) | [C++](./C++/flip-string-to-monotone-increasing.cpp) [Python](./Python/flip-string-to-monotone-increasing.py) | _O(n)_ | _O(1)_ | Medium ||
 931| [Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/) | [C++](./C++/minimum-falling-path-sum.cpp) [Python](./Python/minimum-falling-path-sum.py) | _O(n^2)_ | _O(1)_ | Medium ||
@@ -972,7 +973,7 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 936 | [Stamping The Sequence](https://leetcode.com/problems/stamping-the-sequence/) | [C++](./C++/stamping-the-sequence.cpp) [Python](./Python/stamping-the-sequence.py) | _O((n - m) * m)_ | _O((n - m) * m)_ | Hard ||
 948 | [Bag of Tokens](https://leetcode.com/problems/bag-of-tokens/) | [C++](./C++/bag-of-tokens.cpp) [Python](./Python/bag-of-tokens.py) | _O(nlogn)_ | _O(1)_ | Medium || Two Pointers
 962 | [Maximum Width Ramp](https://leetcode.com/problems/maximum-width-ramp/) | [C++](./C++/maximum-width-ramp.cpp) [Python](./Python/maximum-width-ramp.py) | _O(n)_ | _O(n)_ | Medium || Descending Stack
-968 | [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/) | [C++](./C++/binary-tree-cameras.cpp) [Python](./Python/binary-tree-cameras.py) | _O(n)_ | _O(h)_ | Hard || DFS
+968 | [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/) | [C++](./C++/binary-tree-cameras.cpp) [Python](./Python/binary-tree-cameras.py) | _O(n)_ | _O(h)_ | Hard || DFS, Tree Dynamic Programming
 
 ## Graph
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 

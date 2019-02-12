@@ -37,6 +37,17 @@ class Solution(object):
     def sortArrayByParityII_similar(self, A):
         n, e, o = len(A), 0, 1
         while e < n and o < n:
+            if A[e]%2 == 1 and A[o]%2 == 0:
+                A[e], A[o] = A[o], A[e]
+            if A[e] % 2 == 0:
+                e += 2
+            if A[o] % 2 == 1:
+                o += 2
+        return A
+
+    def sortArrayByParityII_tooManyWhile(self, A):
+        n, e, o = len(A), 0, 1
+        while e < n and o < n:
             while e < n and A[e] % 2 == 0:
                 e += 2
             while o < n and A[o] % 2 == 1:

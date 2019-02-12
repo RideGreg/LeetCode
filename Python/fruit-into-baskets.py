@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 904
 # In a row of trees, the i-th tree produces fruit with type tree[i].
 #
 # You start at any tree of your choice, then repeatedly perform the following steps:
@@ -47,13 +48,41 @@
 
 import collections
 
-
+# Sliding Window
+# Get the longest subarray with at most two different numbers. Maintain the start of sliding window.
 class Solution(object):
-    def totalFruit(self, tree):
+    def totalFruit(self, tree): # 200 ms
         """
         :type tree: List[int]
         :rtype: int
         """
+        lookup = {} # index of the last time key appears
+        s, ans = -1, 0
+        for e, v in enumerate(tree):
+            lookup[v] = e
+            # 3rd new item: need to remove the oldest item and adjust window start point
+            if len(lookup) > 2:
+                a = min(lookup, key=lookup.get)
+                s = lookup[a]
+                del lookup[a]
+            ans = max(ans, e-s)
+        return ans
+
+    # Same as the above, just use OrderedDict so get oldest (but this is slower 800 ms)
+    def totalFruit_OrderedDict(self, tree):
+        lookup = collections.OrderedDict() # index of the last time key appears
+        s, ans = -1, 0
+        for e, v in enumerate(tree):
+            if v in lookup:
+                del lookup[v]
+            lookup[v] = e
+            # 3rd new item: need to remove the oldest item and adjust window start point
+            if len(lookup) > 2:
+                k, s = lookup.popitem(last=False)
+            ans = max(ans, e-s)
+        return ans
+
+    def totalFruit_LeetCodeOfficial(self, tree):
         count = collections.defaultdict(int)
         result, i = 0, 0
         for j, v in enumerate(tree):
@@ -65,4 +94,35 @@ class Solution(object):
                 i += 1
             result = max(result, j-i+1)
         return result
- 
+
+    def totalFruit_groupByBlocks(self, tree):
+        import itertools
+        blocks = [(k, len(list(v)))
+                  for k, v in itertools.groupby(tree)]
+
+        ans = i = 0
+        while i < len(blocks):
+            # We'll start our scan at block[i].
+            # types : the different values of tree[i] seen
+            # weight : the total number of trees represented
+            #          by blocks under consideration
+            types, weight = set(), 0
+
+            # For each block from i and going forward,
+            for j in xrange(i, len(blocks)):
+                # Add each block to consideration
+                types.add(blocks[j][0])
+                weight += blocks[j][1]
+
+                # If we have 3 types, this is not a legal subarray
+                if len(types) >= 3:
+                    i = j - 1  # THIS ONLY WORKS FOR 2 TYPES. IF ALLOW 3 TYPES, CANNOT USE THIS TO FIND THE NEXT VALID START POINT.
+                    break
+
+                ans = max(ans, weight)
+
+            # If we go to the last block, then stop
+            else:
+                break
+
+        return ans

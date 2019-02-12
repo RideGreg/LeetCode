@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n^2)
 
+# 909
 # On an N x N board, the numbers from 1 to N*N are
 # written boustrophedonically starting from the bottom left of the board,
 # and alternating direction each row.  For example, for a 6 x 6 board,
@@ -57,6 +58,7 @@ import collections
 
 
 class Solution(object):
+    # use dict to store visited node AND step, better
     def snakesAndLadders(self, board):
         """
         :type board: List[List[int]]
@@ -65,7 +67,7 @@ class Solution(object):
         def coordinate(n, s):
             a, b = divmod(s-1, n)
             r = n-1-a
-            c = b if r%2 != n%2 else n-1-b
+            c = b if a%2 == 0 else n-1-b # rows with ratio 0,2,3 is arranged from left to right
             return r, c
 
         n = len(board)
@@ -82,4 +84,28 @@ class Solution(object):
                 if s2 not in lookup:
                     lookup[s2] = lookup[s]+1
                     q.append(s2)
+        return -1
+
+    # use set to store visited node, step is stored in queue
+    def snakesAndLadders_ming(self, board):
+        def coordinate(n, s):
+            a, b = divmod(s-1, n)
+            r = n-1-a
+            c = b if a%2 == 0 else n-1-b # rows with ratio 0,2,3 is arranged from left to right
+            return r, c
+
+        n = len(board)
+        lookup = {1}
+        q = collections.deque([(1,0)])
+        while q:
+            s, step = q.popleft()
+            if s == n*n:
+                return step
+            for s2 in xrange(s+1, min(s+6, n*n)+1):
+                r, c = coordinate(n, s2)
+                if board[r][c] != -1:
+                    s2 = board[r][c]
+                if s2 not in lookup:
+                    lookup.add(s2)
+                    q.append((s2, step+1))
         return -1

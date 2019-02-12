@@ -1,6 +1,7 @@
 # Time:  O(logn)
 # Space: O(logn)
 
+# 902
 # We have a sorted set of digits D, a non-empty subset of
 # {'1','2','3','4','5','6','7','8','9'}.  (Note that '0' is not included.)
 #
@@ -38,13 +39,31 @@ class Solution(object):
         :type N: int
         :rtype: int
         """
+        def getLast(d, s):
+            if len(s) == 1:
+                return sum(c<=s for c in D)
+            cand = sum(c<s[0] for c in D)
+            ans = cand * (d**(len(s)-1))
+            if s[0] in D:
+                ans += getLast(d, s[1:])
+            return ans
+
+        D = set(D)
+        d, n, ans = len(D), len(str(N)), 0
+        ans = sum(d**i for i in xrange(1, n))
+
+        return ans + getLast(d, str(N))
+
+
+    def atMostNGivenDigitSet_kamyu(self, D, N):
         str_N = str(N)
         set_D = set(D)
-        result = sum(len(D)**i for i in xrange(1, len(str_N)))
+        choice = len(D)
+        result = sum(choice**i for i in xrange(1, len(str_N)))
         i = 0
         while i < len(str_N):
-            result += sum(c < str_N[i] for c in D) * (len(D)**(len(str_N)-i-1))
-            if str_N[i] not in set_D:
+            result += sum(c < str_N[i] for c in D) * (choice**(len(str_N)-i-1))
+            if str_N[i] not in set_D: # equal to this place value, look at lower digits
                 break
             i += 1
         return result + int(i == len(str_N))

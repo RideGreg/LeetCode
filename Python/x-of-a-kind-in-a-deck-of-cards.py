@@ -1,6 +1,9 @@
 # Time:  O(n * (logn)^2)
+#     LeetCode says Time Complexity: O(N \log^2 N), where N is the number of votes.
+#     If there are C_i cards with number i, then each gcd operation is naively O(log^2 C_i).
 # Space: O(n)
 
+# 914
 # In a deck of cards, each card has an integer written on it.
 #
 # Return true if and only if you can choose X >= 2 such that
@@ -55,3 +58,9 @@ class Solution(object):
 
         vals = collections.Counter(deck).values()
         return reduce(gcd, vals) >= 2
+        ''' or 
+        g = vals[0]
+        for i in xrange(1, len(vals)):
+            g = gcd(g, vals[i])
+        return g >= 2
+        '''
