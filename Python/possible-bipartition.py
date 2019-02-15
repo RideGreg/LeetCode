@@ -1,6 +1,7 @@
 # Time:  O(|V| + |E|)
 # Space: O(|V| + |E|)
 
+# 886
 # Given a set of N people (numbered 1, 2, ..., N),
 # we would like to split everyone into two groups of any size.
 #
@@ -33,32 +34,60 @@
 # - dislikes[i][0] < dislikes[i][1]
 # - There does not exist i != j for which dislikes[i] == dislikes[j].
 
+# Solution: Consider the graph on N people formed by the given "dislike" edges. We want to check that each
+# connected component of this graph is bipartite. Either DFS or BFS to traverse the graph, check whether the graph
+# is bipartite by trying to coloring nodes with two colors.
+
 import collections
 
 
 class Solution(object):
-    def possibleBipartition(self, N, dislikes):
+    def possibleBipartition(self, N, dislikes): # DFS, USE THIS
         """
         :type N: int
         :type dislikes: List[List[int]]
         :rtype: bool
         """
-        adj = [[] for _ in xrange(N)]
+        graph = collections.defaultdict(list)
         for u, v in dislikes:
-            adj[u-1].append(v-1)
-            adj[v-1].append(u-1)
+            graph[u].append(v)
+            graph[v].append(u)
 
-        color = [0]*N
-        color[0] = 1
-        q = collections.deque([0])
-        while q:
-            cur = q.popleft()
-            for nei in adj[cur]:
-                if color[nei] == color[cur]:
-                    return False
-                elif color[nei] == -color[cur]:
-                    continue
-                color[nei] = -color[cur]
-                q.append(nei)
+        stk = []
+        color = {}
+        for node in xrange(1, N + 1):
+            if node not in color:
+                color[node] = 0
+                stk.append(node)
+                while stk:
+                    cur = stk.pop()
+                    for nei in graph[cur]:
+                        if nei not in color:
+                            color[nei] = 1 - color[cur]
+                            stk.append(nei)
+                        elif color[nei] == color[cur]:
+                            return False
+        return True
+
+    def possibleBipartition_bfs(self, N, dislikes):
+        graph = collections.defaultdict(list)
+        for u, v in dislikes:
+            graph[u].append(v)
+            graph[v].append(u)
+
+        q = collections.deque([])
+        color = {}
+        for node in xrange(1, N+1):
+            if node not in color:
+                color[node] = 0
+                q.append(node)
+                while q:
+                    cur = q.popleft()
+                    for nei in graph[cur]:
+                        if nei not in color:
+                            color[nei] = 1-color[cur]
+                            q.append(nei)
+                        elif color[nei] == color[cur]:
+                            return False
         return True
  

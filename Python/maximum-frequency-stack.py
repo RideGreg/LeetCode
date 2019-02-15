@@ -1,6 +1,7 @@
 # Time:  O(1)
 # Space: O(n)
 
+# 895
 # Implement FreqStack,
 # a class which simulates the operation of a stack-like data structure.
 #
@@ -42,7 +43,8 @@
 
 import collections
 
-
+# Very good: store maxFreq, so don't re-count on every pop. Store a dict by 'freq' key
+# to fast retrieve value. Store count (no need to store each id/pos) for each x value.
 class FreqStack(object):
 
     def __init__(self):
@@ -56,25 +58,77 @@ class FreqStack(object):
         :rtype: void
         """
         self.__freq[x] += 1
-        if self.__freq[x] > self.__maxfreq:
-            self.__maxfreq = self.__freq[x]
-        self.__group[self.__freq[x]].append(x)   
+        f = self.__freq[x]
+        if f > self.__maxfreq:
+            self.__maxfreq = f
+        self.__group[f].append(x)
 
     def pop(self):
         """
         :rtype: int
         """
-        x = self.__group[self.__maxfreq].pop()
+        x = self.__group[self.__maxfreq].pop() # list pop by index
         if not self.__group[self.__maxfreq]:
-            self.__group.pop(self.__maxfreq)
+            self.__group.pop(self.__maxfreq) # dict pop by key
             self.__maxfreq -= 1
         self.__freq[x] -= 1
-        if not self.__freq[x]:
-            self.__freq.pop(x)
+        #if not self.__freq[x]: # not need to cleanup
+        #    self.__freq.pop(x)
         return x
 
+# Time bad: if not maintain maxFreq, then TLE due to calculate maxFreq every pop.
+# Space bad: store every insert (ids for each x value)
+class FreqStack_ming(object):
 
-# Your FreqStack object will be instantiated and called as such:
-# obj = FreqStack()
-# obj.push(x)
-# param_2 = obj.pop()
+    def __init__(self):
+        # self.h = []
+        self.pos = collections.defaultdict(list)
+        self.id = 0
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: void
+        """
+        self.id += 1
+        self.pos[x].append(self.id)
+
+    def pop(self):
+        """
+        :rtype: int
+        """
+        ans = max(self.pos, key=lambda x: (len(self.pos[x]), self.pos[x][-1]))
+        self.pos[ans].pop()
+        if not self.pos[ans]:
+            del self.pos[ans]
+        return ans
+
+
+
+obj = FreqStack()
+obj.push(4)
+obj.push(0)
+obj.push(9)
+obj.push(3)
+obj.push(4)
+obj.push(2)
+print(obj.pop()) # 4
+obj.push(6)
+print(obj.pop()) # 6
+obj.push(1)
+print(obj.pop()) # 1
+obj.push(1)
+print(obj.pop()) # 1
+obj.push(4)
+for _ in xrange(6):
+    print(obj.pop()) # 4,2,3,9,0,4
+
+obj = FreqStack()
+obj.push(5)
+obj.push(7)
+obj.push(5)
+obj.push(7)
+obj.push(4)
+obj.push(5)
+for _ in xrange(4):
+    print(obj.pop()) # 5,7,5,4

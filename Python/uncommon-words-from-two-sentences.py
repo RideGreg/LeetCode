@@ -1,6 +1,7 @@
 # Time:  O(m + n)
 # Space: O(m + n)
 
+# 884
 # We are given two sentences A and B. 
 # (A sentence is a string of space separated words.
 # Each word consists only of lowercase letters.)
@@ -39,3 +40,5 @@ class Solution(object):
         count = collections.Counter(A.split())
         count += collections.Counter(B.split())
         return [word for word in count if count[word] == 1]
+        # alternative
+        # return filter(lambda w: count[w]==1, count)

@@ -1,4 +1,5 @@
-# find shortest paths from a "source" node to all other nodes in a weighted directed graph, producing a shortest-path tree.
+# find shortest paths from a "source" node to all other nodes in a weighted directed graph,
+# producing a shortest-path tree (a subset of edges of original tree).
 # Also apply to undirected graph which is just a directed graph with bidirectional connections.
 # BFS is actaully Dijkstra for unweighted graph.
 
@@ -12,7 +13,7 @@ class Solution(object):
         for u, v, w in edges:
             graph[u][v] = w
 
-        pq = [(0, 0)] # (dist, node) dist is the key for ordering.
+        pq = [(0, 0)] # minHeap of (dist, node) dist is the key for ordering.
         dist = [float('inf')] * N
         dist[0] = 0
 
@@ -25,11 +26,19 @@ class Solution(object):
                 # d2 is the total distance to reach 'nei' (neighbor) node.
                 d2 = d + weight
                 if d2 < dist[nei]:
-                    heapq.heappush(pq, (d2, nei))
+                    heapq.heappush(pq, (d2, nei)) # smaller dist goes to front
                     dist[nei] = d2
 
         print dist
         return
 
 Solution().dijkstra_DG([(0,1,4), (0,2,2), (1,2,3), (1,3,2), (1,4,3), (2,1,1), (2,3,4), (2,4,5), (4,3,1)], 5)
+'''
+result: dist = [0,3,2,5,6]
+       0
+      / \
+     1 = 2
+     | X |
+     3 - 4
+'''
 

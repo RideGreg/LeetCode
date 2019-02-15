@@ -1,6 +1,7 @@
 # Time:  O(max(m, n)^2)
 # Space: O(1)
 
+# 885
 # On a 2 dimensional grid with R rows and C columns,
 # we start at (r0, c0) facing east.
 #
@@ -37,7 +38,7 @@
 # - 0 <= c0 < C
 
 class Solution(object):
-    def spiralMatrixIII(self, R, C, r0, c0):
+    def spiralMatrixIII(self, R, C, r0, c0): # Ming, USE THIS
         """
         :type R: int
         :type C: int
@@ -45,6 +46,40 @@ class Solution(object):
         :type c0: int
         :rtype: List[List[int]]
         """
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        ans = [[r0, c0]]
+        n, steps = 0, 1
+        while len(ans) < R * C:
+            for _ in (0, 1):
+                dr, dc = dirs[n % 4]
+                for _ in xrange(steps):
+                    nr, nc = r0 + dr, c0 + dc
+                    if 0 <= nr < R and 0 <= nc < C:
+                        ans.append([nr, nc])
+                    r0, c0 = nr, nc
+                n += 1 # change direction
+            steps += 1
+        return ans
+
+    def spiralMatrixIII_generator(self, R, C, r0, c0):
+        def get_next(r, c):
+            n = 0
+            while True:
+                dx, dy = [(0, 1), (1, 0), (0, -1), (-1, 0)][n % 4]
+                steps = n / 2 + 1
+                for _ in xrange(steps):
+                    yield r + dx, c + dy
+                    r, c = r + dx, c + dy
+                n += 1
+
+        ans = [[r0, c0]]
+        for nx, ny in get_next(r0, c0):
+            if len(ans) == R * C:
+                return ans
+            if 0 <= nx < R and 0 <= ny < C:
+                ans.append([nx, ny])
+
+    def spiralMatrixIII2_kamyu(self, R, C, r0, c0):
         r, c = r0, c0
         result = [[r, c]]
         x, y, n, i = 0, 1, 0, 0
@@ -55,3 +90,8 @@ class Solution(object):
             if i == n//2+1:
                 x, y, n, i = y, -x, n+1, 0
         return result
+
+
+print(Solution().spiralMatrixIII(1,1,0,0)) # [[0,0]]
+print(Solution().spiralMatrixIII(1,4,0,0)) # [[0,0],[0,1],[0,2],[0,3]]
+

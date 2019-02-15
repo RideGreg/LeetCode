@@ -1,6 +1,7 @@
 # Time:  O(n * l)
 # Space: O(n)
 
+# 893
 # You are given an array A of strings.
 #
 # Two strings S and T are special-equivalent
@@ -42,6 +43,8 @@
 # - All A[i] have the same length.
 # - All A[i] consist of only lowercase letters.
 
+# Solution: two ways to generate a hash key from a string
+
 class Solution(object):
     def numSpecialEquivGroups(self, A):
         """
@@ -55,3 +58,7 @@ class Solution(object):
             return tuple(result)
 
         return len({count(word) for word in A})
+
+    # worse Time complexity using sort
+    def numSpecialEquivGroups_sort(self, A):
+        return len(set( ''.join( sorted(a[0::2])+sorted(a[1::2]) ) for a in A))

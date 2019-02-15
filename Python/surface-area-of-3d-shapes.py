@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(1)
 
+# 892
 # On a N * N grid, we place some 1 * 1 * 1 cubes.
 #
 # Each value v = grid[i][j] represents a tower of v cubes
@@ -34,7 +35,7 @@
 # - 0 <= grid[i][j] <= 50
 
 class Solution(object):
-    def surfaceArea(self, grid):
+    def surfaceArea(self, grid): # USE THIS: minus joint surface, 36 ms
         """
         :type grid: List[List[int]]
         :rtype: int
@@ -49,3 +50,31 @@ class Solution(object):
                 if j:
                     result -= min(grid[i][j], grid[i][j-1])*2
         return result
+
+    # look at 4 neighbors of each cell, add contribution if higher than neighbor. Avoid double count
+    # 56 ms
+    def surfaceArea2(self, grid):
+        n, ans = len(grid), 0
+        for i in xrange(n):
+            for j in xrange(n):
+                if grid[i][j]:
+                    ans += 2
+                    for nx, ny in [(i-1,j),(i,j-1),(i+1,j),(i,j+1)]:
+                        if 0<=nx<n and 0<=ny<n:
+                            nei_val = grid[nx][ny]
+                        else:
+                            nei_val = 0
+                        ans += max(0, grid[i][j]-nei_val)
+        return ans
+
+    # add difference between neighboring cells: iterate more times
+    def surfaceArea3(self, grid):
+        ans = 0
+        for row in grid:
+            ans += 2*sum(c>0 for c in row)
+            rrow = [0]+row+[0]
+            ans += sum(abs(rrow[i]-rrow[i+1]) for i in xrange(len(rrow)-1))
+        for col in zip(*grid):
+            col = (0,)+col+(0,) # KENG: zip's result is tuple which cannot concatenate to list
+            ans += sum(abs(col[i]-col[i+1]) for i in xrange(len(col)-1))
+        return ans
