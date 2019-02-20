@@ -36,6 +36,11 @@
 # - 0 <= profit[i] <= 100
 # - 1 <= group.length = profit.length <= 100
 
+# Solution: Dynamic Programming
+# We don't care if the profit of the schemes > P and the number of people required > G, so the bounds are small enough to use DP.
+# Keep track of cur[p][g] (the # of schemes with profitability p and requiring g gang members, except the last row when p==P,
+# it is all schemes profit at least P instead of exactly P). For each new scheme (p, g), we update the DP table.
+
 import itertools
 
 
@@ -48,20 +53,16 @@ class Solution(object):
         :type profit: List[int]
         :rtype: int
         """
-        dp = [[0 for _ in xrange(G+1)] for _ in xrange(P+1)]
+        dp = [[0]*(G+1) for _ in xrange(P+1)]
         dp[0][0] = 1
         for p, g in itertools.izip(profit, group):
-            for i in reversed(xrange(P+1)):
-                for j in reversed(xrange(G-g+1)):
-                    dp[min(i+p, P)][j+g] += dp[i][j]
+            for i in xrange(P, -1, -1):
+                for j in xrange(G-g, -1, -1):
+                    i2, j2 = min(i+p, P), j+g
+                    dp[i2][j2] += dp[i][j]
         return sum(dp[P]) % (10**9 + 7)
 
-    def profitableSchemes(self, G, P, group, profit): # same as the above, just easy to understand
-        '''
-        We don't care if the profit of the schemes > P and the number of people required > G, so the bounds are small enough to use DP.
-        Keep track of cur[p][g] (the # of schemes with profitability p and requiring g gang members, except the last row when p==P,
-        it is all schemes profit at least P instead of exactly P). For each new scheme (p, g), we update the DP table.
-        '''
+    def profitableSchemes(self, G, P, group, profit): # same as the above, traverse forward
         dp = [[0] * (G + 1) for _ in xrange(P + 1)]
         dp[0][0] = 1
 

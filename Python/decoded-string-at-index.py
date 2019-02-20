@@ -39,6 +39,13 @@
 # 1 <= K <= 10^9
 # The decoded string is guaranteed to have less than 2^63 letters.
 
+# Solution: when a decoded string is equal to some word with 'size' length repeated some number of times,
+# the char at the index K as it is for the index (K % size).
+
+# First, find a long enough decoded string where size >= K. The goal is to find when size == K, in that case
+# the last char is answer. If size > K, go backwords to shrink size until size == K. Keep K shrinked too
+# (K %= size) using the above insight. In reality, using K%size==0 instead of size==K, because K may be reduce to 0.
+
 class Solution(object):
     def decodeAtIndex(self, S, K):
         """
@@ -56,15 +63,16 @@ class Solution(object):
             if size >= K: break
 
         for c in S[i::-1]:
-            # keep reducing K to (K % size), as the string size may shrink due to repeatedness
-            K %= size
-            if K == 0 and c.isalpha():
+            if K % size == 0 and c.isalpha():
                 return c
 
             if c.isdigit():
                 size /= int(c)
             else:
                 size -= 1
+            # keep reducing K to (K % size), as the string size may shrink due to repeatedness
+            K %= size
+
 
     # Worse time complexity: recursion may have much more than n calculation, n is the length of S.
     def decodeAtIndex_mingTest(self, S, K):
@@ -81,6 +89,8 @@ class Solution(object):
                     z = K%(cur/mult)
                     if z == 0: z = cur/mult
                     return self.decodeAtIndex(S[:i], z)
+
+print(Solution().decodeAtIndex('ha22', 5))
 
 print(Solution().decodeAtIndex('ha22', 1))
 print(Solution().decodeAtIndex('ha22', 2))

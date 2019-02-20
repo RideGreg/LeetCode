@@ -40,14 +40,15 @@ class Solution(object):
         :type H: int
         :rtype: int
         """
-        def possible(piles, H, K):
-            return sum((pile-1)//K+1 for pile in piles) <= H
-
-        left, right = 1, max(piles)
-        while left <= right:
-            mid = left + (right-left)//2
-            if possible(piles, H, mid):
-                right = mid-1
+        l, r = 1, max(piles)
+        while l <= r:
+            m = (l+r)/2
+            if sum( -(-p/m) for p in piles) <= H:
+                # or sum( (p-1)/m + 1 for p in piles) <= H:
+                r = m
             else:
-                left = mid+1
-        return left
+                l = m+1
+        return l
+
+
+print(Solution().minEatingSpeed([3,6,7,11], 8))

@@ -48,7 +48,10 @@ import collections
 import heapq
 
 class Solution(object):
-    # difference compared to classical Dijkstra: record # of reached nodes on EVERY directed edge (where and how)
+    # why use Dijkstra? 1. Need to know the # of moves travelled when reaching a node. 2. Shortest path will
+    # have more moves left at an original node and can reach mode nodes, thus we don't need to explore longer path.
+    # 3. Dijkstra actually checked all edges, which is also needed to solve this problem.
+    # Difference compared to classical Dijkstra: record # of reached nodes on EVERY directed edge (where and how)
     def reachableNodes(self, edges, M, N):  # USE THIS, more clear
         graph = [{} for _ in xrange(N)]
         for u, v, w in edges:
@@ -71,8 +74,8 @@ class Solution(object):
                 # there are on this edge. prop[1] is the maximum nodes we can reach on this directed edge.
                 prop[1] = min(prop[0], M - d)
 
-                d2 = d + prop[0] + 1 # total distance to reach 'nei' node
-                if d2 < dist[nei]:
+                d2 = d + prop[0] + 1 # total distance to reach 'nei' node. KENG: don't forget +1
+                if d2 <= M and d2 < dist[nei]:
                     heapq.heappush(minHeap, (d2, nei))
                     dist[nei] = d2
 

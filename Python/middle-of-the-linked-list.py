@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 876
 # Given a non-empty, singly linked list with head node head,
 # return a middle node of linked list.
 #
@@ -37,4 +38,12 @@ class Solution(object):
         slow, fast = head, head
         while fast and fast.next:
             slow, fast = slow.next, fast.next.next
+        return slow
+
+    def middleNode2(self, head):
+        fast, slow = head, head
+        while fast.next:
+            fast, slow = fast.next, slow.next
+            if fast.next:
+                fast = fast.next
         return slow

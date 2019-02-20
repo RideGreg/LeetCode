@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n)
 
+# 877
 # Alex and Lee play a game with piles of stones.
 # There are an even number of piles arranged in a row,
 # and each pile has a positive integer number of stones piles[i].
@@ -36,7 +37,7 @@
 
 # The solution is the same as https://leetcode.com/problems/predict-the-winner/description/
 class Solution(object):
-    def stoneGame(self, piles):
+    def stoneGame(self, piles): # USE THIS, easy to understand
         """
         :type piles: List[int]
         :rtype: bool
@@ -44,7 +45,25 @@ class Solution(object):
         if len(piles) % 2 == 0 or len(piles) == 1:
             return True
 
-        dp = [0] * len(piles);
+        prefixsum = [0]
+        for p in piles:
+            prefixsum.append(prefixsum[-1] + p)
+
+        n = len(piles)
+        dp = [0] * n
+        for i in reversed(xrange(n)):
+            for j in xrange(i, n):
+                if i == j:
+                    dp[j] = piles[j]
+                else:
+                    dp[j] = prefixsum[j + 1] - prefixsum[i] - min(dp[j], dp[j - 1])
+        return dp[-1] * 2 > prefixsum[-1]
+
+    def stoneGame_kamyu(self, piles):
+        if len(piles) % 2 == 0 or len(piles) == 1:
+            return True
+
+        dp = [0] * len(piles)
         for i in reversed(xrange(len(piles))):
             dp[i] = piles[i]
             for j in xrange(i+1, len(piles)):
