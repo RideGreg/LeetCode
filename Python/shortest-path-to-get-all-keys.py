@@ -74,20 +74,19 @@ class Solution(object):
 
         def bfs(source):
             r, c = locations[source]
-            lookup = [[False]*(len(grid[0])) for _ in xrange(len(grid))]
-            lookup[r][c] = True
+            lookup = {(r,c)}
             q = collections.deque([(r, c, 0)])
             dist = {}
             while q:
                 r, c, d = q.popleft()
-                if source != grid[r][c] != '.':
+                if source != grid[r][c] and grid[r][c] != '.':
                     dist[grid[r][c]] = d
                     continue # Stop walking from here if we reach a point of interest
-                for direction in directions:
-                    cr, cc = r+direction[0], c+direction[1]
+                for dr, dc in directions:
+                    cr, cc = r+dr, c+dc
                     if (0 <= cr < len(grid)) and (0 <= cc < len(grid[cr])) and \
-                        grid[cr][cc] != '#' and not lookup[cr][cc]:
-                        lookup[cr][cc] = True
+                        grid[cr][cc] != '#' and (cr,cc) not in lookup:
+                        lookup.add((cr,cc))
                         q.append((cr, cc, d+1))
             return dist
 
@@ -97,27 +96,29 @@ class Solution(object):
                      for c, place in enumerate(row)
                      if place not in '.#'}
         # The distance from source to each point of interest
-        dists = {place: bfs(place) for place in locations}
+        graph = {place: bfs(place) for place in locations}
 
         # Dijkstra's algorithm
         min_heap = [(0, '@', 0)]  # distance, place, state
         best = collections.defaultdict(lambda: float("inf"))
         best['@', 0] = 0
-        target_state = 2**sum(place.islower() for place in locations)-1
+        target_state = 2**sum(place.islower() for place in locations)-1 # all keys obtained
         while min_heap:
             cur_d, place, state = heapq.heappop(min_heap)
-            if best[place, state] < cur_d:
-                continue
             if state == target_state:
                 return cur_d
-            for dest, d in dists[place].iteritems():
+
+            if best[place, state] < cur_d:
+                continue
+
+            for dest, d in graph[place].iteritems():
                 next_state = state
                 if dest.islower(): #key
                     next_state |= (1 << (ord(dest)-ord('a')))
                 elif dest.isupper(): #lock
                     if not (state & (1 << (ord(dest)-ord('A')))): #no key
                         continue
-                if cur_d+d < best[dest, next_state]:
+                if cur_d+d < best[dest, next_state]: # ok to go back to a visited cell as long as state is different
                     best[dest, next_state] = cur_d+d
                     heapq.heappush(min_heap, (cur_d+d, dest, next_state))
         return -1
@@ -178,4 +179,17 @@ class Solution(object):
         return ans if ans < R * C + 1 else -1
 
 print(Solution().shortestPathAllKeys(["@.a.#","###.#","b.A.B"]))
+# dists = {'a': {'A':4, '@':2, 'B':4}, #no direct access to 'b'
+#          '@': {'a':2},
+#          'B': {'a':4, 'A':2},
+#          'b': {'A':2},
+#          'A': {'a':4, 'b':2, 'B':2}}
+#
+# Generate a weighted, undirected graph:
+#     2
+#   @ - a
+#     4/ \4
+# b - A - B
+#   2   2
+
 print(Solution().shortestPathAllKeys(["@..aA","..B#.","....b"]))

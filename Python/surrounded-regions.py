@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(m + n)
-#
+
+# 130
 # Given a 2D board containing 'X' and 'O', capture all regions surrounded by 'X'.
 #
 # A region is captured by flipping all 'O's into 'X's in that surrounded region.
@@ -17,6 +18,11 @@
 # X X X X
 # X O X X
 #
+
+# Solution: There are 2 types of 'X': surrounded and connected-to-boarder. It is difficult to
+# find surrounded 'X' by DFS/BFS because it can only be determined later if the 'X' connects to
+# boarder. A good way is to start with four sides and find all 'X' connecting to boarder, mark
+# them using another letter, then all remaining 'X' is surrounded 'X'.
 
 import collections
 

@@ -42,6 +42,12 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 
 * [Shell Script](https://github.com/RideGreg/LeetCode#shell-script)
 
+
+## Python
+
+* [Python Language](https://github.com/RideGreg/LeetCode#python-language)
+
+
 ## Reference
 
 * C++
@@ -1054,3 +1060,9 @@ xxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/lo
 193 | [Valid Phone Numbers](https://leetcode.com/problems/valid-phone-numbers/) | [Shell](./Shell/valid-phone-numbers.sh) | _O(n)_ | _O(1)_    | Easy           ||
 194 | [Transpose File](https://leetcode.com/problems/transpose-file/) | [Shell](./Shell/transpose-file.sh) | _O(n^2)_   | _O(n^2)_        | Medium         ||
 195 | [Tenth Line](https://leetcode.com/problems/tenth-line/) | [Shell](./Shell/tenth-line.sh)    | _O(n)_          | _O(1)_          | Easy           ||
+
+
+## Python Language
+|  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
+|-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
+xxx | [Python Method] | [Python](./Python/python-method.py) | | | | |

@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 872
 # Consider all the leaves of a binary tree.
 # From left to right order,
 # the values of those leaves form a leaf value sequence.
@@ -25,19 +26,32 @@ class TreeNode(object):
 
 class Solution(object):
     def leafSimilar(self, root1, root2):
+        def getLeaf(root, seq):
+            if not root: return seq
+            if not root.left and not root.right:
+                seq.append(root.val)
+                return seq
+
+            seq = getLeaf(root.left, seq)
+            seq = getLeaf(root.right, seq)
+            return seq
+
+        return getLeaf(root1, []) == getLeaf(root2, [])
+
+    def leafSimilar_LeetCodeOfficial(self, root1, root2): # USE iterator
         """
         :type root1: TreeNode
         :type root2: TreeNode
         :rtype: bool
         """
         def dfs(node):
-            if not node:
-                return
-            if not node.left and not node.right:
-                yield node.val
-            for i in dfs(node.left):
-                yield i
-            for i in dfs(node.right):
-                yield i
+            if node:
+                if not node.left and not node.right:
+                    yield node.val
+                for i in dfs(node.left):
+                    yield i
+                for i in dfs(node.right):
+                    yield i
         return all(a == b for a, b in
                    itertools.izip_longest(dfs(root1), dfs(root2)))
+        # or return list(dfs(root1)) == list(dfs(root2))

@@ -1,6 +1,9 @@
 # Time:  O((logn)^2) = O(1) due to n is a 32-bit number
+#          There are logN different candidate powers of 2,
+#          and each comparison has O(logN) time complexity.
 # Space: O(logn) = O(1)
 
+# 869
 # Starting with a positive integer N,
 # we reorder the digits in any order (including the original order)
 # such that the leading digit is not zero.
@@ -49,6 +52,10 @@ class Solution(object):
 
     def reorderedPowerOf2_permutation(self, N):  # TLE
         """
+        Time Complexity: O((logN)!*logN). Note that logN is the number of digits in the binary representation of N.
+        For each of (logN)! permutations of the digits of N, we need to check that it is a power of 2 in O(logN) time.
+        Space Complexity: O(logN), the space used by A (or cand in Python).
+
         In the last line, 'for cand in itertools.permutations(str(N))' will
         iterate through the six possibilities cand = ('1', '2', '8'),
         cand = ('1', '8', '2'), cand = ('2', '1', '8'), and so on.

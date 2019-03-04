@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 865
 # Given a binary tree rooted at root, the depth of each node is
 # the shortest distance to the root.
 # A node is deepest if it has the largest depth possible among
@@ -46,13 +47,14 @@ class Solution(object):
             if not node:
                 return (None, 0)
 
-            l, r = dfs(node.left), dfs(node.right)
-            if l[1] > r[1]:
-                return (l[0], l[1] + 1)
-            elif l[1] < r[1]:
-                return (r[0], r[1] + 1)
+            lNode, lDepth = dfs(node.left)
+            rNode, rDepth = dfs(node.right)
+            if lDepth > rDepth:
+                return (lNode, lDepth + 1)
+            elif lDepth < rDepth:
+                return (rNode, rDepth + 1)
             else:
-                return (node, l[1] + 1)
+                return (node, lDepth + 1)
 
         return dfs(root)[0]
 
