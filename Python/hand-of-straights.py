@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 846
 # Alice has a hand of cards, given as an array of integers.
 #
 # Now she wants to rearrange the cards into groups
@@ -35,28 +36,40 @@ except NameError:
 
 
 class Solution(object):
-    def isNStraightHand(self, hand, W):
+    # use heap if need min value continuously. heap can only remove min/max, not key based.
+    def isNStraightHand(self, hand, W): # USE THIS: O(nlogn) 160ms
         """
         :type hand: List[int]
         :type W: int
         :rtype: bool
         """
-        if len(hand) % W:
-            return False
+        if len(hand) % W: return False
 
-        counts = collections.defaultdict(int)
-        for i in hand:
-            counts[i] += 1
+        counts = collections.Counter(hand)
+        heapq.heapify(hand)
 
-        min_heap = hand[:]
-        heapq.heapify(min_heap)
-        for _ in xrange(len(min_heap)//W):
-            while counts[min_heap[0]] == 0:
-                heapq.heappop(min_heap)
-            start = heapq.heappop(min_heap)
-            for _ in xrange(W):
-                counts[start] -= 1
-                if counts[start] < 0:
+        for _ in xrange(len(hand)//W):
+            while counts[hand[0]] == 0:
+                heapq.heappop(hand)
+            start = heapq.heappop(hand)
+
+            for i in xrange(start, start+W):
+                if counts[i] <= 0:
                     return False
-                start += 1
+                counts[i] -= 1
+        return True
+
+
+    def isNStraightHand_slow(self, hand, W): # O(n^2), 920ms
+        if len(hand) % W: return False
+
+        import collections
+        cnts = collections.Counter(hand)
+        for _ in xrange(len(hand)/W):
+            lead = min(cnts)
+            for i in xrange(lead, lead+W):
+                if cnts[i] <= 0: return False
+                cnts[i] -= 1
+                if cnts[i] == 0:
+                    del cnts[i]
         return True

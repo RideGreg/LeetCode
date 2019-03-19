@@ -1,6 +1,9 @@
+# -*- encoding=utf-8 -*-
+
 # Time:  O(n)
 # Space: O(n)
 
+# 862
 # Return the length of the shortest, non-empty,
 # contiguous subarray of A with sum at least K.
 # If there is no non-empty subarray with sum at least K, return -1.
@@ -35,6 +38,8 @@ Motivated by that equation, let opt(y) be the largest x such that P[x] <= P[y] -
 
 Algorithm
 Maintain a "monoqueue" of indices of P: a deque of indices x_0, x_1, ... such that P[x_0], P[x_1], ... is increasing.
+对每一个新元素，检查queue中保留的起始端元素，这些起始端元素越靠前区间和越大但区间越宽，往后区间越来越窄但区间和变小(必须>=K).
+
 When adding a new index y to the monoqueue, we'll pop all x_i from the end of the deque where P[x_i] >= P[y]
 so that P[x_0], P[x_1], ..., P[y] will be increasing.
 If P[y] >= P[x_0] + K, then we don't need to consider x_0 again, and we can pop it from the front of the deque.
@@ -67,7 +72,8 @@ class Solution(object):
                 monoq.pop()
 
             while monoq and Py - P[monoq[0]] >= K:
-                ans = min(ans, y - monoq.popleft())
+                x = monoq.popleft()
+                ans = min(ans, y - x)
 
             monoq.append(y)
 

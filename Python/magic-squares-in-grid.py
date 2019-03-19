@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(1)
 
+# 840
 # A 3 x 3 magic square is a 3 x 3 grid filled with
 # distinct numbers from 1 to 9 such that each row, column,
 # and both diagonals all have the same sum.
@@ -38,11 +39,22 @@ except NameError:
 
 
 class Solution(object):
-    def numMagicSquaresInside(self, grid):
+    def numMagicSquaresInside(self, grid): # USE THIS: clean code
         """
         :type grid: List[List[int]]
         :rtype: int
         """
+        def isMagic(r, c):
+            a, b, c, d, e, f, g, h, i = grid[r][c], grid[r][c + 1], grid[r][c + 2], \
+                                        grid[r + 1][c], grid[r + 1][c + 1], grid[r + 1][c + 2], \
+                                        grid[r + 2][c], grid[r + 2][c + 1], grid[r + 2][c + 2]
+            return (a+b+c == d+e+f == g+h+i == a+d+g == b+e+h == c+f+i == a+e+i == c+e+g == 15) \
+                   and (sorted([a, b, c, d, e, f, g, h, i]) == range(1, 10))
+
+        return sum(isMagic(r, c) for r in xrange(len(grid) - 2) for c in xrange(len(grid[0]) - 2))
+
+
+    def numMagicSquaresInside_kamyu(self, grid):
         def magic(grid, r, c):
             expect = k * (k**2+1) // 2
             nums = set()
@@ -70,3 +82,5 @@ class Solution(object):
                 if magic(grid, r, c):
                     result += 1
         return result
+
+print(Solution().numMagicSquaresInside([[4,3,8,4],[9,5,1,9],[2,7,6,2]]))

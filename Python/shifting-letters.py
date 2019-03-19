@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 848
 # We have a string S of lowercase letters, and an integer array shifts.
 #
 # Call the shift of a letter, the next letter in the alphabet,
@@ -41,3 +42,13 @@ class Solution(object):
             result.append(chr(ord('a') + (index+times) % 26))
             times = (times-shifts[i]) % 26
         return "".join(result)
+
+    def shiftingLetters_ming(self, S, shifts):
+        n = len(shifts)
+        ans = [None]*n
+        for i in xrange(n-1, -1, -1):
+            if i < n-1:
+                shifts[i] += shifts[i+1]
+            index = ord(S[i])-ord('a')
+            ans[i] = chr(ord('a') + (index + shifts[i])%26)
+        return ''.join(ans)

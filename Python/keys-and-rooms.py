@@ -1,6 +1,7 @@
-# Time:  O(n!)
+# Time:  O(n+e), where n is # of rooms, e is total # of keys.
 # Space: O(n)
 
+# 841
 # There are N rooms and you start in room 0.
 # Each room has a distinct number in 0, 1, 2, ..., N-1,
 # and each room may have some keys to access the next room.
@@ -42,7 +43,7 @@ class Solution(object):
         :type rooms: List[List[int]]
         :rtype: bool
         """
-        lookup = set([0])
+        lookup = {0}
         stack = [0]
         while stack:
             node = stack.pop()
@@ -53,3 +54,15 @@ class Solution(object):
                         return True
                     stack.append(nei)
         return len(lookup) == len(rooms)
+
+    def canVisitAllRooms_dfsRecur(self, rooms):
+        def dfs(x):
+            for child in rooms[x]:
+                if child not in visited:
+                    visited.add(child)
+                    dfs(child)
+
+        n = len(rooms)
+        visited = {0}
+        dfs(0)
+        return len(visited) == n

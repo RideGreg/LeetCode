@@ -29,7 +29,9 @@
 # - The total area covered by all rectangles will never exceed 2^63 - 1 and
 #   thus will fit in a 64-bit signed integer.
 
-
+# Segment Tree
+# As in solution below "Line Sweep", we want to support add(x1, x2), remove(x1, x2), and query(). This is
+# the perfect setting for using a segment tree.
 class SegmentTreeNode(object):
     def __init__(self, start, end):
         self.start, self.end = start, end
@@ -89,3 +91,97 @@ class Solution(object):
             cur_x_sum = st.update(X, Xi[x1], Xi[x2], typ)
             cur_y = y
         return result % (10**9+7)
+
+# Line Sweep
+# Time Complexity: O(N^2*logN), where N is the number of rectangles.
+# Space Complexity: O(N).
+
+# Imagine we pass a horizontal line from bottom to top over the shape. We have some active intervals on this horizontal
+# line, which gets updated twice for each rectangle. In total, there are 2 * N events, and we can update our
+# (up to N) active horizontal intervals for each update.
+#
+# Algorithm
+#
+# For a rectangle like rec = [1,0,3,1], the first update is to add [1, 3] to the active set at y = 0, and the second
+# update is to remove [1, 3] at y = 1. Note that adding and removing respects multiplicity - if we also added
+# [0, 2] at y = 0, then removing [1, 3] at y = 1 will still leave us with [0, 2] active.
+#
+# This gives us a plan: create these two events for each rectangle, then process all the events in sorted order of
+# y. The issue now is deciding how to process the events add(x1, x2) and remove(x1, x2) such that we are able to
+# query() the total horizontal length of our active intervals.
+#
+# We can use the fact that our remove(...) operation will always be on an interval that was previously added.
+# Let's store all the (x1, x2) intervals in sorted order. Then, we can query() in linear time using a technique
+# similar to a classic LeetCode problem, Merge Intervals.
+class Solution2(object):
+    def rectangleArea(self, rectangles):
+        # Populate events
+        OPEN, CLOSE = 0, 1
+        events = []
+        for x1, y1, x2, y2 in rectangles:
+            events.append((y1, OPEN, x1, x2))
+            events.append((y2, CLOSE, x1, x2))
+        events.sort()
+
+        def query():
+            ans = 0
+            cur = -1
+            for x1, x2 in active:
+                cur = max(cur, x1)
+                ans += max(0, x2 - cur)
+                cur = max(cur, x2)
+            return ans
+
+        active = []
+        cur_y = events[0][0]
+        ans = 0
+        for y, typ, x1, x2 in events:
+            # For all vertical ground covered, update answer
+            ans += query() * (y - cur_y)
+
+            # Update active intervals
+            if typ is OPEN:
+                active.append((x1, x2))
+                active.sort()
+            else:
+                active.remove((x1, x2))
+
+            cur_y = y
+
+        return ans % (10**9 + 7)
+
+
+# Principle of Inclusion-Exclusion
+# Time Complexity: O(N * 2^N), where N is the number of rectangles.
+# Space Complexity: O(N).
+
+# Say we have two rectangles, AA and BB. The area of their union is:
+# |A union B| = |A| + |B| - |A intersect B|
+#
+# Say we have three rectangles, A, B, CA,B,C. The area of their union is:
+# |A union B union C| = |A| + |B| +|C| - |A intersect B| - |A intersect C| - |B intersect C| + |A intersect B intersect C|
+#
+# From Rectangle Area I, we know that the intersection of any axis-aligned rectangles is another axis-aligned rectangle (or nothing).
+# For every subset of {1,2,...N}, calculate their intersection of rectangles and its area. Then add (or subtract) to total.
+class Solution3(object):
+    def rectangleArea(self, rectangles):
+        import itertools
+        def intersect(rec1, rec2):
+            return [max(rec1[0], rec2[0]),
+                    max(rec1[1], rec2[1]),
+                    min(rec1[2], rec2[2]),
+                    min(rec1[3], rec2[3])]
+
+        def area(rec):
+            dx = max(0, rec[2] - rec[0])
+            dy = max(0, rec[3] - rec[1])
+            return dx * dy
+
+        ans = 0
+        for size in xrange(1, len(rectangles) + 1):
+            for group in itertools.combinations(rectangles, size):
+                ans += (-1) ** (size + 1) * area(reduce(intersect, group))
+
+        return ans % (10**9 + 7)
+
+print(Solution().rectangleArea([[0,0,4,2],[2,0,4,3],[2,0,5,1]])) # 11

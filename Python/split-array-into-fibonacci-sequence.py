@@ -1,6 +1,7 @@
 # Time:  O(n^3)
 # Space: O(n)
 
+# 842
 # Given a string S of digits, such as S = "123456579",
 # we can split it into a Fibonacci-like sequence [123, 456, 579].
 #
@@ -46,6 +47,12 @@
 # - 1 <= S.length <= 200
 # - S contains only digits.
 
+
+# Solution: Brute Force
+# The first two elements of the array uniquely determine the rest of the sequence.
+# For each of the first two elements, assuming they have no leading zero, let's iterate through the rest of the string.
+# At each stage, we expect a number less than or equal to 2^31 - 1 that starts with the sum of the two previous numbers.
+
 try:
     xrange          # Python 2
 except NameError:
@@ -53,11 +60,35 @@ except NameError:
 
 
 class Solution(object):
-    def splitIntoFibonacci(self, S):
+    def splitIntoFibonacci(self, S): # 20ms
         """
         :type S: str
         :rtype: List[int]
         """
+        for i in xrange(min(10, len(S)-2)):
+            a = S[:i+1]
+            if a.startswith('0') and a != '0': break
+            a = int(a)
+            for j in xrange(i+1, min(i+10, len(S)-1)):
+                b = S[i+1:j+1]
+                if b.startswith('0') and b != '0': break
+                b = int(b)
+                fib = [a, b]
+                k = j+1
+                while k < len(S):
+                    nxt = fib[-1] + fib[-2]
+                    nxtS = str(nxt)
+                    if nxt <= 2**31-1 and S[k:].startswith(nxtS):
+                        k += len(nxtS)
+                        fib.append(nxt)
+                    else:
+                        break
+                else:
+                    if len(fib) >= 3:
+                        return fib
+        return []
+
+    def splitIntoFibonacci_kamyu(self, S):
         def startswith(S, k, x):
             y = 0
             for i in xrange(k, len(S)):
@@ -93,3 +124,51 @@ class Solution(object):
             if a == 0:
                 break
         return []
+
+    # Bad time complexity 240 ms, try to determine first 3 numbers in fib sequence at once.
+    # repeat partition with same first number ...
+    # not good as the official solution which calculates each first number only once
+    def splitIntoFibonacci_mingContest(self, S):
+        def isF(ss):
+            for i in xrange(1, min(11, len(ss)-1)):
+                for j in xrange(i+1, len(ss)):
+                    d1, d2, d3 = ss[:i], ss[i:j], ss[j:]
+                    fail = False
+                    for d in (d1,d2,d3):
+                        if len(d)>1 and d[0]=='0' or int(d)>2147483647:
+                            fail = True
+                            break
+                    if fail: continue
+                    if int(d1)+int(d2)==int(d3):
+                        #print '{} {} {}'.format(d1, d2, d3)
+                        return [int(d1),int(d2),int(d3)]
+            return []
+
+        if len(S)<3: return False
+        ans = []
+        for i in xrange(3, min(31, len(S)+1)):
+            ans = []
+            ret = isF(S[:i])
+            if ret:
+                ans = ret
+                d2, d3 = ret[1], ret[2]
+                ok = True
+                while i < len(S) and ok:
+                    if d2+d3 > 2147483647:
+                        ok = False
+                        break
+                    nd = str(d2 + d3)
+                    if i + len(nd) <= len(S) and nd == S[i:i+len(nd)]:
+                        i += len(nd)
+                        d2, d3 = d3, d2+d3
+                        ans.append(d3)
+                    else:
+                        ok = False
+                if i==len(S) and ok: return ans
+        return ans
+
+print Solution().splitIntoFibonacci('123456579') # [123, 456, 579]
+print Solution().splitIntoFibonacci('11235813') # [1, 1, 2, 3, 5, 8, 13]
+print Solution().splitIntoFibonacci('112358130') # []
+print Solution().splitIntoFibonacci('0123') # []
+print Solution().splitIntoFibonacci('1101111') # [11, 0, 11, 11]

@@ -1,6 +1,7 @@
 # Time:  O(m + n)
 # Space: O(1)
 
+# 844
 # Given two strings S and T, return if they are equal
 # when both are typed into empty text editors. # means a backspace character.
 #
@@ -57,3 +58,15 @@ class Solution(object):
 
         return all(x == y for x, y in
                    itertools.izip_longest(findNextChar(S), findNextChar(T)))
+
+    # Time O(m+n), worse Space O(m+n)
+    def backspaceCompare_stack(self, S, T):
+        def build(s):
+            stk = []
+            for c in s:
+                if c != '#':
+                    stk.append(c)
+                elif stk:
+                    stk.pop()
+            return stk
+        return build(S) == build(T)

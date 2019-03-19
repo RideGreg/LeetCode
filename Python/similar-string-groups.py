@@ -1,6 +1,8 @@
-# Time:  O(n^2 * l) ~ O(n * l^4)
-# Space: O(n) ~ O(n * l^3)
+# Time:  min(O(n^2 * l), O(n * l^3)), where n is # of words, l is the length of each word.
+# Space: O(n) if n < l^2 (union find storage); or O(n * l^3) if n >= l^2, for each of nl^2
+#        neighbors we store a word of length l.
 
+# 839
 # Two strings X and Y are similar if we can swap two letters
 # (in different positions) of X, so that it equals Y.
 #
@@ -32,6 +34,31 @@
 # - All words in A consist of lowercase letters only.
 # - All words in A have the same length and are anagrams of each other.
 # - The judging time limit has been increased for this question.
+
+
+# Solution: Union-Find, but piecewise union strategy
+#
+# Let W = A[0].length. We can determine in O(W) time, whether two words from A are similar.
+#
+# One attempt is brute force: for each pair of words, draw an edge between the words if they are similar.
+# We can do this in O(N^2 W) time. After, finding the # of connected components can be done in O(N^2) time
+# naively (each node has up to N-1 edges), (or O(N) w/ a union-find structure.) Total complexity is O(N^2 W).
+#
+# Another attempt is to enumerate all neighbors of a word. A word has up to 2CW neighbors, and if a
+# neighbor is a given word, that word and neighbor are connected by an edge. In this way, we can build
+# the graph in O(N W^3) time, and again take O(N^2) or O(N) time to analyze the # of connected components.
+#
+# One insight is that between these two approaches, we can choose which approach works better. If we have
+# very few words, we want to use the first approach; if we have very short words, we want to use the second
+# approach. We'll piecewise add these two approaches (with complexity O(N^2 W) and O(N W^3)), to create
+# an approach with O(NW min(N,W^2)) complexity.
+#
+# There are a few challenges involved in this problem, but each challenge is relatively straightforward.
+#
+# - Use a helper function similar(word1, word2) that is true if and only if two given words are similar.
+# - Enumerate all neighbors of a word, and discover when it is equal to a given word.
+# - Use either a union-find structure or a depth-first search, to calculate the # of connected components
+# of the underlying graph.
 
 import collections
 import itertools
@@ -83,18 +110,15 @@ class Solution(object):
                 if isSimilar(word1, word2):
                     union_find.union_set(i1, i2)
         else:
-            buckets = collections.defaultdict(list)
-            lookup = set()
+            buckets = collections.defaultdict(set)
             for i in xrange(len(A)):
                 word = list(A[i])
-                if A[i] not in lookup:
-                    buckets[A[i]].append(i)
-                    lookup.add(A[i])
                 for j1, j2 in itertools.combinations(xrange(L), 2):
                     word[j1], word[j2] = word[j2], word[j1]
-                    buckets["".join(word)].append(i)
+                    buckets["".join(word)].add(i)
                     word[j1], word[j2] = word[j2], word[j1]
-            for word in A:  # Time:  O(n * l^4)
-                for i1, i2 in itertools.combinations(buckets[word], 2):
-                    union_find.union_set(i1, i2)
+
+            for i, word in enumerate(A):
+                for j in buckets[word]:
+                    union_find.union_set(i, j)
         return union_find.size()

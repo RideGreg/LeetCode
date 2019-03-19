@@ -1,11 +1,12 @@
 # Time:  O(n)
 # Space: O(1)
 
-# Given an integer n, count all numbers with unique digits, x, where 0 <= x <= 10n.
+# 357
+# Given an integer n, count all numbers with unique digits, x, where 0 <= x < 10^n.
 #
 # Example:
-# Given n = 2, return 91. (The answer should be the total numbers in the range of 0 <= x <= 100,
-# excluding [11,22,33,44,55,66,77,88,99,100])
+# Given n = 2, return 91. (The answer should be the total numbers in the range of 0 <= x < 100,
+# excluding [11,22,33,44,55,66,77,88,99])
 #
 # Hint:
 # 1. A direct way is to use the backtracking approach.

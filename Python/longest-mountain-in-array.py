@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 845
 # Let's call any (contiguous) subarray B (of A) a mountain
 # if the following properties hold:
 #
@@ -27,7 +28,10 @@
 # Note:
 # - 0 <= A.length <= 10000
 # - 0 <= A[i] <= 10000
-
+#
+# Follow up:
+# Can you solve it using only one pass?
+# Can you solve it in O(1) space?
 try:
     xrange          # Python 2
 except NameError:
@@ -49,3 +53,12 @@ class Solution(object):
             if up_len and down_len:
                 result = max(result, up_len+down_len+1)
         return result
+
+    # two pass solution, takes more space, for reference only
+    def longestMountain_2pass(self, A):
+        up, down = [0] * len(A), [0] * len(A)
+        for i in range(1, len(A)):
+            if A[i] > A[i - 1]: up[i] = up[i - 1] + 1
+        for i in range(len(A) - 1)[::-1]:
+            if A[i] > A[i + 1]: down[i] = down[i + 1] + 1
+        return max([u + d + 1 for u, d in zip(up, down) if u and d] or [0])

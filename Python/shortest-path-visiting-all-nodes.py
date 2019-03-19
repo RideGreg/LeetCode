@@ -1,6 +1,7 @@
 # Time:  O(n * 2^n)
 # Space: O(n * 2^n)
 
+# 847
 # An undirected, connected graph of N nodes (labeled 0, 1, 2, ..., N-1)
 # is given as graph.
 #
@@ -35,11 +36,32 @@ except NameError:
 
 
 class Solution(object):
-    def shortestPathLength(self, graph):
+    # A path 'state' can be represented by the subset of nodes visited, plus the current node.
+    # Then, the problem reduces to a shortest path problem among these states, which can be solved with bfs.
+    def shortestPathLength(self, graph): # USE THIS: bfs
         """
         :type graph: List[List[int]]
         :rtype: int
         """
+        n = len(graph)
+        target = 2 ** n - 1
+        q = collections.deque([(i, 1 << i) for i in xrange(n)])  # node, state
+        steps = {}
+        for i in xrange(n):
+            steps[i, 1 << i] = 0
+
+        while q:
+            node, state = q.popleft()
+            if state == target:
+                return steps[node, state]
+
+            for nei in graph[node]:
+                state2 = state | 1 << nei
+                if (nei, state2) not in steps:
+                    steps[nei, state2] = steps[node, state] + 1
+                    q.append((nei, state2))
+
+    def shortestPathLength_dp(self, graph):
         dp = [[float("inf")]*(len(graph))
               for _ in xrange(1 << len(graph))]
         q = collections.deque()
@@ -55,3 +77,7 @@ class Solution(object):
                     dp[new_state][nei] = steps+1
                     q.append((new_state, nei))
         return min(dp[-1])
+
+print(Solution().shortestPathLength([[1,2,3],[0],[0],[0]]))
+print(Solution().shortestPathLength([[1],[0,2,4],[1,3,4],[2],[1,2]]))
+

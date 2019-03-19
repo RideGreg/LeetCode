@@ -18,13 +18,14 @@ class Solution(object):
         :type A: List[int]
         :rtype: bool
         """
-        i = 0
+        i, j = 0, len(A)-1
         while i+1 < len(A) and A[i] < A[i+1]:
             i += 1
-        j = len(A)-1
-        while j-1 >= 0 and A[j-1] > A[j]:
+            if i == len(A) - 1: return False
+        while j > 0 and A[j-1] > A[j]:
             j -= 1
-        return 0 < i == j < len(A)-1
+            if j == 0: return False
+        return i == j
 
     # One passs from left to right
     def validMountainArray_LeetCodeOfficial(self, A):

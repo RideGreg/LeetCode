@@ -1,6 +1,7 @@
 # Time:   O(nlogn)
 # Space : O(n)
 
+# 857
 # There are N workers.
 # The i-th worker has a quality[i] and a minimum wage expectation wage[i].
 #
@@ -46,23 +47,23 @@ class Solution(object):
         :rtype: float
 
         Every worker has some minimum ratio of "dollars to quality" that they demand. The key insight is to iterate over
-        the ratio. For a given ratio R, we know the workers hired all have a ratio R or lower. Then, we want to keep
-        the K workers with lowest quality. Use a heap to remove K+1-th workers in terms of high quality.
+        the ratio. For a given ratio R, the workers hired all have a ratio R or lower. So only the biggest N-(K-1) ratios
+        will be considered (used to calculate total wage).
+        Then, we want to select the K workers with lowest quality. Use a heap to maintain the K workers for each effective R.
         """
-        workers = [[float(w)/q, q] for w, q in itertools.izip(wage, quality)]
+        workers = sorted([[float(w)/q, q] for w, q in zip(wage, quality)])
         # default sorting by 1st element, then 2nd element and so on. We need sorting by ratio then quality.
-        workers.sort()
 
-        max_heap = [-q for r, q in workers[:K]]
-        qsum = -sum(max_heap)
-        result = qsum * workers[K - 1][0]
-        heapq.heapify(max_heap)
-        for r, q in workers[K:]:
-            z = - heapq.heappushpop(max_heap, -q)
-            if z != q:
-                qsum += q - z
-                result = min(result, qsum*r)
-        return result
+        maxHeap = []
+        ans, sumq = float('inf'), 0
+        for r, q in workers:
+            sumq += q
+            heapq.heappush(maxHeap, -q)
+            if len(maxHeap) > K:
+                sumq += heapq.heappop(maxHeap)
+            if len(maxHeap) == K:
+                ans = min(ans, r * sumq)
+        return ans
 
     def mincostToHireWorkers_buteForceGreedy(self, quality, wage, K): # TLE
         '''
@@ -73,7 +74,7 @@ class Solution(object):
         and still keep everyone earning more than their wage expectation.
 
         Algorithm
-        Loop all workers, take each as captain that will be paid their minimum wage expectation, calculate the cost of
+        Loop all workers, take each as CAPTAIN that will be paid their minimum wage expectation, calculate the cost of
         hiring K workers where each point of quality is worth wage[captain] / quality[captain] dollars.
         '''
         ans = float('inf')
@@ -89,3 +90,5 @@ class Solution(object):
                 prices.sort()
                 ans = min(ans, sum(prices[:K]))
         return ans
+
+print(Solution().mincostToHireWorkers([3,1,10,10,1], [4,8,2,2,7], 3))
