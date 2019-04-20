@@ -1,11 +1,27 @@
 # Time:  O(n)
 # Space: O(k)
 
+# 992
+# Given an array A of positive integers, call a (contiguous, not necessarily distinct) subarray
+# of A good if the number of different integers in that subarray is exactly K.
+#
+# (For example, [1,2,3,1,2] has 3 different integers: 1, 2, and 3.)
+#
+# Return the number of good subarrays of A.
+
+# Input: A = [1,2,1,2,3], K = 2
+# Output: 7
+# Explanation: Subarrays formed with exactly 2 different integers:
+# [1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2].
+
 import collections
 
 
 class Solution(object):
-    def subarraysWithKDistinct(self, A, K):
+    # sliding window solution. Find at most k, instead of exact k.
+    # Maintain a counter for count of digits. Scan digits one by one,
+    # add length of sliding window to total # of subarrays. Adjust window beginning as needed.
+    def subarraysWithKDistinct(self, A, K): # USE THIS
         """
         :type A: List[int]
         :type K: int
@@ -26,9 +42,42 @@ class Solution(object):
         
         return atMostK(A, K) - atMostK(A, K-1)
 
+    def subarraysWithKDistinct_lastPos(self, A, K): # 9700 ms. OrderedDict version is even slower (TLE)
+        lookup = {}
+        s, ans = -1, 0
+        for endPos, v in enumerate(A):
+            lookup[v] = endPos
+            # 3rd new item: need to remove the oldest item and adjust window start point
+            if len(lookup) > K:
+                a = min(lookup, key=lookup.get)
+                s = lookup[a]
+                del lookup[a]
+            if len(lookup) == K:
+                firstEnd = min(lookup.values())
+                ans += firstEnd - s
+        return ans
+
+    def subarraysWithKDistinct_lastPos2(self, A, K): # TLE: OrderedDict is very slow
+        lookup = collections.OrderedDict()
+        s, ans = -1, 0
+        for i, x in enumerate(A):
+            if x in lookup:
+                del lookup[x]
+            lookup[x] = i
+
+            if len(lookup) > K:
+                _, s = lookup.popitem(last=False)
+            if len(lookup) == K:
+                ans += lookup.values()[0] - s
+        return ans
 
 # Time:  O(n)
 # Space: O(k)
+# Solution: maintain two sliding windows. Each sliding window will be able to count
+# how many different elements there are in the window, and add and remove elements
+# in a queue-like fashion.
+
+# Similar to Solution 1, get difference between k and k-1
 class Window(object):
     def __init__(self):
         self.__count = collections.defaultdict(int)
@@ -65,3 +114,7 @@ class Solution2(object):
                 left2 += 1
             result += left2-left1
         return result
+
+
+print(Solution().subarraysWithKDistinct([1,2,1,2,3], 2)) # 7
+print(Solution().subarraysWithKDistinct([1,2,1,3,4], 3)) # 3

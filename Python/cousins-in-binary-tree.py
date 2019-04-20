@@ -1,6 +1,18 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 993
+# In a binary tree, the root node is at depth 0, and children of each depth k node are at depth k+1.
+#
+# Two nodes of a binary tree are cousins if they have the same depth, but have different parents.
+#
+# We are given the root of a binary tree with unique values, and the values x and y of
+# two different nodes in the tree.
+# Return true if and only if the nodes corresponding to the values x and y are cousins.
+
+# Input: root = [1,2,3,null,4,null,5], x = 5, y = 4
+# Output: true
+
 # Definition for a binary tree node.
 class TreeNode(object):
     def __init__(self, x):
@@ -10,34 +22,33 @@ class TreeNode(object):
 
 
 class Solution(object):
-    def isCousins(self, root, x, y):
-        """
-        :type root: TreeNode
-        :type x: int
-        :type y: int
-        :rtype: bool
-        """
-        def dfs(root, x, depth, parent):
-            if not root:
-                return False
-            if root.val == x:
-                return True
-            depth[0] += 1
-            prev_parent, parent[0] = parent[0], root
-            if dfs(root.left, x, depth, parent):
-                return True
-            parent[0] = root
-            if dfs(root.right, x, depth, parent):
-                return True
-            parent[0] = prev_parent
-            depth[0] -= 1
-            return False
-        
-        depth_x, depth_y = [0], [0]
-        parent_x, parent_y = [None], [None]
-        return dfs(root, x, depth_x, parent_x) and \
-               dfs(root, y, depth_y, parent_y) and \
-               depth_x[0] == depth_y[0] and \
-               parent_x[0] != parent_y[0]
+    def isCousins(self, root, x, y): # USE THIS: iteration DFS, early return
+        stk = [(root, 0, None)]
+        first = None
+        while stk:
+            cur, depth, par = stk.pop()
+            if cur:
+                if cur.val in (x, y):
+                    if first is None:
+                        first = (depth, par)
+                    else:
+                        return first[0] == depth and first[1] != par
+                stk.append((cur.left, depth+1, cur))
+                stk.append((cur.right, depth+1, cur))
+
+
+    # DFS to annotate parent and depth. Recursion hard to early return.
+    def isCousins_LeetcodeOfficial(self, root, x, y):
+        parent = {}
+        depth = {}
+        def dfs(node, par):
+            if node:
+                depth[node.val] = 1 + depth[par.val] if par else 0
+                parent[node.val] = par
+                dfs(node.left, node)
+                dfs(node.right, node)
+
+        dfs(root, None)
+        return depth[x] == depth[y] and parent[x] != parent[y]
                 
         

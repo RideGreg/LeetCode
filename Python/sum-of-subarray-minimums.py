@@ -21,7 +21,7 @@
 # - 1 <= A[i] <= 30000
 
 
-# Prev/Next Array
+# LeftBound/RightBound Array
 # Intuition
 #
 # Instead of finding all subarrays (O(n^2)) and add their min. Let's count the # of subarrays #(j) for which A[j] is the
@@ -40,13 +40,13 @@
 # Algorithm
 #
 # E.g. if A = [10, 3, 4, 5, _3_, 6, 3, 10] and we would like to know #(j = 4) [the count of the second 3, which is marked],
-# we would find i = 1 and k = 5. From there, the actual count is #(j) = (j - i + 1) * (k - j + 1).
+# we would find i = 0 and k = 5. From there, the actual count is #(j) = (j - i + 1) * (k - j + 1).
 #
 # These queries (ie. determining (i, k) given j) is a classic problem that can be answered with a stack. We actually find
 # i-1 (largest index whose number < A[j], and k+1 (smallest index whose number <= A[j].
 #
-# The idea is to maintain stack. For 'prev' array, the top of stack is index of the previous nearest number < A[j];
-# for 'next' array, the top of stack is index of the next nearest number <= A[j].
+# The idea is to maintain stack. For 'leftBound' array, the top of stack is index of the previous nearest number < A[j];
+# for 'rightBound' array, the top of stack is index of the next nearest number <= A[j].
 #
 # This is quite difficult to figure out, but this type of technique occurs often in many other problems,
 # so it is worth learning in detail.
@@ -62,21 +62,21 @@ class Solution(object):
         :rtype: int
         """
         n = len(A)
-        prev, nex = [None]*n, [None]*n
+        leftBound, rightBound = [-1]*n, [n]*n
         stk = []
         for i in xrange(n):
             # discard previous numbers >= A[i] to find the nearest number which cannot put in a valid subarray
             while stk and A[stk[-1]] >= A[i]:
                 stk.pop()
-            prev[i] = stk[-1] if stk else -1
+            leftBound[i] = stk[-1] if stk else -1
             stk.append(i)
         stk = []
         for i in xrange(n-1,-1,-1):
             while stk and A[stk[-1]] > A[i]:
                 stk.pop()
-            nex[i] = stk[-1] if stk else n
+            rightBound[i] = stk[-1] if stk else n
             stk.append(i)
-        return sum(A[i]*(i-prev[i])*(nex[i]-i) for i in xrange(n)) % (10**9+7) # KENG: missing parenthesis, better use a constant
+        return sum(A[i]*(i-leftBound[i])*(rightBound[i]-i) for i in xrange(n)) % (10**9+7) # KENG: missing parenthesis, better use a constant
 
     # not good: stack stores a tuple (index, # of valid items) - complicated
     def sumSubarrayMins_kamyu(self, A):

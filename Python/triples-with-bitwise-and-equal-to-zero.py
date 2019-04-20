@@ -1,6 +1,33 @@
 # Time:  O(nlogn), n is the max of A
 # Space: O(n)
 
+# 982
+# Given an array of integers A, find the # of triples of indices (i, j, k) such that:
+#
+# 0 <= i < A.length
+# 0 <= j < A.length
+# 0 <= k < A.length
+# A[i] & A[j] & A[k] == 0, where & represents the bitwise-AND operator.
+#
+#
+# Example 1:
+#
+# Input: [2,1,3]
+# Output: 12
+# Explanation: We could choose the following i, j, k triples:
+# (i=0, j=0, k=1) : 2 & 2 & 1
+# (i=0, j=1, k=0) : 2 & 1 & 2
+# (i=0, j=1, k=1) : 2 & 1 & 1
+# (i=0, j=1, k=2) : 2 & 1 & 3
+# (i=0, j=2, k=1) : 2 & 3 & 1
+# (i=1, j=0, k=0) : 1 & 2 & 2
+# (i=1, j=0, k=1) : 1 & 2 & 1
+# (i=1, j=0, k=2) : 1 & 2 & 3
+# (i=1, j=1, k=0) : 1 & 1 & 2
+# (i=1, j=2, k=0) : 1 & 3 & 2
+# (i=2, j=0, k=1) : 3 & 2 & 1
+# (i=2, j=1, k=0) : 3 & 1 & 2
+
 import collections
 
 
@@ -32,7 +59,7 @@ class Solution(object):
         return C[0]
 
 
-# Time:  O(n^3), n is the length of A
+# Time:  O(n^2), n is the length of A
 # Space: O(n^2)
 import collections
 
@@ -43,13 +70,11 @@ class Solution2(object):
         :type A: List[int]
         :rtype: int
         """
-        count = collections.defaultdict(int)
-        for i in xrange(len(A)):
-            for j in xrange(len(A)):
-                count[A[i]&A[j]] += 1
-        result = 0
-        for k in xrange(len(A)):
-            for v in count:
-                if A[k]&v == 0:
-                    result += count[v]
-        return result
+        # c is a counter of input elem, d is a counter of product of 2 elems
+        c = collections.Counter(A)
+        d = collections.defaultdict(int)
+        for i in c:
+            for j in c:
+                d[i&j] += c[i]*c[j]
+
+        return sum(c[i]*d[j] for i in c for j in d if i&j == 0)

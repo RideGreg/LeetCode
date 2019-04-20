@@ -1,6 +1,17 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 990
+# Given an array equations of strings that represent relationships between variables, each string
+# equations[i] has length 4 and takes one of two different forms: "a==b" or "a!=b".  Here, a and b
+# are lowercase letters (not necessarily different) that represent one-letter variable names.
+#
+# Return true if and only if it is possible to assign integers to variable names so as to satisfy
+# all the given equations.
+
+# Input: ["a==b","b!=c","c==a"]
+# Output: false
+
 class UnionFind(object):
     def __init__(self, n):
         self.set = range(n)
@@ -50,36 +61,35 @@ class Solution2(object):
         graph = [[] for _ in xrange(26)]
 
         for eqn in equations:
-            x = ord(eqn[0]) - ord('a')
-            y = ord(eqn[3]) - ord('a')
-            if eqn[1] == '!':
-                if x == y:
-                    return False
-            else:
+            if eqn[1] == '=':
+                x = ord(eqn[0]) - ord('a')
+                y = ord(eqn[3]) - ord('a')
                 graph[x].append(y)
                 graph[y].append(x)
 
         color = [None]*26
         c = 0
-        for i in xrange(26):
-            if color[i] is not None:
+        for start in xrange(26):
+            if color[start] is not None:
                 continue
             c += 1
-            stack = [i]
+            stack = [start]
             while stack:
                 node = stack.pop()
                 for nei in graph[node]:
-                    if color[nei] is not None:
-                        continue
-                    color[nei] = c
-                    stack.append(nei)
+                    if color[nei] is None:
+                        color[nei] = c
+                        stack.append(nei)
 
         for eqn in equations:
-            if eqn[1] != '!':
-                continue
-            x = ord(eqn[0]) - ord('a')
-            y = ord(eqn[3]) - ord('a')
-            if color[x] is not None and \
-               color[x] == color[y]:
-                return False
+            if eqn[1] == '!':
+                x = ord(eqn[0]) - ord('a')
+                y = ord(eqn[3]) - ord('a')
+                if x == y: # this is required for ['a!=a'] to be correct, which is not in graph and not colored.
+                    return False
+                if color[x] == color[y] and color[x] is not None:
+                    return False
         return True
+
+print(Solution2().equationsPossible(["a==b","b!=c","c==a"])) # False
+print(Solution2().equationsPossible(["a!=a"])) # False

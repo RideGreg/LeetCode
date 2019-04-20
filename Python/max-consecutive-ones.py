@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 485
 # Given a binary array, find the maximum number of consecutive 1s in this array.
 #
 # Example 1:
@@ -19,8 +20,11 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        result, local_max = 0, 0
+        result, local = 0, 0
         for n in nums:
-            local_max = (local_max + 1 if n else 0)
-            result = max(result, local_max)
+            if n == 1:
+                local += 1
+                result = max(result, local)
+            else:
+                local = 0
         return result
