@@ -1,4 +1,4 @@
-# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-1023%20%2F%201023-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
+# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-1028%20%2F%201028-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
 
 The number of LeetCode questions is increasing every week.
 For more questions and solutions, you can see my [LintCode](https://github.com/RideGreg/LintCode) repository.
@@ -208,6 +208,8 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 1014 | [Best Sightseeing Pair](https://leetcode.com/problems/best-sightseeing-pair/) | [C++](./C++/best-sightseeing-pair.cpp) [Python](./Python/best-sightseeing-pair.py) | _O(n)_ | _O(1)_      | Medium         ||
 1018 | [Binary Prefix Divisible By 5](https://leetcode.com/problems/binary-prefix-divisible-by-5/) | [C++](./C++/binary-prefix-divisible-by-5.cpp) [Python](./Python/binary-prefix-divisible-by-5.py) | _O(n)_ | _O(1)_      | Easy         ||
 1013 | [Partition Array Into Three Parts With Equal Sum](https://leetcode.com/problems/partition-array-into-three-parts-with-equal-sum/) | [C++](./C++/partition-array-into-three-parts-with-equal-sum.cpp) [Python](./Python/partition-array-into-three-parts-with-equal-sum.py) | _O(n)_ | _O(1)_      | Easy         ||
+1030 | [Matrix Cells in Distance Order](https://leetcode.com/problems/matrix-cells-in-distance-order/) | [C++](./C++/matrix-cells-in-distance-order.cpp) [Python](./Python/matrix-cells-in-distance-order.py) | _O(n)_ | _O(1)_      | Easy         ||
+1031 | [Maximum Sum of Two Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/) | [C++](./C++/maximum-sum-of-two-non-overlapping-subarrays.cpp) [Python](./Python/maximum-sum-of-two-non-overlapping-subarrays.py) | _O(n)_ | _O(1)_      | Medium         ||
 
 ## String
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -449,6 +451,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 1022 |[Sum of Root To Leaf Binary Numbers](https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/)| [C++](./C++/sum-of-root-to-leaf-binary-numbers.cpp) [Python](./Python/sum-of-root-to-leaf-binary-numbers.py)| _O(n)_ | _O(h)_ | Easy |||
 1026 |[Maximum Difference Between Node and Ancestor](https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/)| [C++](./C++/maximum-difference-between-node-and-ancestor.cpp) [Python](./Python/maximum-difference-between-node-and-ancestor.py)| _O(n)_ | _O(h)_ | Medium || DFS |
 1028 |[Recover a Tree From Preorder Traversal](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/)| [C++](./C++/recover-a-tree-from-preorder-traversal.cpp) [Python](./Python/recover-a-tree-from-preorder-traversal.py)| _O(n)_ | _O(h)_ | Hard || DFS |
+1032 |[Stream of Characters](https://leetcode.com/problems/stream-of-character/)| [C++](./C++/stream-of-character.cpp) [Python](./Python/stream-of-character.py)| ctor: _O(n)_, query: _O(m + z)_ | _O(t)_ | Hard || `Aho–Corasick Automata`, Trie |
 
 ## Hash Table
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -617,28 +620,29 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 ## Sort
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
-056| [Merge Intervals](https://leetcode.com/problems/merge-intervals/)| [C++](./C++/merge-intervals.cpp) [Python](./Python/merge-intervals.py) | _O(nlogn)_  | _O(1)_        | Hard           ||
-057| [Insert Interval](https://leetcode.com/problems/insert-interval/)| [C++](./C++/insert-interval.cpp) [Python](./Python/insert-interval.py) | _O(n)_    | _O(1)_          | Hard           ||
-075| [Sort Colors](https://leetcode.com/problems/sort-colors/)   | [C++](./C++/sort-colors.cpp) [Python](./Python/sort-colors.py) | _O(n)_         | _O(1)_          | Medium         || Tri Partition
-088| [Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)| [C++](./C++/merge-sorted-array.cpp) [Python](./Python/merge-sorted-array.py) | _O(n)_ | _O(1)_       | Easy           ||
-147| [Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)|[C++](./C++/insertion-sort-list.cpp) [Python](./Python/insertion-sort-list.py) | _O(n^2)_ | _O(1)_    | Medium         ||
-148| [Sort List](https://leetcode.com/problems/sort-list/)     | [C++](./C++/sort-list.cpp) [Python](./Python/sort-list.py)  | _O(nlogn)_      | _O(logn)_       | Medium         ||
-164| [Maximum Gap](https://leetcode.com/problems/maximum-gap/)   | [C++](./C++/maximum-gap.cpp) [Python](./Python/maximum-gap.py)| _O(n)_          | _O(n)_          | Hard           || Tricky 
-179| [Largest Number](https://leetcode.com/problems/largest-number/) | [C++](./C++/largest-number.cpp) [Python](./Python/largest-number.py) | _O(nlogn)_   | _O(1)_        | Medium         ||
-218| [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) | [C++](./C++/the-skyline-problem.cpp) [Python](./Python/the-skyline-problem.py) | _O(nlogn)_   | _O(n)_        | Hard         || Sort, BST|
-252| [Meeting Rooms](https://leetcode.com/problems/meeting-rooms/) | [C++](./C++/meeting-rooms.cpp) [Python](./Python/meeting-rooms.py) | _O(nlogn)_   | _O(n)_        | Easy         |📖| |
-253| [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) | [C++](./C++/meeting-rooms-ii.cpp) [Python](./Python/meeting-rooms-ii.py) | _O(nlogn)_   | _O(n)_        | Medium         |📖| |
-274| [H-Index](https://leetcode.com/problems/h-index/) | [C++](./C++/h-index.cpp)  [Python](./Python/h-index.py)  | _O(n)_ | _O(n)_ | Medium         || Counting Sort |
-280| [Wiggle Sort](https://leetcode.com/problems/wiggle-sort/) | [C++](./C++/wiggle-sort.cpp) [Python](./Python/wiggle-sort.py) | _O(n)_   | _O(1)_        | Medium         |📖| |
-324| [Wiggle Sort II](https://leetcode.com/problems/wiggle-sort-ii/) | [C++](./C++/wiggle-sort-ii.cpp) [Python](./Python/wiggle-sort-ii.py) | _O(n)_  on average | _O(1)_        | Medium         | variant of [Sort Colors](https://leetcode.com/problems/sort-colors/) | Tri Partition |
-347| [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) | [C++](./C++/top-k-frequent-elements.cpp) [Python](./Python/top-k-frequent-elements.py) | _O(n)_ | _O(n)_        | Medium         | | Quick Select, Heap, Bucket Sort |
-406| [Queue Reconstruction by Height](https://leetcode.com/problems/queue-reconstruction-by-height/) | [C++](./C++/queue-reconstruction-by-height.cpp) [Python](./Python/queue-reconstruction-by-height.py) | _O(n * sqrt(n))_ | _O(n)_        | Medium         | | Tricky |
-451| [Sort Characters By Frequency](https://leetcode.com/problems/sort-characters-by-frequency/) | [C++](./C++/sort-characters-by-frequency.cpp) [Python](./Python/sort-characters-by-frequency.py) | _O(n)_ | _O(n)_        | Medium         | | |
-692| [Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/) | [C++](./C++/top-k-frequent-words.cpp) [Python](./Python/top-k-frequent-words.py) | _O(n + klogk)_ on average | _O(n)_        | Medium         | | Quick Select, Heap, Bucket Sort |
-937| [Reorder Log Files](https://leetcode.com/problems/reorder-log-files/) | [C++](./C++/reorder-log-files.cpp) [Python](./Python/reorder-log-files.py) | _O(nlogn * l)_ | _O(l)_        | Easy         | | |
-969| [Pancake Sorting](https://leetcode.com/problems/pancake-sorting/) | [C++](./C++/pancake-sorting.cpp) [Python](./Python/pancake-sorting.py) | _O(n^2)_ | _O(l)_        | Medium         | | |
-973| [K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/) | [C++](./C++/k-closest-points-to-origin.cpp) [Python](./Python/k-closest-points-to-origin.py) | _O(n)_ on average | _O(1)_        | Easy         | | Quick Select, Heap|
-976| [Largest Perimeter Triangle](https://leetcode.com/problems/largest-perimeter-triangle/) | [C++](./C++/largest-perimeter-triangle.cpp) [Python](./Python/largest-perimeter-triangle.py) | _O(nlogn)_ | _O(1)_        | Easy         | | |
+0056| [Merge Intervals](https://leetcode.com/problems/merge-intervals/)| [C++](./C++/merge-intervals.cpp) [Python](./Python/merge-intervals.py) | _O(nlogn)_  | _O(1)_        | Hard           ||
+0057| [Insert Interval](https://leetcode.com/problems/insert-interval/)| [C++](./C++/insert-interval.cpp) [Python](./Python/insert-interval.py) | _O(n)_    | _O(1)_          | Hard           ||
+0075| [Sort Colors](https://leetcode.com/problems/sort-colors/)   | [C++](./C++/sort-colors.cpp) [Python](./Python/sort-colors.py) | _O(n)_         | _O(1)_          | Medium         || Tri Partition
+0088| [Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)| [C++](./C++/merge-sorted-array.cpp) [Python](./Python/merge-sorted-array.py) | _O(n)_ | _O(1)_       | Easy           ||
+0147| [Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)|[C++](./C++/insertion-sort-list.cpp) [Python](./Python/insertion-sort-list.py) | _O(n^2)_ | _O(1)_    | Medium         ||
+0148| [Sort List](https://leetcode.com/problems/sort-list/)     | [C++](./C++/sort-list.cpp) [Python](./Python/sort-list.py)  | _O(nlogn)_      | _O(logn)_       | Medium         ||
+0164| [Maximum Gap](https://leetcode.com/problems/maximum-gap/)   | [C++](./C++/maximum-gap.cpp) [Python](./Python/maximum-gap.py)| _O(n)_          | _O(n)_          | Hard           || Tricky 
+0179| [Largest Number](https://leetcode.com/problems/largest-number/) | [C++](./C++/largest-number.cpp) [Python](./Python/largest-number.py) | _O(nlogn)_   | _O(1)_        | Medium         ||
+0218| [The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) | [C++](./C++/the-skyline-problem.cpp) [Python](./Python/the-skyline-problem.py) | _O(nlogn)_   | _O(n)_        | Hard         || Sort, BST|
+0252| [Meeting Rooms](https://leetcode.com/problems/meeting-rooms/) | [C++](./C++/meeting-rooms.cpp) [Python](./Python/meeting-rooms.py) | _O(nlogn)_   | _O(n)_        | Easy         |🔒| |
+0253| [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) | [C++](./C++/meeting-rooms-ii.cpp) [Python](./Python/meeting-rooms-ii.py) | _O(nlogn)_   | _O(n)_        | Medium         |🔒| |
+0274| [H-Index](https://leetcode.com/problems/h-index/) | [C++](./C++/h-index.cpp)  [Python](./Python/h-index.py)  | _O(n)_ | _O(n)_ | Medium         || Counting Sort |
+0280| [Wiggle Sort](https://leetcode.com/problems/wiggle-sort/) | [C++](./C++/wiggle-sort.cpp) [Python](./Python/wiggle-sort.py) | _O(n)_   | _O(1)_        | Medium         |🔒| |
+0324| [Wiggle Sort II](https://leetcode.com/problems/wiggle-sort-ii/) | [C++](./C++/wiggle-sort-ii.cpp) [Python](./Python/wiggle-sort-ii.py) | _O(n)_  on average | _O(1)_        | Medium         | variant of [Sort Colors](https://leetcode.com/problems/sort-colors/) | Tri Partition |
+0347| [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) | [C++](./C++/top-k-frequent-elements.cpp) [Python](./Python/top-k-frequent-elements.py) | _O(n)_ | _O(n)_        | Medium         | | Quick Select, Heap, Bucket Sort |
+0406| [Queue Reconstruction by Height](https://leetcode.com/problems/queue-reconstruction-by-height/) | [C++](./C++/queue-reconstruction-by-height.cpp) [Python](./Python/queue-reconstruction-by-height.py) | _O(n * sqrt(n))_ | _O(n)_        | Medium         | | Tricky |
+0451| [Sort Characters By Frequency](https://leetcode.com/problems/sort-characters-by-frequency/) | [C++](./C++/sort-characters-by-frequency.cpp) [Python](./Python/sort-characters-by-frequency.py) | _O(n)_ | _O(n)_        | Medium         | | |
+0692| [Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/) | [C++](./C++/top-k-frequent-words.cpp) [Python](./Python/top-k-frequent-words.py) | _O(n + klogk)_ on average | _O(n)_        | Medium         | | Quick Select, Heap, Bucket Sort |
+0912| [Sort an Array](https://leetcode.com/problems/sort-an-array/) | [C++](./C++/sort-an-array.cpp) [Python](./Python/sort-an-array.py) | _O(nlogn)_ | _O(n)_        | Medium         | | | Merge Sort, Quick Sort
+0937| [Reorder Log Files](https://leetcode.com/problems/reorder-log-files/) | [C++](./C++/reorder-log-files.cpp) [Python](./Python/reorder-log-files.py) | _O(nlogn * l)_ | _O(l)_        | Easy         | | |
+0969| [Pancake Sorting](https://leetcode.com/problems/pancake-sorting/) | [C++](./C++/pancake-sorting.cpp) [Python](./Python/pancake-sorting.py) | _O(n^2)_ | _O(l)_        | Medium         | | |
+0973| [K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/) | [C++](./C++/k-closest-points-to-origin.cpp) [Python](./Python/k-closest-points-to-origin.py) | _O(n)_ on average | _O(1)_        | Easy         | | Quick Select, Heap|
+0976| [Largest Perimeter Triangle](https://leetcode.com/problems/largest-perimeter-triangle/) | [C++](./C++/largest-perimeter-triangle.cpp) [Python](./Python/largest-perimeter-triangle.py) | _O(nlogn)_ | _O(1)_        | Easy         | | |
 
 ## Two Pointers
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1039,6 +1043,7 @@ xxxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/l
 0995 | [Minimum Number of K Consecutive Bit Flips](https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/) | [C++](./C++/minimum-number-of-k-consecutive-bit-flips.cpp) [Python](./Python/minimum-number-of-k-consecutive-bit-flips.py) | _O(n)_ | _O(1)_ | Hard ||
 1005 | [Maximize Sum Of Array After K Negations](https://leetcode.com/problems/maximize-sum-of-array-after-k-negations/) | [C++](./C++/maximize-sum-of-array-after-k-negations.cpp) [Python](./Python/maximize-sum-of-array-after-k-negations.py) | _O(n)_ on average | _O(1)_ | Easy || Quick Select
 1024 | [Video Stitching](https://leetcode.com/problems/video-stitching/) | [C++](./C++/video-stitching.cpp) [Python](./Python/video-stitching.py) | _O(nlogn)_ | _O(1)_ | Medium | variant of [Jump Game II](https://leetcode.com/problems/jump-game-ii/) |
+1029 | [Two City Scheduling](https://leetcode.com/problems/two-city-scheduling/) | [C++](./C++/two-city-scheduling.cpp) [Python](./Python/two-city-scheduling.py) | _O(n)_ on average | _O(1)_ | Easy | | Quick Select
 
 ## Graph
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
