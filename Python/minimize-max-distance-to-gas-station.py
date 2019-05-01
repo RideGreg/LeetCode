@@ -1,6 +1,7 @@
 # Time:  O(nlogr)
 # Space: O(1)
 
+# 774
 # On a horizontal number line, we have gas stations at positions
 # stations[0], stations[1], ..., stations[N-1], where N = stations.length.
 #
@@ -27,11 +28,11 @@ class Solution(object):
         :type K: int
         :rtype: float
         """
-        def possible(stations, K, guess):
-            return sum(int((stations[i+1]-stations[i]) / guess)
-                       for i in xrange(len(stations)-1)) <= K
+        def possible(guess):
+            return sum(int((gap - 1e-6) / guess) for gap in gaps) <= K
 
-        left, right = 0, 10**8
+        gaps = [stations[i+1]-stations[i] for i in range(len(stations)-1)]
+        left, right = 0, max(gaps)
         while right-left > 1e-6:
             mid = left + (right-left)/2.0
             if possible(mid):
@@ -39,3 +40,5 @@ class Solution(object):
             else:
                 left = mid
         return left
+
+print(Solution().minmaxGasDist([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9)) # 0.50000

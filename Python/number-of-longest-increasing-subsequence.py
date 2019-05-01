@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n)
 
+# 673
 # Given an unsorted array of integers, find the number of longest increasing subsequence.
 #
 # Example 1:
@@ -21,18 +22,18 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        result, max_len = 0, 0
-        dp = [[1, 1] for _ in xrange(len(nums))]  # {length, number} pair
-        for i in xrange(len(nums)):
-            for j in xrange(i):
+        ans, max_len = 0, 0
+        dp = [[1, 1] for _ in range(len(nums))]  # {longest_length, count} for LIS ending at this elem
+        for i in range(len(nums)):
+            for j in range(i):
                 if nums[i] > nums[j]:
-                    if dp[i][0] == dp[j][0]+1:
-                        dp[i][1] += dp[j][1]
-                    elif dp[i][0] < dp[j][0]+1:
-                        dp[i] = [dp[j][0]+1, dp[j][1]]
+                    l, c = dp[j]
+                    if dp[i][0] == l+1:
+                        dp[i][1] += c
+                    elif dp[i][0] < l+1:
+                        dp[i] = [l+1, c]
             if max_len == dp[i][0]:
-                result += dp[i][1]
+                ans += dp[i][1]
             elif max_len < dp[i][0]:
-                max_len = dp[i][0]
-                result = dp[i][1]
-        return result
+                max_len, ans = dp[i]
+        return ans

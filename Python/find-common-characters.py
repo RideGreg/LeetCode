@@ -22,7 +22,7 @@ class Solution(object):
         result = collections.Counter(A[0])
         for a in A:
             result &= collections.Counter(a) # Counter intersection (dict doesn't support)
-        return list(result.elements())       # Counter.elements()
+        return list(result.elements())       # Counter.elements() NOTE: convert iterator to list!!
         # Return an iterator over elements repeating each as many times as its count.
 
     # one line solution

@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
-#
+
+# 300
 # Given an unsorted array of integers,
 # find the length of longest increasing subsequence.
 #
@@ -15,11 +16,15 @@
 # Follow up: Could you improve it to O(n log n) time complexity?
 #
 
-# Binary search solution. LIS stores the longest increasing subsequence: when new
+# Binary search solution. LIS[i] stores the smallest tail of LIS with length i+1 : when new
 # elem is larger than all elems in LIS, append to the end of LIS; otherwise replace
 # the first LIS elem which is larger than it. e.g. given [10, 9, 2, 5, 3, 7, 101, 18],
 # [10] -> [9] -> [2] -> [2,5] -> [2,3] -> [2,3,7] -> [2,3,7,101] -> [2,3,7,18]
 
+# given [20, 21, 22, 1, 2, 3, 4]:
+# [20] -> [20, 21] -> [20,21,22] -> [1,21,22] -> [1,2,22] -> [1,2,3] -> [1,2,3,4]
+#                                   ^ this is not a valid subsequence but the length are correct.
+#                1 is smallest tail of length-1 LIS, 21 is tail of length-2 LIS, 22 is tail of length-3 LIS.
 # the method in this geeksforgeeks article is similar but not straightforward https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
 
 class Solution(object):
@@ -28,26 +33,16 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        LIS = []
-        def insert(target):
-            left, right = 0, len(LIS) - 1
-            # Find the first index "left" which satisfies LIS[left] >= target
-            while left <= right:
-                mid = left + (right - left) // 2
-                if LIS[mid] >= target:
-                    right = mid - 1
-                else:
-                    left = mid + 1
-            # If not found, append the target.
-            if left == len(LIS):
-                LIS.append(target);
+        import bisect
+        seq = []
+        for n in nums:
+            pos = bisect.bisect_left(seq, n) # Find the first pos which satisfies seq[pos] >= target
+            if pos == len(seq):
+                seq.append(n)
             else:
-                LIS[left] = target
+                seq[pos] = n
+        return len(seq)
 
-        for num in nums:
-            insert(num)
-
-        return len(LIS)
 
 # Time:  O(n^2)
 # Space: O(n)
@@ -59,9 +54,11 @@ class Solution2(object):
         :rtype: int
         """
         dp = []  # dp[i]: the length of LIS ends with nums[i]
-        for i in xrange(len(nums)):
+        for i in range(len(nums)):
             dp.append(1)
-            for j in xrange(i):
+            for j in range(i):
                 if nums[j] < nums[i]:
                     dp[i] = max(dp[i], dp[j] + 1)
         return max(dp) if dp else 0
+
+print(Solution().lengthOfLIS([2,3,4,1]))

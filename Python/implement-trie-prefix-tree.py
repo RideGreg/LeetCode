@@ -7,15 +7,16 @@
 # You may assume that all inputs are consist of lowercase letters a-z.
 #
 
+import collections
+
 class TrieNode:
     # Initialize your data structure here.
     def __init__(self):
         self.is_string = False
-        self.leaves = {}
+        self.leaves = collections.defaultdict(TrieNode)
 
 
 class Trie:
-
     def __init__(self):
         self.root = TrieNode()
 
@@ -25,8 +26,6 @@ class Trie:
     def insert(self, word):
         cur = self.root
         for c in word:
-            if not c in cur.leaves:
-                cur.leaves[c] = TrieNode()
             cur = cur.leaves[c]
         cur.is_string = True
 
@@ -94,11 +93,12 @@ class Trie2:
             cur = cur[c]
         return True
 
-trie2 = Trie2()
-trie2.make_trie('foo', 'bar', 'baz', 'barz')
-print trie2.search('bar') #True
-print trie2.search('baa') #False
-print trie2.search('ba')  #False
-print trie2.startsWith('baz') #True
-print trie2.startsWith('ba') #True
-print trie2.startsWith('c') #False
+trie2 = Trie()
+for w in ('foo', 'bar', 'baz', 'barz'):
+    trie2.insert(w)
+print(trie2.search('bar')) #True
+print(trie2.search('baa')) #False
+print(trie2.search('ba'))  #False
+print(trie2.startsWith('baz')) #True
+print(trie2.startsWith('ba')) #True
+print(trie2.startsWith('c')) #False

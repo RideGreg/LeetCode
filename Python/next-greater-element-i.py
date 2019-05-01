@@ -1,6 +1,7 @@
 # Time:  O(m + n)
 # Space: O(m + n)
 
+# 496
 # You are given two arrays (without duplicates) nums1 and nums2 where nums1’s elements are subset of nums2.
 # Find all the next greater numbers for nums1's elements in the corresponding places of nums2.
 #
@@ -36,12 +37,11 @@ class Solution(object):
             while stk and num > stk[-1]:
                 lookup[stk.pop()] = num
             stk.append(num)
-        while stk:
-            lookup[stk.pop()] = -1
-        return map(lambda x : lookup[x], findNums)
-#        return [lookup[x] if x in lookup else -1 for x in findNums]
 
-    defenextGreaterElement_bnuteforce(self, findNums, nums):
+        return [lookup.get(x, -1) for x in findNums]
+
+    # don't use, O(m*n).
+    def nextGreaterElement_bnuteforce(self, findNums, nums):
         ans = []
         for m in findNums:
             found, nxtNum = False, -1
