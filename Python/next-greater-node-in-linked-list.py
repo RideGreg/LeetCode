@@ -36,3 +36,15 @@ class Solution(object):
             result.append(0)
             head = head.next
         return result
+
+    # same as above, just use index i for easy understanding
+    def nextLargerNodes_ming(self, head):
+        stk, ans, i = [], [], 0
+        while head:
+            while stk and stk[-1][1] < head.val:
+                ans[stk.pop()[0]] = head.val
+            stk.append((i, head.val))
+            i += 1
+            ans.append(0)
+            head = head.next
+        return ans

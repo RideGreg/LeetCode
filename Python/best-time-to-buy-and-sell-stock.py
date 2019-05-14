@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 121
 # Say you have an array for which the ith element
 # is the price of a given stock on day i.
 #
@@ -14,8 +15,8 @@ class Solution(object):
     # @param prices, a list of integer
     # @return an integer
     def maxProfit(self, prices):
-        max_profit, min_price = 0, float("inf")
-        for price in prices:
-            min_price = min(min_price, price)
-            max_profit = max(max_profit, price - min_price)
-        return max_profit
+        ans, mmin = 0, float('inf')
+        for p in prices:
+            mmin = min(mmin, p)
+            ans = max(ans, p-mmin)
+        return ans

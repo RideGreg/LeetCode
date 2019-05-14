@@ -12,24 +12,35 @@
 # (ie, you must sell the stock before you buy again).
 #
 
+# Input: [3,3,5,0,0,3,1,4]
+# Output: 6 (= 3-0 + 4-1)
+
+# Input: [1,2,3,4,5]
+# Output: 4
+
 try:
     xrange          # Python 2
 except NameError:
     xrange = range  # Python 3
 
 
-class Solution(object):
+class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
     # @param prices, a list of integer
     # @return an integer
+
+    # This solution is AN EXTENSION OF SOLUTION for buy-and-sell-stock-i.
+    # Maintain the min of if we just buy 1, 2, 3... stock, and the max of if we just sell 1,2,3... stock.
+    # In order to get the final max profit, profit1 must be as relatively most as possible to produce a small cost2,
+    # and therefore cost2 can be as less as possible to give the final max profit2.
     def maxProfit(self, prices):
-        hold1, hold2 = float("-inf"), float("-inf")
-        release1, release2 = 0, 0
+        cost1, cost2 = float("inf"), float("inf")
+        profit1, profit2 = 0, 0
         for i in prices:
-            release2 = max(release2, hold2 + i)
-            hold2 = max(hold2, release1 - i)
-            release1 = max(release1, hold1 + i)
-            hold1 = max(hold1, -i)
-        return release2
+            cost1 = min(cost1, i)
+            profit1 = max(profit1, i - cost1)
+            cost2 = min(cost2, i - profit1)
+            profit2 = max(profit2, i - cost2)
+        return profit2
 
 
 # Time:  O(k * n)
@@ -52,30 +63,34 @@ class Solution2(object):
         return max_sell[k]
 
 
+# This solution cannot extend to k transactions.
 # Time:  O(n)
 # Space: O(n)
 class Solution3(object):
     # @param prices, a list of integer
     # @return an integer
+
+    # use any day as divider for 1st and 2nd stock transaction. Compare all possible division
+    # (linear time). Ok to sell then buy at the same day, so divider is on each day (dp array
+    # is length N), not between two days.
     def maxProfit(self, prices):
+        N = len(prices)
         min_price, max_profit_from_left, max_profits_from_left = \
-            float("inf"), 0, []
-        for price in prices:
-            min_price = min(min_price, price)
-            max_profit_from_left = max(max_profit_from_left, price - min_price)
-            max_profits_from_left.append(max_profit_from_left)
+            float("inf"), 0, [0]*N
+        max_price, max_profit_from_right, max_profits_from_right = 0, 0, [0]*N
 
-        max_price, max_profit_from_right, max_profits_from_right = 0, 0, []
-        for i in reversed(range(len(prices))):
-            max_price = max(max_price, prices[i])
+        for i in range(N):
+            min_price = min(min_price, prices[i])
+            max_profit_from_left = max(max_profit_from_left, prices[i] - min_price)
+            max_profits_from_left[i] = max_profit_from_left
+
+            max_price = max(max_price, prices[N-1-i])
             max_profit_from_right = max(max_profit_from_right,
-                                        max_price - prices[i])
-            max_profits_from_right.insert(0, max_profit_from_right)
+                                        max_price - prices[N-1-i])
+            max_profits_from_right[N-1-i] = max_profit_from_right
 
-        max_profit = 0
-        for i in range(len(prices)):
-            max_profit = max(max_profit,
-                             max_profits_from_left[i] +
-                             max_profits_from_right[i])
+        return max(max_profits_from_left[i]+max_profits_from_right[i]
+                   for i in range(N)) if N else 0
 
-        return max_profit
+print(Solution().maxProfit([1,2,3,4,5])) # 4
+print(Solution().maxProfit([3,3,5,0,0,3,1,4])) # 6

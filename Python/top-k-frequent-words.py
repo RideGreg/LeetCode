@@ -1,4 +1,4 @@
-# Time:  O(n + klogk) on average
+# Time:  O(n + klogk) on average, quick select O(n), output sort klogk
 # Space: O(n)
 
 # 692
@@ -33,52 +33,45 @@ from random import randint
 
 
 class Solution(object):
-    def topKFrequent(self, words, k):
+    def topKFrequent(self, words, k):  # USE THIS: Quick Select is best solution
         """
         :type words: List[str]
         :type k: int
         :rtype: List[str]
         """
+        def kthElement(A, k):
+            import random
+            def partition(l, r, pivot): # O(n) on average
+                new_pivot = l
+                A[pivot], A[r] = A[r], A[pivot]
+                for i in range(l, r):
+                    if A[i] < A[r]:
+                        A[i], A[new_pivot] = A[new_pivot], A[i]
+                        new_pivot += 1
+                A[new_pivot], A[r] = A[r], A[new_pivot]
+                return new_pivot
+
+            l, r = 0, len(A)-1
+            while l <= r:
+                pivot = random.randint(l, r)
+                new_pivot = partition(l, r, pivot)
+                if new_pivot == k-1:
+                    return
+                elif new_pivot > k-1:
+                    r = new_pivot - 1
+                else:
+                    l = new_pivot + 1
+
         counts = collections.Counter(words)
-        p = []
-        for key, val in counts.iteritems():
-            p.append((-val, key))
-        self.kthElement(p, k)
-
-        result = []
-        sorted_p = sorted(p[:k])
-        for i in xrange(k):
-            result.append(sorted_p[i][1])
-        return result
-
-    def kthElement(self, nums, k):  # O(n) on average
-        def PartitionAroundPivot(left, right, pivot_idx, nums):
-            pivot_value = nums[pivot_idx]
-            new_pivot_idx = left
-            nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]
-            for i in xrange(left, right):
-                if nums[i] < pivot_value:
-                    nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]
-                    new_pivot_idx += 1
-
-            nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]
-            return new_pivot_idx
-
-        left, right = 0, len(nums) - 1
-        while left <= right:
-            pivot_idx = randint(left, right)
-            new_pivot_idx = PartitionAroundPivot(left, right, pivot_idx, nums)
-            if new_pivot_idx == k - 1:
-                return
-            elif new_pivot_idx > k - 1:
-                right = new_pivot_idx - 1
-            else:  # new_pivot_idx < k - 1.
-                left = new_pivot_idx + 1
-
+        pairs = []
+        for w, c in counts.items():
+            pairs.append((-c, w))
+        kthElement(pairs, k)
+        return [x[1] for x in sorted(pairs[:k])]
 
 # Time:  O(nlogk)
 # Space: O(n)
-# Heap Solution
+# Heap Solution: need to build HeapObj
 class Solution2(object):
     def topKFrequent(self, words, k):
         """
@@ -116,6 +109,22 @@ class Solution2(object):
 # Space: O(n)
 # Bucket Sort Solution
 class Solution3(object):
+    def topKFrequent_ming(self, words, k):
+        import bisect
+        counts = collections.Counter(words)
+        N = len(words)
+        buckets = [[] for _ in range(N + 1)]
+        for w, c in counts.items():
+            bisect.insort(buckets[c], w)   # sort takes extra time on top of O(n)
+
+        ans = []
+        for count in reversed(range(len(buckets))):
+            for w in buckets[count]:
+                ans.append(w)
+                if len(ans) == k:
+                    return ans
+
+
     def topKFrequent(self, words, k):
         """
         :type words: List[str]
@@ -123,11 +132,11 @@ class Solution3(object):
         :rtype: List[str]
         """
         counts = collections.Counter(words)
-        buckets = [[] for _ in xrange(len(words)+1)]
-        for word, count in counts.iteritems():
+        buckets = [[] for _ in range(len(words)+1)]
+        for word, count in counts.items():
             buckets[count].append(word)
         pairs = []
-        for i in reversed(xrange(len(words))):
+        for i in reversed(range(len(buckets))):
             for word in buckets[i]:
                 pairs.append((-i, word))
             if len(pairs) >= k:

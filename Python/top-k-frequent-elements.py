@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 347
 # Given a non-empty array of integers,
 # return the k most frequent elements.
 #
@@ -12,6 +13,8 @@
 # 1 <= k <= number of unique elements.
 # Your algorithm's time complexity must be better
 # than O(n log n), where n is the array's size.
+
+# REQUIRE NOT TO DO FULLY SORTING
 
 # Bucket Sort Solution
 
@@ -30,15 +33,15 @@ class Solution(object):
         :type k: int
         :rtype: List[int]
         """
-        counts = collections.Counter(words)
+        counts = collections.Counter(nums)
         buckets = [[] for _ in xrange(len(nums)+1)]
         for i, count in counts.iteritems():
             buckets[count].append(i)
 
         result = []
-        for i in reversed(xrange(len(buckets))):
-            for j in xrange(len(buckets[i])):
-                result.append(buckets[i][j])
+        for count in reversed(xrange(len(buckets))):
+            for n in buckets[count]:
+                result.append(n)
                 if len(result) == k:
                     return result
         return result
@@ -47,7 +50,9 @@ class Solution(object):
 # Time:  O(n) ~ O(n^2), O(n) on average.
 # Space: O(n)
 # Quick Select Solution
-from random import randint
+# if ask top k large nums, it is simply kthElement()
+# now ask top k frequent, must get and sort by frequency, then apply kthElement()
+import random
 class Solution2(object):
     def topKFrequent(self, nums, k):
         """
@@ -55,41 +60,35 @@ class Solution2(object):
         :type k: int
         :rtype: List[int]
         """
-        counts = collections.Counter(words)
-        p = []
-        for key, val in counts.iteritems():
-            p.append((-val, key))
-        self.kthElement(p, k)
+        def kthElement(A, k):
+            def partition(l, r, pivot):
+                new_pivot = l
+                A[pivot], A[r] = A[r], A[pivot]
+                for i in range(l, r):
+                    if A[i] < A[r]:
+                        A[i], A[new_pivot] = A[new_pivot], A[i]
+                        new_pivot += 1
 
-        result = []
-        for i in xrange(k):
-            result.append(p[i][1])
-        return result
+                A[new_pivot], A[r] = A[r], A[new_pivot]
+                return new_pivot
 
-    def kthElement(self, nums, k):
-        def PartitionAroundPivot(left, right, pivot_idx, nums):
-            pivot_value = nums[pivot_idx]
-            new_pivot_idx = left
-            nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]
-            for i in xrange(left, right):
-                if nums[i] < pivot_value:
-                    nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]
-                    new_pivot_idx += 1
+            l, r = 0, len(A) - 1
+            while l <= r:
+                pivot = random.randint(l, r)
+                new_pivot = partition(l, r, pivot)
+                if new_pivot == k - 1:
+                    return
+                elif new_pivot > k - 1:
+                    r = new_pivot - 1
+                else:
+                    l = new_pivot + 1
 
-            nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]
-            return new_pivot_idx
-
-        left, right = 0, len(nums) - 1
-        while left <= right:
-            pivot_idx = randint(left, right)
-            new_pivot_idx = PartitionAroundPivot(left, right, pivot_idx, nums)
-            if new_pivot_idx == k - 1:
-                return
-            elif new_pivot_idx > k - 1:
-                right = new_pivot_idx - 1
-            else:  # new_pivot_idx < k - 1.
-                left = new_pivot_idx + 1
-
+        counts = collections.Counter(nums)
+        pairs = []
+        for n, count in counts.items():
+            pairs.append((-count, n))
+        kthElement(pairs, k)
+        return [x[1] for x in pairs[:k]]
 
 # Time:  O(nlogk)
 # Space: O(n)
@@ -101,3 +100,10 @@ class Solution3(object):
         :rtype: List[int]
         """
         return [key for key, _ in collections.Counter(nums).most_common(k)]
+
+# Heap solution
+# If k = 1 the linear-time solution is quite simple. One could keep the frequency of elements appearance
+# in a hash map and update the maximum element at each step.
+#
+# When k > 1 we need a data structure that has a fast access to the elements ordered by their frequencies.
+# The idea here is to use the heap which is also known as priority queue.
