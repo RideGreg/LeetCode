@@ -10,7 +10,6 @@
 #  1, 10, 11, 12, 13.
 #
 
-
 class Solution(object):
     def countDigitOne(self, n):
         """
