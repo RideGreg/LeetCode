@@ -80,24 +80,26 @@ class Solution(object):
         :type N: int
         :rtype: int
         """
-        def f(x):
-            ans = 0
-            r = 1
+        def check(n):
+            # Each combination of n moves with k broken eggs could represent a unique F.
+            # Thus, the range size of F that all cominations can cover is the sum of C(n, k), k = 1..K
             # start from 1Cx = x, then 2Cx = x(x-1)/2, ... to kCx = x(x-1)..(x-k+1)/k!
             # 0Cx = 1 is not considered because floor 0 is not included f(x) (max # of floors can distinguished)
-            for i in range(1, K+1):
-                r *= x-i+1
-                r //= i
-                ans += r
-                if ans >= N: break
-            return ans
+            total, c = 0, 1
+            for k in range(1, K+1):
+                c *= n-k+1
+                c //= k
+                total += c
+                if total >= N:
+                    return True
+            return False
 
         lo, hi = 1, N
         while lo < hi:
             mi = (lo + hi) // 2
-            if f(mi) < N: # mi move is invalid, discard
+            if not check(mi): # mi move is invalid, discard anything <= mi
                 lo = mi + 1
-            else:
+            else:             # mi is valid, discard anything > mi
                 hi = mi
         return lo
 
