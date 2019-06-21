@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 860
 # At a lemonade stand, each lemonade costs $5.
 #
 # Customers are standing in a queue to buy from you,
@@ -48,8 +49,33 @@
 # - 0 <= bills.length <= 10000
 # - bills[i] will be either 5, 10, or 20.
 
+import collections
+
 
 class Solution(object):
+    def lemonadeChange(self, bills):
+        """
+        :type bills: List[int]
+        :rtype: bool
+        """
+        coins = [20, 10, 5]
+        counts = collections.defaultdict(int)
+        for bill in bills:
+            counts[bill] += 1
+            change = bill - coins[-1]
+            for coin in coins:
+                if change == 0:
+                    break
+                if change >= coin:
+                    count = min(counts[coin], change//coin)
+                    counts[coin] -= count
+                    change -= coin * count
+            if change != 0:
+                return False
+        return True
+
+
+class Solution2(object):
     def lemonadeChange(self, bills):
         """
         :type bills: List[int]
