@@ -16,10 +16,25 @@ class Solution:
     # @param {Interval[]} intervals
     # @return {integer}
     def minMeetingRooms(self, intervals):
+        result, curr = 0, 0
+        line = [x for i, j in intervals for x in [[i, 1], [j, -1]]]
+        line.sort()
+        for _, num in line:
+            curr += num
+            result = max(result, curr)
+        return result
+
+
+# Time:  O(nlogn)
+# Space: O(n)
+class Solution2(object):
+    # @param {Interval[]} intervals
+    # @return {integer}
+    def minMeetingRooms(self, intervals):
         starts, ends = [], []
-        for i in intervals:
-            starts.append(i.start)
-            ends.append(i.end)
+        for start, end in intervals:
+            starts.append(start)
+            ends.append(end)
 
         starts.sort()
         ends.sort()
@@ -39,12 +54,12 @@ class Solution:
         return min_rooms
 
 
-# time: O(nlogn)
-# space: O(n)
+# Time: O(nlogn)
+# Space: O(n)
 from heapq import heappush, heappop
 
 
-class Solution2(object):
+class Solution3(object):
     def minMeetingRooms(self, intervals):
         """
         :type intervals: List[Interval]
@@ -53,15 +68,15 @@ class Solution2(object):
         if not intervals:
             return 0
         
-        intervals.sort(key=lambda x: x.start)
+        intervals.sort(key=lambda x: x[0])
         free_rooms = []
         
-        heappush(free_rooms, intervals[0].end)
+        heappush(free_rooms, intervals[0][1])
         for interval in intervals[1:]:
-            if free_rooms[0] <= interval.start:
+            if free_rooms[0] <= interval[0]:
                 heappop(free_rooms)
             
-            heappush(free_rooms, interval.end)
+            heappush(free_rooms, interval[1])
         
         return len(free_rooms)
 
