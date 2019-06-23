@@ -7,13 +7,17 @@
 #         self.start = s
 #         self.end = e
 
-class Solution:
+class Solution(object):
     # @param {Interval[]} intervals
     # @return {boolean}
     def canAttendMeetings(self, intervals):
-        intervals.sort(key=lambda x: x.start)
+        """
+        :type intervals: List[List[int]]
+        :rtype: bool
+        """
+        intervals.sort(key=lambda x: x[0])
 
         for i in xrange(1, len(intervals)):
-            if intervals[i].start < intervals[i-1].end:
+            if intervals[i][0] < intervals[i-1][1]:
                 return False
         return True
