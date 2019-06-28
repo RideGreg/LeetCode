@@ -1,5 +1,5 @@
 # Time:  O(m * n)
-# Space: O(m + n)
+# Space: O(min(m, n))
 #
 # Follow up for "Unique Paths":
 #

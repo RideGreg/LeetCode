@@ -27,8 +27,9 @@ class Solution(object):
         """
         res = []
         while N:
-            res.append(-N & 1)  # N % -2
-            N = -(N >> 1)  # N //= -2
+            # replace N%-2 by sth%2, replace N//-2 by sth//2.
+            res.append((-N) & 1) # N%-2 = (-N) % 2. Note N%2 and (-N)%2 the result (last digit) is the same
+            N = -(N >> 1) # N//-2 = - (N//2) = -1, if N=3. Note (-N) >> 1 is wrong, which is -2 when N=3.
 
         return "".join(map(str, res[::-1])) if res else "0"
 
