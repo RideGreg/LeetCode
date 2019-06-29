@@ -51,6 +51,7 @@ class ExamRoom(object):
         self.__num = N
         self.__seats = {-1: [-1, self.__num], self.__num: [-1, self.__num]}
         self.__max_heap = [(-self.__distance((-1, self.__num)), -1, self.__num)]
+
     def seat(self):
         """
         :rtype: int
