@@ -1,3 +1,4 @@
+# -*- encoding=utf-8 -*-
 # Time:  O(logn)
 # Space: O(1)
 
@@ -36,6 +37,9 @@ import math
 
 
 class Solution(object):
+    # 一元二次方程ax^2 + bx + c = 0 求根公式 x1 = -b-sqrt(b^2-4ac)/2a, x2 = -b+sqrt(b^2-4ac)/2a
+    # x(x+1)//2 <= n => x^2+x-2n <= 0 因为判别式b^2-4ac = 8n+1 > 0 所以有两实数解，所以不等式的解集为 
+    # (-sqrt(8n + 1) -1)/2 <= x <= (sqrt(8n + 1) -1)/2
     def arrangeCoins(self, n):
         """
         :type n: int
@@ -47,16 +51,34 @@ class Solution(object):
 # Time:  O(logn)
 # Space: O(1)
 class Solution2(object):
-    def arrangeCoins(self, n):
+    def arrangeCoins_ming(self, n):
+        def check(k):
+            return k*(k+1)//2 <= n
+        
+        l, r = 0, n              # range [l, r] contains at least one valid solution 0
+        while l < r:
+            m = l + (r-l+1)//2   # m is close to r not l, since we have l = m below. 
+            if check(m):
+                l = m
+            else:
+                r = m - 1
+        return l                 # reutrn r is also okay, since l equals to r.
+
+    def arrangeCoins_kamyu(self, n):
         """
         :type n: int
         :rtype: int
         """
+        def check(mid, n):
+            return mid*(mid+1) <= 2*n
+
         left, right = 1, n
         while left <= right:
-            mid = left + (right - left) / 2
-            if 2 * n < mid * (mid+1):
-                right = mid - 1
+            mid = left + (right-left)//2
+            if not check(mid, n):
+                right = mid-1
             else:
-                left = mid + 1
-        return left - 1
+                # becuase left maybe = mid, in the case of check ok, cannot set left=mid which is dead loop never converge.
+                # so left-1 is actually a valid answer, so when left>right exit, the answer is left-1 or right.
+                left = mid+1
+        return left-1   # return right is also okay
