@@ -1,4 +1,4 @@
-# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-1132%20%2F%201132-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
+# [LeetCode](https://leetcode.com/problemset/algorithms/) ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++%2011-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) ![Update](https://img.shields.io/badge/update-weekly-green.svg) ![Progress](https://img.shields.io/badge/progress-1140%20%2F%201140-ff69b4.svg) [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104) ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)
 
 The number of LeetCode questions is increasing every week.
 For more questions and solutions, you can see my [LintCode](https://github.com/RideGreg/LintCode) repository.
@@ -548,6 +548,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 0992| [Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/) |[C++](./C++/subarrays-with-k-different-integers.cpp)  [Python](./Python/subarrays-with-k-different-integers.py) | _O(n)_ | _O(k)_ | Hard         || Two Pointers
 1001| [Grid Illumination](https://leetcode.com/problems/grid-illumination/) |[C++](./C++/grid-illumination.cpp)  [Python](./Python/grid-illumination.py) | _O(l + q)_ | _O(l)_ | Hard         ||
 1124| [Longest Well-Performing Interval](https://leetcode.com/problems/longest-well-performing-interval/) |[C++](./C++/longest-well-performing-interval.cpp)  [Python](./Python/longest-well-performing-interval.py) | _O(n)_ | _O(n)_ | Medium         ||
+1133| [Largest Unique Number](https://leetcode.com/problems/largest-unique-number/) | [C++](./C++/largest-unique-number.cpp) [Python](./Python/largest-unique-number.py) | _O(n)_| _O(n)_| Easy |🔒| Hash |
 
 ## Math
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -655,6 +656,7 @@ I'll keep updating for full summary and better solutions. Stay tuned for updates
 1121| [Divide Array Into Increasing Sequences](https://leetcode.com/problems/divide-array-into-increasing-sequences/) | [C++](./C++/divide-array-into-increasing-sequences.cpp) [Python](./Python/divide-array-into-increasing-sequences.py) | _O(n)_ | _O(1)_ |  Hard | 🔒 |
 1128| [Number of Equivalent Domino Pairs](https://leetcode.com/problems/number-of-equivalent-domino-pairs/) | [C++](./C++/number-of-equivalent-domino-pairs.cpp) [Python](./Python/number-of-equivalent-domino-pairs.py) | _O(n)_ | _O(n)_ |  Easy ||
 1131| [Maximum of Absolute Value Expression](https://leetcode.com/problems/maximum-of-absolute-value-expression/) | [C++](./C++/maximum-of-absolute-value-expression.cpp) [Python](./Python/maximum-of-absolute-value-expression.py) | _O(n)_ | _O(1)_ |  Medium ||
+1134| [Armstrong Number](https://leetcode.com/problems/armstrong-number/) | [C++](./C++/armstrong-number.cpp) [Python](./Python/armstrong-number.py) | _O(klogk)_ | _O(k)_ |  Easy | 🔒 |
 
 ## Sort
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -862,6 +864,7 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 1091|[Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)| [C++](./C++/shortest-path-in-binary-matrix.cpp) [Python](./Python/shortest-path-in-binary-matrix.py)| _O(n^2)_ | _O(n)_ | Medium | | |
 1102|[Path With Maximum Minimum Value](https://leetcode.com/problems/path-with-maximum-minimum-value/)| [C++](./C++/path-with-maximum-minimum-value.cpp) [Python](./Python/path-with-maximum-minimum-value.py)| _O((m * n) * log(m * n))_ | _O(m * n)_ | Medium | 🔒 | Binary Search, DFS, `Dijkstra's algorithm` |
 1129|[Shortest Path with Alternating Colors](https://leetcode.com/problems/shortest-path-with-alternating-colors/)| [C++](./C++/shortest-path-with-alternating-colors.cpp) [Python](./Python/shortest-path-with-alternating-colors.py)| _O(n + e)_ | _O(n + e)_ | Medium |||
+1136| [Parallel Courses](https://leetcode.com/problems/parallel-courses/)| [C++](./C++/parallel-courses.cpp) [Python](./Python/parallel-courses.py)   | _O(\|V\| + \|E\|)_         | _O(\|E\|)_          | Hard         |🔒| Topological Sort |
 
 ## Depth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1067,7 +1070,9 @@ xxxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | |
 1092| [Shortest Common Supersequence](https://leetcode.com/problems/shortest-common-supersequence/) | [C++](./C++/shortest-common-supersequence.cpp) [Python](./Python/shortest-common-supersequence.py) |  _O(m * n)_ | _O(m * n)_   | Hard         |||
 1105| [Filling Bookcase Shelves](https://leetcode.com/problems/filling-bookcase-shelves/) | [C++](./C++/filling-bookcase-shelves.cpp) [Python](./Python/filling-bookcase-shelves.py) |  _O(n^2)_ | _O(n)_   | Medium         |||
 1125| [Smallest Sufficient Team](https://leetcode.com/problems/smallest-sufficient-team/) | [C++](./C++/smallest-sufficient-team.cpp) [Python](./Python/smallest-sufficient-team.py) |  _O(m * 2^n)_ | _O(2^n)_   | Hard         |||
-
+1137| [N-th Tribonacci Number](https://leetcode.com/problems/n-th-tribonacci-number/)| [C++](./C++/n-th-tribonacci-number.cpp) [Python](./Python/n-th-tribonacci-number.py) | _O(logn)_    | _O(1)_          | Easy           | variant of [Fibonacci Number](https://leetcode.com/problems/fibonacci-number/) | Matrix Exponentiation
+1139| [Largest 1-Bordered Square](https://leetcode.com/problems/largest-1-bordered-square/)| [C++](./C++/largest-1-bordered-square.cpp) [Python](./Python/largest-1-bordered-square.py) | _O(n^3)_    | _O(n^2)_          | Medium           | |
+1140 | [Stone Game II](https://leetcode.com/problems/stone-game-ii/) | [C++](./C++/stone-game-ii.cpp) [Python](./Python/stone-game-ii.py) | _O(n*(logn)^2)_ | _O(nlogn)_ | Medium || |
 
 ## Greedy
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1131,6 +1136,7 @@ xxxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | |
 0990 | [Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/) | [C++](./C++/satisfiability-of-equality-equations.cpp) [Python](./Python/satisfiability-of-equality-equations.py) | _O(n)_ | _O(1)_ | Medium           || Union Find |
 1042 | [Flower Planting With No Adjacent](https://leetcode.com/problems/flower-planting-with-no-adjacent/) | [C++](./C++/flower-planting-with-no-adjacent.cpp) [Python](./Python/flower-planting-with-no-adjacent.py) | _O(n)_ | _O(n)_ | Easy           |||
 1101 | [The Earliest Moment When Everyone Become Friends](https://leetcode.com/problems/the-earliest-moment-when-everyone-become-friends/) | [C++](./C++/the-earliest-moment-when-everyone-become-friends.cpp) [Python](./Python/the-earliest-moment-when-everyone-become-friends.py) | _O(nlogn)_ | _O(n)_ | Medium           |🔒| Union Find |
+1135 | [Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/) | [C++](./C++/connecting-cities-with-minimum-cost.cpp) [Python](./Python/connecting-cities-with-minimum-cost.py) | _O(nlogn)_ | _O(n)_ | Medium           |🔒| Union Find, `Kruskal's Algorithm`, MST |
 
 ## Geometry
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1141,7 +1147,8 @@ xxxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | |
 ## Simulation
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
-874 | [Walking Robot Simulation](https://leetcode.com/problems/walking-robot-simulation/)  | [C++](./C++/walking-robot-simulation.cpp) [Python](./Python/walking-robot-simulation.py) | _O(n + k)_| _O(k)_| Easy           ||| 
+0874 | [Walking Robot Simulation](https://leetcode.com/problems/walking-robot-simulation/)  | [C++](./C++/walking-robot-simulation.cpp) [Python](./Python/walking-robot-simulation.py) | _O(n + k)_| _O(k)_| Easy           ||| 
+1138 | [Alphabet Board Path](https://leetcode.com/problems/alphabet-board-path/)  | [C++](./C++/alphabet-board-path.cpp) [Python](./Python/alphabet-board-path.py) | _O(n)_| _O(1)_| Medium           ||| 
 
 ## Design
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
