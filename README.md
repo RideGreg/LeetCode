@@ -948,7 +948,6 @@ xxx| [Minimax Sample] | [Python](./Python/minimax.py) | | | Medium | | |
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
 xxxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | | |
-xxxx| [Longest Common Subsequence](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [Python](./longest-common-subsequence.py) | _O(m*n)_ | _O(m*n)_ | Easy | | |
 0010| [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | [Python](./Python/regular-expression-matching.py) | _O(m * n)_ | _O(n)_ | Hard ||
 0044| [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/) | [Python](./Python/wildcard-matching.py) | _O(m * n)_ | _O(1)_    | Hard           || Greedy
 0053| [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)| [Python](./Python/maximum-subarray.py)| _O(n)_     | _O(1)_         | Medium         ||

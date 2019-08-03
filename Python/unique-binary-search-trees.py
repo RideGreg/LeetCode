@@ -15,6 +15,8 @@
 #
 
 # Math solution. Answer is a Catalan Number = C(2n, n) - C(2n, n+1) = C(2n, n)/(n+1) = (2n)! / ((n+1)! * n!)
+# C(2n,n) is # of total combinations of n '(' in 2n positions, C(2n,n+1) is # of bad combinations
+# that doesn't meet the condition #of '(' > #of ')' i.e. n+1 '(' and n-1 ')'.
 # start from C_0: 1,1,2,5,14,42,132... Catalan Number solves many combinatorial problem,
 # iff this regulation is satisfied: C_0 = 1,  and C_n = sum{C_i * C_n-1-i)} for i is 0..n-1.
 # or the problem can be described as: order n pairs of (a, b), at any time cannot have more B than A.

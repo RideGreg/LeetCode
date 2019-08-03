@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 #
+# 123
 # Say you have an array for which the ith element
 # is the price of a given stock on day i.
 #
@@ -28,42 +29,41 @@ class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
     # @param prices, a list of integer
     # @return an integer
 
-    # This solution is AN EXTENSION OF SOLUTION for buy-and-sell-stock-i.
-    # Maintain the min of if we just buy 1, 2, 3... stock, and the max of if we just sell 1,2,3... stock.
-    # In order to get the final max profit, profit1 must be as relatively most as possible to produce a small cost2,
-    # and therefore cost2 can be as less as possible to give the final max profit2.
+    # This solution is AN EXTENSION OF SOLUTION for buy-and-sell-stock-i, and can extend to k.
+    # bal_buy[i] is the balance after ith buy, bal_sell[i] is the balance after ith sell.
+    def maxProfit(self, prices):
+        n, k = len(prices), 2
+        bal_buy = [float('-inf')] * (k+1)
+        bal_sell = [0] * (k+1)
+        for i in range(n):
+            # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set bal_buy[0].
+            # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
+            for j in range(1, min(k, i+1)+1):
+                bal_buy[j] = max(bal_buy[j], bal_sell[j-1] - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+                bal_sell[j] = max(bal_sell[j], bal_buy[j] + prices[i])
+        return bal_sell[k]
+
+
+# Time:  O(n)
+# Space: O(1)
+class Solution2(object):
+    # similar to Solution 1, but track cost/profit instead of balances.
+
+    # Maintain the min COST of if we just buy 1, 2, 3... stock, and the max PROFIT (balance) of if we just sell 1,2,3... stock.
+    # In order to get the final max profit, profit1 must be as relatively large as possible to produce a small cost2,
+    # and therefore cost2 can be as small as possible to give the final max profit2.
     def maxProfit(self, prices):
         cost1, cost2 = float("inf"), float("inf")
         profit1, profit2 = 0, 0
-        for i in prices:
-            cost1 = min(cost1, i)
-            profit1 = max(profit1, i - cost1)
-            cost2 = min(cost2, i - profit1)
-            profit2 = max(profit2, i - cost2)
+        for p in prices:
+            cost1 = min(cost1, p)             # lowest price
+            profit1 = max(profit1, p - cost1) # global max profit for 1 buy-sell transaction
+            cost2 = min(cost2, p - profit1)   # adjust the cost by reducing 1st profit
+            profit2 = max(profit2, p - cost2) # global max profit for 1 to 2 transactions
         return profit2
 
 
-# Time:  O(k * n)
-# Space: O(k)
-class Solution2(object):
-    # @param prices, a list of integer
-    # @return an integer
-    def maxProfit(self, prices):
-        return self.maxAtMostKPairsProfit(prices, 2)
-
-    def maxAtMostKPairsProfit(self, prices, k):
-        max_buy = [float("-inf") for _ in xrange(k + 1)]
-        max_sell = [0 for _ in xrange(k + 1)]
-
-        for i in xrange(len(prices)):
-            for j in xrange(1, min(k, i/2+1) + 1):
-                max_buy[j] = max(max_buy[j], max_sell[j-1] - prices[i])
-                max_sell[j] = max(max_sell[j], max_buy[j] + prices[i])
-
-        return max_sell[k]
-
-
-# This solution cannot extend to k transactions.
+# This solution CANNOT extend to k transactions.
 # Time:  O(n)
 # Space: O(n)
 class Solution3(object):
@@ -75,21 +75,19 @@ class Solution3(object):
     # is length N), not between two days.
     def maxProfit(self, prices):
         N = len(prices)
-        min_price, max_profit_from_left, max_profits_from_left = \
-            float("inf"), 0, [0]*N
-        max_price, max_profit_from_right, max_profits_from_right = 0, 0, [0]*N
+        _min, maxProfitLeft, maxProfitsLeft = float("inf"), 0, [0]*N
+        _max, maxProfitRight, maxProfitsRight = 0, 0, [0]*N
 
         for i in range(N):
-            min_price = min(min_price, prices[i])
-            max_profit_from_left = max(max_profit_from_left, prices[i] - min_price)
-            max_profits_from_left[i] = max_profit_from_left
+            _min = min(_min, prices[i])
+            maxProfitLeft = max(maxProfitLeft, prices[i] - _min)
+            maxProfitsLeft[i] = maxProfitLeft
 
-            max_price = max(max_price, prices[N-1-i])
-            max_profit_from_right = max(max_profit_from_right,
-                                        max_price - prices[N-1-i])
-            max_profits_from_right[N-1-i] = max_profit_from_right
+            _max = max(_max, prices[N-1-i])
+            maxProfitRight = max(maxProfitRight, _max - prices[N-1-i])
+            maxProfitsRight[N-1-i] = maxProfitRight
 
-        return max(max_profits_from_left[i]+max_profits_from_right[i]
+        return max(maxProfitsLeft[i]+maxProfitsRight[i]
                    for i in range(N)) if N else 0
 
 print(Solution().maxProfit([1,2,3,4,5])) # 4

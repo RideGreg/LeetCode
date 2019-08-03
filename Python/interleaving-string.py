@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(m + n)
 #
+# 97
 # Given s1, s2, s3, find whether s3 is formed by the interleaving of s1 and s2.
 #
 # For example,
@@ -17,21 +18,25 @@
 # Dynamic Programming + Sliding Window
 class Solution:
     # @return a boolean
-    def isInterleave(self, s1, s2, s3):
+    def isInterleave(self, s1, s2, s3): # USE THIS
         if len(s1) + len(s2) != len(s3):
             return False
+
         if len(s1) > len(s2):
-            return self.isInterleave(s2, s1, s3)
-        match = [False for i in xrange(len(s1) + 1)]
-        match[0] = True
-        for i in xrange(1, len(s1) + 1):
-            match[i] = match[i -1] and s1[i - 1] == s3[i - 1]
-        for j in xrange(1, len(s2) + 1):
-            match[0] = match[0] and s2[j - 1] == s3[j - 1]
-            for i in xrange(1, len(s1) + 1):
-                match[i] = (match[i - 1] and s1[i - 1] == s3[i + j - 1]) \
-                                       or (match[i] and s2[j - 1] == s3[i + j - 1])
-        return match[-1]
+            s1, s2 = s2, s1
+
+        m, n = len(s1), len(s2)
+        dp = [False] * (m + 1)
+        dp[0] = True
+        for i in range(1, m + 1):
+            dp[i] = dp[i - 1] and (s1[i - 1] == s3[i - 1])
+
+        for j in range(1, n + 1):
+            dp[0] = dp[0] and (s2[j - 1] == s3[j - 1])
+            for i in range(1, m + 1):
+                dp[i] = (dp[i - 1] and (s1[i - 1] == s3[i + j - 1])) or (dp[i] and (s2[j - 1] == s3[i + j - 1]))
+        return dp[-1]
+
 
 # Time:  O(m * n)
 # Space: O(m * n)
@@ -82,6 +87,7 @@ class Solution3:
         return result
 
 if __name__ == "__main__":
-    print Solution().isInterleave("a", "", "a")
-    print Solution().isInterleave("aabcc", "dbbca", "aadbbcbcac")
-    print Solution().isInterleave("aabcc", "dbbca", "aadbbbaccc")
+    print(Solution().isInterleave("a", "", "c")) # False
+    print(Solution().isInterleave("a", "", "a")) # True
+    print(Solution().isInterleave("aabcc", "dbbca", "aadbbcbcac")) # True
+    print(Solution().isInterleave("aabcc", "dbbca", "aadbbbaccc")) # False

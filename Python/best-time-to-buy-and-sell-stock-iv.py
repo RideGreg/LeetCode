@@ -20,25 +20,22 @@ except NameError:
 
 class Solution(object):
     # @return an integer as the maximum profit
-    def maxProfit(self, k, prices):
-        if k >= len(prices) / 2:
-            return self.maxAtMostNPairsProfit(prices)
+    def maxProfit(self, k, prices): # USE THIS: refer to at most 2 transactions problem (best-time-to-buy-and-sell-iii.py)
+        if k == 0 or len(prices) == 0: return 0
 
-        return self.maxAtMostKPairsProfit(prices, k)
+        # corner case: huge k will cause memory error in allocating cost array
+        # this case is as many transactions as you like problem (best-time-to-buy-and-sell-ii.py)
+        n = len(prices)
+        if k >= n // 2:
+            return sum(max(0, prices[i] - prices[i - 1]) for i in range(1, n))
 
-    def maxAtMostNPairsProfit(self, prices):
-        profit = 0
-        for i in xrange(len(prices) - 1):
-            profit += max(0, prices[i + 1] - prices[i])
-        return profit
+        bal_buy = [float('-inf')] * (k+1)
+        bal_sell = [0] * (k+1)
+        for i in range(n):
+            # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set bal_buy[0].
+            # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
+            for j in range(1, min(k, i+1)+1):
+                bal_buy[j] = max(bal_buy[j], bal_sell[j-1] - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+                bal_sell[j] = max(bal_sell[j], bal_buy[j] + prices[i])
+        return bal_sell[k]
 
-    def maxAtMostKPairsProfit(self, prices, k):
-        max_buy = [float("-inf") for _ in xrange(k + 1)]
-        max_sell = [0 for _ in xrange(k + 1)]
-
-        for i in xrange(len(prices)):
-            for j in xrange(1, min(k, i/2+1) + 1):
-                max_buy[j] = max(max_buy[j], max_sell[j-1] - prices[i])
-                max_sell[j] = max(max_sell[j], max_buy[j] + prices[i])
-
-        return max_sell[k]
