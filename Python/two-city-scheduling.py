@@ -40,9 +40,9 @@ class Solution(object):
             while l <= r:
                 pivot = random.randint(l, r)
                 new_pivot = partition(l, r, pivot)
-                if new_pivot == k - 1: # kamyu changed to new_pivot == k ??
+                if new_pivot == k:
                     return
-                elif new_pivot > k - 1: # kamyu changed to new_pivot > k ??
+                elif new_pivot > k:
                     r = new_pivot - 1
                 else:
                     l = new_pivot + 1

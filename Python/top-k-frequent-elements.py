@@ -60,6 +60,7 @@ class Solution2(object):
         :type k: int
         :rtype: List[int]
         """
+<<<<<<< HEAD
         def kthElement(A, k):
             def partition(l, r, pivot):
                 new_pivot = l
@@ -76,9 +77,9 @@ class Solution2(object):
             while l <= r:
                 pivot = random.randint(l, r)
                 new_pivot = partition(l, r, pivot)
-                if new_pivot == k - 1:
+                if new_pivot == k:
                     return
-                elif new_pivot > k - 1:
+                elif new_pivot > k:
                     r = new_pivot - 1
                 else:
                     l = new_pivot + 1
@@ -87,7 +88,7 @@ class Solution2(object):
         pairs = []
         for n, count in counts.items():
             pairs.append((-count, n))
-        kthElement(pairs, k)
+        kthElement(pairs, k-1)
         return [x[1] for x in pairs[:k]]
 
 # Time:  O(nlogk)
