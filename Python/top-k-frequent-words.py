@@ -39,6 +39,7 @@ class Solution(object):
         :type k: int
         :rtype: List[str]
         """
+<<<<<<< HEAD
         def kthElement(A, k):
             import random
             def partition(l, r, pivot): # O(n) on average
@@ -55,9 +56,9 @@ class Solution(object):
             while l <= r:
                 pivot = random.randint(l, r)
                 new_pivot = partition(l, r, pivot)
-                if new_pivot == k-1:
+                if new_pivot == k:
                     return
-                elif new_pivot > k-1:
+                elif new_pivot > k:
                     r = new_pivot - 1
                 else:
                     l = new_pivot + 1
@@ -66,7 +67,7 @@ class Solution(object):
         pairs = []
         for w, c in counts.items():
             pairs.append((-c, w))
-        kthElement(pairs, k)
+        kthElement(pairs, k-1)
         return [x[1] for x in sorted(pairs[:k])]
 
 # Time:  O(nlogk)
