@@ -1,5 +1,5 @@
-# Time:  O(n) ~ O(n^2)
-# Space: O(n)
+# Time:  O(n^2)
+# Space: O(n^2)
 
 # A frog is crossing a river. The river is divided into x units and
 # at each unit there may or may not exist a stone.
