@@ -60,7 +60,7 @@ class Solution(object):
             cur_min = min(cur_min, 0) + a
             global_min = min(global_min, cur_min)
             total += a
-        return max(global_max, total-global_min) if global_max > 0 else global_max
+        return max(global_max, total-global_min) if global_max >= 0 else global_max # >= 0 or > 0
 
     # Time O(n^2)
     def maxSubarraySumCircular_TLE(self, A):
