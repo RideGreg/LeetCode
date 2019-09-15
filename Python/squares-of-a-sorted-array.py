@@ -6,6 +6,8 @@
 # squares of each number, also in sorted non-decreasing order.
 # Input: [-7,-3,2,3,11]
 # Output: [4,9,9,49,121]
+import bisect
+
 
 class Solution(object):
     # Two pointers. Time O(n)
@@ -29,9 +31,7 @@ class Solution(object):
         :type A: List[int]
         :rtype: List[int]
         """
-        right = 0
-        while right < len(A) and A[right] < 0:
-            right += 1
+        right = bisect.bisect_left(A, 0)
         left = right-1
 
         result = []
