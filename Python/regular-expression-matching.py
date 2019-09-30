@@ -24,25 +24,34 @@
 # dp with rolling window
 class Solution:
     # @return a boolean
-    def isMatchO(self, s, p):
-        k = 3
-        result = [[False for j in xrange(len(p) + 1)] for i in xrange(k)]
+    def isMatch(self, s, p):
+        def matchSingleChar(cp, cs):
+            return cp == cs or cp == '.'
 
-        result[0][0] = True
-        for i in xrange(2, len(p) + 1):
-            if p[i-1] == '*':
-                result[0][i] = result[0][i-2]
+        k, m, n = 2, len(s), len(p)
+        if not n: return m == 0
+        dp = [[False] * (n + 1) for _ in range(k)]
 
-        for i in xrange(1,len(s) + 1):
-            if i > 1:
-                result[0][0] = False
-            for j in xrange(1, len(p) + 1):
-                if p[j-1] != '*':
-                    result[i % k][j] = result[(i-1) % k][j-1] and (s[i-1] == p[j-1] or p[j-1] == '.')
+        dp[0][0] = True
+        for i in range(2, n + 1):
+            if p[i - 1] == '*':
+                # * match 0 char in s: not use * and the char before *
+                dp[0][i] = dp[0][i - 2]
+
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if p[j - 1] == '*':
+                    # * match 0 char in s: not use * and the char before *, or
+                    # * match 1+ chars in s: s' last char has to match the char before *, and removing s's last char, s[:i-1] also matchs p
+                    dp[i % k][j] = dp[i % k][j - 2] or (dp[(i - 1) % k][j] and matchSingleChar(p[j - 2], s[i - 1]))
                 else:
-                    result[i % k][j] = result[i % k][j-2] or (result[(i-1) % k][j] and (s[i-1] == p[j-2] or p[j-2] == '.'))
+                    # last chars have to match and the substring w/o last chars have to match too
+                    dp[i % k][j] = dp[(i - 1) % k][j - 1] and matchSingleChar(p[j - 1], s[i - 1])
 
-        return result[len(s) % k][len(p)]
+            if i == 1:
+                dp[0][0] = False   # only dp[i][0] is always False except dp[0][0]
+
+        return dp[m % k][-1]
 
 
 # dp
@@ -149,12 +158,14 @@ class Solution4:
             return self.isMatch(s, p[2:])
 
 if __name__ == "__main__":
-    print Solution().isMatch("abab", "a*b*") # False
-    print Solution().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c") # False
-    print Solution().isMatch("aa","a") # False
-    print Solution().isMatch("aa","aa") # True
-    print Solution().isMatch("aaa","aa") # False
-    print Solution().isMatch("aa", "a*") # True
-    print Solution().isMatch("aa", ".*") # True
-    print Solution().isMatch("ab", ".*") # True
-    print Solution().isMatch("aab", "c*a*b") # True
+    print(Solution().isMatch("ba", "")) # False
+    print(Solution().isMatch("abab", "")) # False
+    print(Solution().isMatch("abab", "a*b*")) # False
+    print(Solution().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c")) # False
+    print(Solution().isMatch("aa","a")) # False
+    print(Solution().isMatch("aa","aa")) # True
+    print(Solution().isMatch("aaa","aa")) # False
+    print(Solution().isMatch("aa", "a*")) # True
+    print(Solution().isMatch("aa", ".*")) # True
+    print(Solution().isMatch("ab", ".*")) # True
+    print(Solution().isMatch("aab", "c*a*b")) # True

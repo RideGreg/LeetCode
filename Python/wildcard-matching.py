@@ -59,42 +59,48 @@ class Solution(object):
 # dp with rolling window
 # Time:  O(m * n)
 # Space: O(n)
-class Solution2(object):
+class Solution2(object):  # USE THIS
     # @return a boolean
     def isMatch(self, s, p):
-        k = 2
-        result = [[False for j in xrange(len(p) + 1)] for i in xrange(k)]
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(2)]
+        dp[0][0] = True
+        for j in range(1, n + 1):
+            if p[j - 1] == '*':
+                dp[0][j] = dp[0][j - 1]
 
-        result[0][0] = True
-        for i in xrange(1, len(p) + 1):
-            if p[i-1] == '*':
-                result[0][i] = result[0][i-1]
-        for i in xrange(1,len(s) + 1):
-            result[i % k][0] = False
-            for j in xrange(1, len(p) + 1):
-                if p[j-1] != '*':
-                    result[i % k][j] = result[(i-1) % k][j-1] and (s[i-1] == p[j-1] or p[j-1] == '?')
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if p[j - 1] == '*':
+                    dp[i % 2][j] = dp[(i - 1) % 2][j] or dp[i % 2][j - 1]
                 else:
-                    result[i % k][j] = result[i % k][j-1] or result[(i-1) % k][j]
+                    dp[i % 2][j] = dp[(i - 1) % 2][j - 1] and (p[j - 1] == s[i - 1] or p[j - 1] == '?')
+                ''' Below is a bug: due to reuse space, every cell has to be set, CANNOT be kept old value.
+                elif p[j - 1] == '?' or p[j - 1] == s[i - 1]:
+                    dp[i % 2][j] = dp[(i - 1) % 2][j - 1]
+                '''
 
-        return result[len(s) % k][len(p)]
+            if i == 1:
+                dp[0][0] = False   # only dp[i][0] is always False except dp[0][0]
+
+        return dp[m % 2][-1]
 
 
 # dp
 # Time:  O(m * n)
 # Space: O(m * n)
-class Solution:
+class Solution3:
     # @return a boolean
     def isMatch(self, s, p):
-        result = [[False for j in xrange(len(p) + 1)] for i in xrange(len(s) + 1)]
+        result = [[False for j in range(len(p) + 1)] for i in range(len(s) + 1)]
 
         result[0][0] = True
-        for i in xrange(1, len(p) + 1):
+        for i in range(1, len(p) + 1):
             if p[i-1] == '*':
                 result[0][i] = result[0][i-1]
-        for i in xrange(1,len(s) + 1):
+        for i in range(1,len(s) + 1):
             result[i][0] = False
-            for j in xrange(1, len(p) + 1):
+            for j in range(1, len(p) + 1):
                 if p[j-1] != '*':
                     result[i][j] = result[i-1][j-1] and (s[i-1] == p[j-1] or p[j-1] == '?')
                 else:
@@ -123,12 +129,13 @@ class Solution4:
             return self.isMatch(s, p[1:])
 
 if __name__ == "__main__":
-    print Solution().isMatch("aaaabaaaab","a*b*b")
-    print Solution().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c")
-    print Solution().isMatch("aa","a")
-    print Solution().isMatch("aa","aa")
-    print Solution().isMatch("aaa","aa")
-    print Solution().isMatch("aa", "a*")
-    print Solution().isMatch("aa", "?*")
-    print Solution().isMatch("ab", "?*")
-    print Solution().isMatch("aab", "c*a*b")
+    print(Solution2().isMatch("abcdefde", "abc*def")) # False
+    print(Solution2().isMatch("aaaabaaaab","a*b*b")) # True
+    print(Solution2().isMatch("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c")) # False
+    print(Solution2().isMatch("aa","a")) # False
+    print(Solution2().isMatch("aa","aa")) # True
+    print(Solution2().isMatch("aaa","aa")) # False
+    print(Solution2().isMatch("aa", "a*")) # True
+    print(Solution2().isMatch("aa", "?*")) # True
+    print(Solution2().isMatch("ab", "?*")) # True
+    print(Solution2().isMatch("aab", "c*a*b")) # False

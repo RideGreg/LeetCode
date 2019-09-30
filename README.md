@@ -1073,7 +1073,7 @@ xxxx| [Coins in a Line] | [Python](./Python/coins-in-a-line.py) | | | Medium | |
 1137| [N-th Tribonacci Number](https://leetcode.com/problems/n-th-tribonacci-number/)| [C++](./C++/n-th-tribonacci-number.cpp) [Python](./Python/n-th-tribonacci-number.py) | _O(logn)_    | _O(1)_          | Easy           | variant of [Fibonacci Number](https://leetcode.com/problems/fibonacci-number/) | Matrix Exponentiation
 1139| [Largest 1-Bordered Square](https://leetcode.com/problems/largest-1-bordered-square/)| [C++](./C++/largest-1-bordered-square.cpp) [Python](./Python/largest-1-bordered-square.py) | _O(n^3)_    | _O(n^2)_          | Medium           | |
 1140 | [Stone Game II](https://leetcode.com/problems/stone-game-ii/) | [C++](./C++/stone-game-ii.cpp) [Python](./Python/stone-game-ii.py) | _O(n*(logn)^2)_ | _O(nlogn)_ | Medium || |
-1143 | [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/) | [C++](./C++/longest-common-subsequence.cpp) [Python](./Python/longest-common-subsequence.py) | _O(m * n)_ | _O(min(m, n))_ | Medium || |
+1143 | [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/) [LCS2](https://yisuang1186.gitbooks.io/-shuatibiji/longest_common_subsequence.html) | [C++](./C++/longest-common-subsequence.cpp) [Python](./Python/longest-common-subsequence.py) | _O(m * n)_ | _O(min(m, n))_ | Medium || |
 
 ## Greedy
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 

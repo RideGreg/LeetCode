@@ -33,15 +33,16 @@ class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
     # bal_buy[i] is the balance after ith buy, bal_sell[i] is the balance after ith sell.
     def maxProfit(self, prices):
         n, k = len(prices), 2
-        bal_buy = [float('-inf')] * (k+1)
-        bal_sell = [0] * (k+1)
+        bal_buy = [float('-inf')] * k
+        bal_sell = [0] * k
         for i in range(n):
             # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set bal_buy[0].
             # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
-            for j in range(1, min(k, i+1)+1):
-                bal_buy[j] = max(bal_buy[j], bal_sell[j-1] - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+            for j in range(min(k, i+1)):
+                bal_after_last_sell = bal_sell[j-1] if j > 0 else 0
+                bal_buy[j] = max(bal_buy[j], bal_after_last_sell - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
                 bal_sell[j] = max(bal_sell[j], bal_buy[j] + prices[i])
-        return bal_sell[k]
+        return bal_sell[k-1]
 
 
 # Time:  O(n)

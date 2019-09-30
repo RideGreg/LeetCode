@@ -1,6 +1,7 @@
 # Time:  O(n * l^2)
 # Space: O(n)
 
+# 139
 # Given a string s and a dictionary of words dict,
 # determine if s can be segmented into a space-separated sequence of one or more dictionary words.
 #
@@ -11,39 +12,34 @@
 # Return true because "leetcode" can be segmented as "leet code".
 
 class Solution(object):
-    def wordBreak(self, s, wordDict):
+    def wordBreak(self, s, wordDict):  # USE THIS
         """
         :type s: str
         :type wordDict: Set[str]
         :rtype: bool
         """
         n = len(s)
-
-        max_len = 0
-        for string in wordDict:
-            max_len = max(max_len, len(string))
-
-        can_break = [False for _ in xrange(n + 1)]
-        can_break[0] = True
-        for i in xrange(1, n + 1):
-            for l in xrange(1, min(i, max_len) + 1):
-                if can_break[i-l] and s[i-l:i] in wordDict:
-                    can_break[i] = True
-                    break
-
-        return can_break[-1]
-
-    def wordBreak_ming(self, s, wordDict):  # USE THIS
-        n = len(s)
         dset = set(wordDict)
-        maxlen = max(len(w) for w in dset) if dset else 0
+        maxLen = max(map(len, dset)) if dset else 0
 
         dp = [False] * (n+1)
         dp[0] = True
-        for j in xrange(1, n+1):
-            dp[j] = any(dp[i] and s[i:j] in dset \
-                        for i in xrange(max(0, j-maxlen), j))
+        for i in range(1, n+1):
+            dp[i] = any(dp[i-l] and s[i-l:i] in dset \
+                        for l in range(1, min(i, maxLen)+1))
         return dp[n]
+
+
+    def wordBreak_ming(self, s, wordDict): # 2D space
+        dset, n = set(wordDict), len(s)
+        dp = [[False] * n for _ in range(n)]
+
+        for i in reversed(range(n)):
+            for j in range(i, n):
+                dp[i][j] = s[i:j + 1] in dset
+                if not dp[i][j]:
+                    dp[i][j] = any(dp[i][k] and dp[k + 1][j] for k in range(i, j))
+        return dp[0][-1]
 
 if __name__ == "__main__":
     print Solution().wordBreak("leetcode", ["leet", "code"])

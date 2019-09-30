@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 213
 # Note: This is an extension of House Robber.
 #
 # After robbing those houses on that street, the thief has found himself a new place
@@ -27,11 +28,24 @@ class Solution:
 
     def robRange(self, nums, start, end):
         num_i, num_i_1 = nums[start], 0
-        for i in xrange(start + 1, end):
+        for i in range(start + 1, end):
             num_i_1, num_i_2 = num_i, num_i_1
             num_i = max(nums[i] + num_i_2, num_i_1);
 
         return num_i
 
+
+class Solution2: # USE THIS, concise
+    def rob(self, nums):
+        def foo(nums):
+            last, now = 0, 0
+            for n in nums:
+                last, now = now, max(now, last + n)
+            return now
+
+        if len(nums) == 1:
+            return nums[0]
+        return max(foo(nums[1:]), foo(nums[:-1]))
+
 if __name__ == '__main__':
-        print Solution().rob([8,4,8,5,9,6,5,4,4,10])
+        print(Solution().rob([8,4,8,5,9,6,5,4,4,10]))

@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(m + n)
 #
+# 174
 # The demons had captured the princess (P) and imprisoned her
 # in the bottom-right corner of a dungeon. T
 # he dungeon consists of M x N rooms laid out in a 2D grid.
@@ -34,17 +35,79 @@
 class Solution:
     # @param dungeon, a list of lists of integers
     # @return a integer
-    def calculateMinimumHP(self, dungeon):
-        DP = [float("inf") for _ in dungeon[0]]
+
+    # At grid P, since "at any point his health point drops to 0 or below, he dies immediately", the remaining health value
+    # should be at least 1, that is, start + dungeon >= 1, we have start = max(1, 1 - dungeon[i][j]). (Notice, at any grid,
+    # the start health should be at least 1 (for example, test case [1,0,0] require start health 1 even though it has positive
+    # remaining health at grid[0][1] and grid[0][2])
+    # Similarly, to satisfy the start health of dungeon[i][j], the start health of dungeon[i-1][j] (or dungeon[i][j-1])
+    # should be at least start[i-1][j] + dungeon[i-1][j] = start[i][j], that is, start[i-1][j] = start[i][j] - dungeon[i-1][j].
+    # In addition, if grid[i][j] can go both grid[i+1][j] and grid[i][j+1] to P, we should choose a path with less start health
+    # between grid[i+1][j] and grid[i][j+1] since it require less start health of grid[i][j].
+
+    def calculateMinimumHP_ming(self, dungeon): # USE THIS
+        m, n = len(dungeon), len(dungeon[0])
+        start = [[0] * n for _ in range(2)]
+
+        start[(m - 1) % 2][n - 1] = max(1, 1 - dungeon[m - 1][n - 1])
+        for j in reversed(range(n - 1)):
+            start[(m - 1) % 2][j] = max(1, start[(m - 1) % 2][j + 1] - dungeon[m - 1][j])
+
+        for i in reversed(range(m - 1)):
+            start[i % 2][n - 1] = max(1, start[(i + 1) % 2][n - 1] - dungeon[i][n - 1])
+            for j in reversed(range(n - 1)):
+                start[i % 2][j] = max(1, min(start[(i + 1) % 2][j], start[i % 2][j + 1]) - dungeon[i][j])
+
+        return start[0][0]
+
+    def calculateMinimumHP_kamyu(self, dungeon): # similar to the above
+        m, n = len(dungeon), len(dungeon[0])
+        DP = float("inf") * n
         DP[-1] = 1
 
-        for i in reversed(xrange(len(dungeon))):
+        for i in reversed(range(m)):
             DP[-1] = max(DP[-1] - dungeon[i][-1], 1)
-            for j in reversed(xrange(len(dungeon[i]) - 1)):
+            for j in reversed(range(n - 1)):
                 min_HP_on_exit = min(DP[j], DP[j + 1])
                 DP[j] = max(min_HP_on_exit - dungeon[i][j], 1)
 
         return DP[0]
+
+
+class Solution_wrong:
+    # this method doesn't work, go forward from top-left to bottom-right
+    # two helper 2D arrays: _sum for total health travelled, pathMin for min start health needed on this path
+    def calculateMinimumHP_wrong_attempt(self, dungeon):
+        m, n = len(dungeon), len(dungeon[0])
+        _sum = [[0] * n for _ in range(2)]
+        pathMin = [[0] * n for _ in range(2)]
+        for j in range(n):
+            _sum[0][j] = dungeon[0][j] + (_sum[0][j-1] if j > 0 else 0)
+            pathMin[0][j] = min(_sum[0][j], pathMin[0][j-1] if j > 0 else float('inf'))
+
+        for i in range(1, m):
+            _sum[i%2][0] = dungeon[i][0] + _sum[(i-1)%2][0]
+            pathMin[i%2][0] = min(_sum[i%2][0], pathMin[(i-1)%2][0])
+            for j in range(1, n):
+                # fail for [[1, -3, 3], [0, -2, 0], [-3, -3, -3]]
+                # to reach dungeon[2][2], best is right->right->down->down, but
+                # the algorithm previously set the best path to reach dungeon[1][2] is down->right->right
+                fromUp = min(pathMin[(i-1)%2][j], _sum[(i-1)%2][j] + dungeon[i][j])
+                fromLeft = min(pathMin[i%2][j - 1], _sum[i%2][j - 1] + dungeon[i][j])
+                if fromUp > fromLeft:
+                    pathMin[i % 2][j] = fromUp
+                    _sum[i % 2][j] = _sum[(i - 1) % 2][j] + dungeon[i][j]
+                else:
+                    pathMin[i % 2][j] = fromLeft
+                    _sum[i % 2][j] = _sum[i % 2][j - 1] + dungeon[i][j]
+
+                ''' fail for [[1,-4,5,-99], [2,-2,-2,-1]]
+                _sum[i%2][j] = max(_sum[(i-1)%2][j], _sum[i%2][j - 1]) + dungeon[i][j]
+                pathMin[i%2][j] = max(min(pathMin[(i-1)%2][j], _sum[(i-1)%2][j] + dungeon[i][j]),
+                                      min(pathMin[i%2][j - 1], _sum[i%2][j - 1] + dungeon[i][j]))
+                '''
+        return 1 - pathMin[(m-1)%2][-1] if pathMin[(m-1)%2][-1] <= 0 else 1
+
 
 # Time:  O(m * n logk), where k is the possible maximum sum of loses
 # Space: O(m + n)
@@ -95,13 +158,21 @@ class Solution2:
         return remain_HP[-1] > 0
 
 if __name__ == "__main__":
+    print(Solution().calculateMinimumHP([[1,-4,5,-99],
+                                         [2,-2,-2,-1]]))  # 3
+    print(Solution().calculateMinimumHP([[1, -3, 3],
+                                         [0, -2, 0],
+                                         [-3, -3, -3]]))  # 3
+
     dungeon = [[ -2,  -3,  3], \
                [ -5, -10,  1], \
                [ 10,  30, -5]]
-    print Solution().calculateMinimumHP(dungeon)
+    print(Solution().calculateMinimumHP(dungeon)) # 7
 
     dungeon = [[ -200]]
-    print Solution().calculateMinimumHP(dungeon)
+    print(Solution().calculateMinimumHP(dungeon)) # 201
 
     dungeon = [[0, -3]]
-    print Solution().calculateMinimumHP(dungeon)
+    print(Solution().calculateMinimumHP(dungeon)) # 4
+
+    print(Solution().calculateMinimumHP([[200]])) # 1

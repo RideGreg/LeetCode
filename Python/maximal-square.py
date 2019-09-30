@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n)
-#
+
+# 221
 # Given a 2D binary matrix filled with 0's and 1's,
 # find the largest square containing all 1's and return its area.
 #
@@ -29,46 +30,41 @@
 class Solution:
     # @param {character[][]} matrix
     # @return {integer}
-    class Solution(object):  #USE THIS: concise
-        def maximalSquare_bookshadow(self, matrix):
-            """
-            :type matrix: List[List[str]]
-            :rtype: int
-            """
-            ans = 0
-            if not matrix: return ans
-            m, n = len(matrix), len(matrix[0])
-            dp = [[0] * n for _ in xrange(2)]
-            for i in xrange(m):
-                for j in xrange(n):
-                    dp[i % 2][j] = int(matrix[i][j])
-                    if i and j and dp[i % 2][j]:
-                        dp[i % 2][j] = min(dp[(i - 1) % 2][j], dp[(i - 1) % 2][j - 1], dp[i % 2][j - 1]) + 1
-                    ans = max(ans, dp[i % 2][j])
-            return ans ** 2
+    def maximalSquare(self, matrix): # USE THIS: bookshadow, best time complexity, fully use previous results
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        ans = 0
+        if not matrix: return ans
+        m, n = len(matrix), len(matrix[0])
+        dp = [[0] * n for _ in range(2)]
+        for i in range(m):
+            for j in range(n):
+                dp[i % 2][j] = int(matrix[i][j])
+                if i and j and dp[i % 2][j]:
+                    dp[i % 2][j] = min(dp[(i - 1) % 2][j], dp[(i - 1) % 2][j - 1], dp[i % 2][j - 1]) + 1
+                ans = max(ans, dp[i % 2][j])
+        return ans ** 2
 
-    # wrong for [["0","0","0","1"],["1","1","0","1"],["1","1","1","1"],["0","1","1","1"],["0","1","1","1"]]
-    def maximalSquare(self, matrix):
-        def foo(i, j, n):
-            ret = 1
-            for k in xrange(n):
-                if matrix[i][j-1-k] == '1' and matrix[i-1-k][j] == '1':
-                    ret += 1
-                else:
-                    break
-            return ret
-
+    # Time complexity is not best
+    def maximalSquare_ming(self, matrix):
         if not matrix: return 0
         m, n, dp = len(matrix), len(matrix[0]), [int(c) for c in matrix[0]]
         ans = max(dp)
-        for i in xrange(1, m):
-            for j in reversed(xrange(0, n)):
+        for i in range(1, m):
+            for j in reversed(range(0, n)):
                 if matrix[i][j] == '0':
                     dp[j] = 0
-                elif j == 0:
-                    dp[j] = 1
                 else:
-                    dp[j] = foo(i, j, dp[j-1])
+                    dp[j] = 1
+                    if j != 0:
+                        # this loop increases time complexity. If don't loop, the test case fails.
+                        for k in range(dp[j-1]):
+                            if matrix[i][j-1-k] == '1' and matrix[i-1-k][j] == '1':
+                                dp[j] += 1
+                            else:
+                                break
                 ans = max(ans, dp[j])
             print(dp)
         return ans ** 2
@@ -78,23 +74,23 @@ class Solution:
             return 0
 
         m, n = len(matrix), len(matrix[0])
-        size = [[0 for j in xrange(n)] for i in xrange(2)]
+        size = [[0 for j in range(n)] for i in range(2)]
         max_size = 0
 
-        for j in xrange(n):
+        for j in range(n):
             if matrix[0][j] == '1':
                 size[0][j] = 1
             max_size = max(max_size, size[0][j])
 
-        for i in xrange(1, m):
+        for i in range(1, m):
             if matrix[i][0] == '1':
                 size[i % 2][0] = 1
             else:
                 size[i % 2][0] = 0
-            for j in xrange(1, n):
+            for j in range(1, n):
                 if matrix[i][j] == '1':
-                    size[i % 2][j] = min(size[i % 2][j - 1], \
-                                         size[(i - 1) % 2][j], \
+                    size[i % 2][j] = min(size[i % 2][j - 1],
+                                         size[(i - 1) % 2][j],
                                          size[(i - 1) % 2][j - 1]) + 1
                     max_size = max(max_size, size[i % 2][j])
                 else:
@@ -114,23 +110,23 @@ class Solution2:
             return 0
 
         m, n = len(matrix), len(matrix[0])
-        size = [[0 for j in xrange(n)] for i in xrange(m)]
+        size = [[0 for j in range(n)] for i in range(m)]
         max_size = 0
 
-        for j in xrange(n):
+        for j in range(n):
             if matrix[0][j] == '1':
                 size[0][j] = 1
             max_size = max(max_size, size[0][j])
 
-        for i in xrange(1, m):
+        for i in range(1, m):
             if matrix[i][0] == '1':
                 size[i][0] = 1
             else:
                 size[i][0] = 0
-            for j in xrange(1, n):
+            for j in range(1, n):
                 if matrix[i][j] == '1':
-                    size[i][j] = min(size[i][j - 1],  \
-                                     size[i - 1][j],  \
+                    size[i][j] = min(size[i][j - 1],
+                                     size[i - 1][j],
                                      size[i - 1][j - 1]) + 1
                     max_size = max(max_size, size[i][j])
                 else:
@@ -151,10 +147,10 @@ class Solution3:
 
         H, W = 0, 1
         # DP table stores (h, w) for each (i, j).
-        table = [[[0, 0] for j in xrange(len(matrix[0]))] \
-                         for i in xrange(len(matrix))]
-        for i in reversed(xrange(len(matrix))):
-            for j in reversed(xrange(len(matrix[i]))):
+        table = [[[0, 0] for j in range(len(matrix[0]))] \
+                         for i in range(len(matrix))]
+        for i in reversed(range(len(matrix))):
+            for j in reversed(range(len(matrix[i]))):
                 # Find the largest h such that (i, j) to (i + h - 1, j) are feasible.
                 # Find the largest w such that (i, j) to (i, j + w - 1) are feasible.
                 if matrix[i][j] == '1':
@@ -166,11 +162,11 @@ class Solution3:
                     table[i][j] = [h, w]
 
         # A table stores the length of largest square for each (i, j).
-        s = [[0 for j in xrange(len(matrix[0]))] \
-                for i in xrange(len(matrix))]
+        s = [[0 for j in range(len(matrix[0]))] \
+                for i in range(len(matrix))]
         max_square_area = 0
-        for i in reversed(xrange(len(matrix))):
-            for j in reversed(xrange(len(matrix[i]))):
+        for i in reversed(range(len(matrix))):
+            for j in reversed(range(len(matrix[i]))):
                 side = min(table[i][j][H], table[i][j][W])
                 if matrix[i][j] == '1':
                     # Get the length of largest square with bottom-left corner (i, j).
@@ -179,6 +175,6 @@ class Solution3:
                     s[i][j] = side
                     max_square_area = max(max_square_area, side * side)
 
-        return max_square_area;
+        return max_square_area
 
 print(Solution().maximalSquare([["0","0","0","1"],["1","1","0","1"],["1","1","1","1"],["0","1","1","1"],["0","1","1","1"]]))
