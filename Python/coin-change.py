@@ -1,6 +1,7 @@
 # Time:  O(n * k), n is the number of coins, k is the amount of money
 # Space: O(k)
-#
+
+# 322
 # You are given coins of different denominations and
 # a total amount of money amount. Write a function to
 # compute the fewest number of coins that you need to
@@ -26,6 +27,18 @@ class Solution(object):
         :type amount: int
         :rtype: int
         """
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        coins.sort()
+        for i in range(1, amount+1):
+            for c in coins:
+                if c > i:
+                    break
+                dp[i] = min(dp[i], dp[i-c] + 1)
+        return dp[-1] if dp[-1] != float('inf') else -1
+
+
+    def coinChange_kamyu(self, coins, amount):
         INF = 0x7fffffff  # Using float("inf") would be slower.
         amounts = [INF] * (amount + 1)
         amounts[0] = 0
@@ -35,4 +48,6 @@ class Solution(object):
                     if i + coin <= amount:
                         amounts[i + coin] = min(amounts[i + coin], amounts[i] + 1)
         return amounts[amount] if amounts[amount] != INF else -1
+
+print(Solution().coinChange([1], 0)) # 0
 

@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 309
 # Say you have an array for which the ith element is the price of
 # a given stock on day i.
 #
@@ -12,25 +13,54 @@
 # (ie, you must sell the stock before you buy again).
 # After you sell your stock, you cannot buy stock on next day.
 # (ie, cooldown 1 day)
-# Example:
-#
-# prices = [1, 2, 3, 0, 2]
-# maxProfit = 3
-# transactions = [buy, sell, cooldown, buy, sell]
-#
 
 try:
     xrange          # Python 2
 except NameError:
     xrange = range  # Python 3
 
+# three states buy/sell/coolDown can be simplified as 2 states own/notOwn
 
 class Solution(object):
+    # only relay on the balance of past two days
+    # buy0, buy1: balance if own stock in previous day and current day
+    # sell0, sell1: balance if not own stock in previous day and current day
     def maxProfit(self, prices):
         """
         :type prices: List[int]
         :rtype: int
         """
+        if len(prices) < 2:
+            return 0
+
+        buy0 = -prices[0]
+        buy1 = max(-prices[0], -prices[1])
+        sell0 = 0
+        sell1 = max(0, prices[1]-prices[0])
+
+        for p in prices[2:]:
+            buy0, sell0, buy1, sell1 = buy1, sell1, max(buy1, sell0-p), max(sell1, buy1+p)
+        return sell1
+
+    # or more clear with a rotating array
+    # notOwn[i]表示在第i天不持有股票所能获得的最大累计收益
+    # own[i]表示在第i天持有股票所能获得的最大累计收益
+    # also do space optimization
+    def maxProfit_rotatingArray(self, prices):
+        N = len(prices)
+        if N < 2:
+            return 0
+
+        own = [-prices[0], max(-prices[0], -prices[1]), 0]
+        notOwn = [0, max(0, prices[1]-prices[0]), 0]
+        for i in range(2, N):
+            notOwn[i%3] = max(notOwn[(i-1)%3], own[(i-1)%3] + prices[i])
+            own[i%3] = max(own[(i-1)%3], notOwn[(i-2)%3] - prices[i])
+        return notOwn[(N-1)%3]
+
+
+    # 3 states
+    def maxProfit_kamyu(self, prices):
         if not prices:
             return 0
         buy, sell, coolDown = [0] * 2, [0] * 2, [0] * 2
@@ -45,3 +75,6 @@ class Solution(object):
             coolDown[i % 2] = max(coolDown[(i - 1) % 2], sell[(i - 1) % 2])
         return max(coolDown[(len(prices) - 1) % 2],
                    sell[(len(prices) - 1) % 2])
+
+
+print(Solution().maxProfit([1, 2, 3, 0, 2])) # 3 = [buy, sell, cooldown, buy, sell]
