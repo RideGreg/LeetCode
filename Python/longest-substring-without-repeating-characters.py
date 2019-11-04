@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 3
 # Given a string, find the length of the longest substring without repeating characters.
 # For example, the longest substring without repeating letters for "abcabcbb" is "abc", which the length is 3.
 # For "bbbbb" the longest substring is "b", with the length of 1.
@@ -8,12 +9,16 @@
 
 class Solution:
     def lengthOfLongestSubstring(self, s): # USE THIS: HashMap stores index of previous occurrence
-        map, ans = {}, 0
+        lookup, ans = {}, 0
         start = 0
         for end, v in enumerate(s):
-            if v in map and map[v] >= start: # Python3 TypeError if comparing None to int
-                start = map[v] + 1
-            map[v] = end
+            if v in lookup and lookup[v] >= start: # Python3 TypeError if comparing None to int
+                start = lookup[v] + 1
+            ''' OR
+            if v in lookup:
+            	start = max(start, lookup[v]+1)
+            '''
+            lookup[v] = end
             ans = max(ans, end - start + 1)
         return ans
 
@@ -28,20 +33,6 @@ class Solution:
                 start += 1
             ans = max(ans, end-start+1)
         return ans
-
-    # @return an integer
-    def lengthOfLongestSubstring3(self, s):
-        longest, start, visited = 0, 0, [False for _ in range(256)]
-        for i, char in enumerate(s):
-            if visited[ord(char)]:
-                while char != s[start]:
-                    visited[ord(s[start])] = False
-                    start += 1
-                start += 1
-            else:
-                visited[ord(char)] = True
-            longest = max(longest, i - start + 1)
-        return longest
 
 
 print(Solution().lengthOfLongestSubstring3("abcabcbb")) # 3
