@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 413
 # A sequence of number is called arithmetic if it consists of at least three elements
 # and if the difference between any two consecutive elements is the same.
 #
@@ -27,13 +28,37 @@
 #
 # return: 3, for 3 arithmetic slices in A: [1, 2, 3], [2, 3, 4] and [1, 2, 3, 4] itself.
 
+# Multiple solutions:
+# https://leetcode.com/articles/arithmetic-slices/
 
 class Solution(object):
-    def numberOfArithmeticSlices(self, A):
+    def numberOfArithmeticSlices(self, A): # USE THIS: constant space DP
         """
         :type A: List[int]
         :rtype: int
         """
+        ans, cnt = 0, 0
+        for i in range(2, len(A)):
+            if A[i] - A[i-1] == A[i-1] - A[i-2]:
+                cnt += 1
+                ans += cnt
+            else:
+                cnt = 0
+        return ans
+
+    def numberOfArithmeticSlices_bookshadow(self, A):
+        ans = cnt = 0
+        delta = A[1] - A[0]
+        for x in range(2, len(A)):
+            if A[x] - A[x - 1] == delta:
+                cnt += 1
+                ans += cnt
+            else:
+                delta = A[x] - A[x - 1]
+                cnt = 0
+        return ans
+
+    def numberOfArithmeticSlices_kamyu(self, A):
         res, i = 0, 0
         while i+2 < len(A):
             start = i
@@ -43,3 +68,5 @@ class Solution(object):
             i += 1
 
         return res
+
+print(Solution().numberOfArithmeticSlices([1,2,3,4])) # 3

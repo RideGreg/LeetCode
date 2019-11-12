@@ -8,6 +8,10 @@
 # < ... < i_k <= A.length - 1, and that a sequence B is arithmetic if B[i+1] - B[i] are
 # all the same value (for 0 <= i < B.length - 1).
 
+# 2 <= A.length <= 2000
+# 0 <= A[i] <= 10000
+
+
 # Input: [20,1,15,3,10,5,8]
 # Output: 4
 # Explanation:
@@ -26,12 +30,14 @@ class Solution(object):
         """
         # usually dp is list of int, here dp is list of dict -> we can use ONE dict with 2d key instead
         # collections.defaultdict(int) only difference is default to 0
+        ans = 1
         dp = collections.defaultdict(lambda: 1)
         for i in range(1, len(A)):
             for j in range(i):
                 d = A[i]-A[j]
-                dp[i,d] = max(dp[i,d], dp[j,d] + 1)
-        return max(dp.values())
+                dp[i,d] = dp[j,d] + 1
+                ans = max(ans, dp[i,d])
+        return ans
 
     # The solution 2d DP only works if input A is sorted.
     # https://www.geeksforgeeks.org/longest-arithmetic-progression-dp-35/
@@ -66,3 +72,6 @@ class Solution(object):
         return llap
 
 print(Solution().longestArithSeqLength([83,20,17,43,52,78,68,45])) # 2
+print(Solution().longestArithSeqLength([3,6,9,12])) # 4
+print(Solution().longestArithSeqLength([9,4,7,2,10])) # 3
+print(Solution().longestArithSeqLength([20,1,15,3,10,5,8])) # 4

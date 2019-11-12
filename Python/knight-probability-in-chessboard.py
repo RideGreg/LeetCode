@@ -1,6 +1,7 @@
 # Time:  O(k * n^2)
 # Space: O(n^2)
 
+# 688
 # On an NxN chessboard, a knight starts at the r-th row and c-th column and
 # attempts to make exactly K moves. The rows and columns are 0 indexed,
 # so the top-left square is (0, 0), and the bottom-right square is (N-1, N-1).
@@ -28,7 +29,8 @@
 # The knight always initially starts on the board.
 
 class Solution(object):
-    def knightProbability(self, N, K, r, c):
+    # bookshadow: use dict to save time/space, since we only care the cells we can reach last time
+    def knightProbability(self, N, K, r, c): # USE THIS
         """
         :type N: int
         :type K: int
@@ -36,17 +38,40 @@ class Solution(object):
         :type c: int
         :rtype: float
         """
-        directions = \
-            [[ 1, 2], [ 1, -2], [ 2, 1], [ 2, -1], \
-             [-1, 2], [-1, -2], [-2, 1], [-2, -1]];
-        dp = [[[1 for _ in xrange(N)] for _ in xrange(N)] for _ in xrange(2)]
-        for step in xrange(1, K+1):
-            for i in xrange(N):
-                for j in xrange(N):
-                    dp[step%2][i][j] = 0
-                    for direction in directions:
-                        rr, cc = i+direction[0], j+direction[1]
-                        if 0 <= cc < N and 0 <= rr < N:
-                            dp[step%2][i][j] += 0.125 * dp[(step-1)%2][rr][cc];
+        import collections
+        dirs = [(-2,-1), (-2,1), (-1,-2), (-1,2), (1,-2), (1,2), (2,-1), (2,1)]
+        ans = 0
+        dmap = {(r, c) : 1}
+        for t in range(K):
+            dmap0 = collections.defaultdict(int)
+            for (x, y), pb in dmap.items():
+                for dx, dy in dirs:
+                    nx, ny = x + dx, y + dy
+                    if nx < 0 or nx >= N or ny < 0 or ny >= N:
+                        ans += 0.125 * pb
+                    else:
+                        dmap0[(nx, ny)] += 0.125 * pb
+            dmap = dmap0
+        return 1 - ans
 
-        return dp[K%2][r][c]
+
+    def knightProbability_fullSpace(self, N, K, r, c):
+        dp = [[0] * N for _ in range(N)]
+        dp[r][c] = 1.0
+        dirs = [(-2,-1), (-2,1), (-1,-2), (-1,2), (1,-2), (1,2), (2,-1), (2,1)]
+        not_in = 0 # complimentary probability
+        for _ in range(K):
+            ndp = [[0] * N for _ in range(N)]
+            for x in range(N):
+                for y in range(N):
+                    for dx, dy in dirs:
+                        nx, ny = x+dx, y+dy
+                        if 0<=nx<N and 0<=ny<N:
+                            ndp[nx][ny] += 0.125 * dp[x][y]
+                        else:
+                            not_in += 0.125 * dp[x][y]
+            dp = ndp
+        return 1 - not_in
+
+
+print(Solution().knightProbability(3,2,0,0)) # 0.0625

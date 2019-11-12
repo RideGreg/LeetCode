@@ -14,7 +14,22 @@
 
 class Solution:
     # @return a string
-    def countAndSay(self, n):
+    def countAndSay(self, n: int) -> str:
+        s = '1'
+        for _ in range(n-1):
+            ns = ''
+            c = 1
+            for i in range(len(s)):
+                if i < len(s)-1 and s[i] == s[i+1]:
+                    c += 1
+                else:
+                    ns += str(c)+s[i]
+                    c = 1
+            s = ns
+        return s
+
+
+    def countAndSay_kamyu(self, n):
         seq = "1"
         for i in xrange(n - 1):
             seq = self.getNext(seq)
@@ -32,7 +47,7 @@ class Solution:
         return next_seq
 
 if __name__ == "__main__":
-    for i in xrange(1, 4):
-        print Solution().countAndSay(i)
+    for i in range(1, 6):
+        print(Solution().countAndSay(i)) # 1, 11, 21, 1211, 111221
 
 

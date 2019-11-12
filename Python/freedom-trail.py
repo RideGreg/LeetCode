@@ -1,6 +1,7 @@
-# Time:  O(k) ~ O(k * r^2)
+# Time:  O(k) ~ O(k * r^2), where k, r is the length of key, ring
 # Space: O(r)
 
+# 514
 # In the video game Fallout 4, the quest "Road to Freedom"
 # requires players to reach a metal dial called the "Freedom Trail Ring",
 # and use the dial to spell a specific keyword in order to open the door.
@@ -36,6 +37,15 @@
 # There are only lowercase letters in both strings and might be some duplcate characters in both strings.
 # It's guaranteed that string key could always be spelled by rotating the string ring.
 
+
+# DP: 利用字典dp记录当拨盘位于不同位置时，所需的最少步数。
+#
+# 状态转移方程：
+# dp[k][i] = min(dp[k][i], dp[k - 1][j] + min(abs(i - j), len(ring) - abs(i - j)))
+#
+# 其中k iterates key中每个字符的下标，i表示此字符在ring中的下标，j表示key中上一个字符在ring中的下标。
+# 上式可以利用滚动数组化简为一维，节省空间开销。
+
 import collections
 
 
@@ -43,22 +53,22 @@ class Solution(object):
     def findRotateSteps(self, ring, key):
         """
         :type ring: str
-        :type key: str
+        :type key: strs
         :rtype: int
         """
-        lookup = collections.defaultdict(list)
-        for i in xrange(len(ring)):
-            lookup[ring[i]].append(i)
+        rsize = len(ring)
+        rlist = collections.defaultdict(list)
+        for i, c in enumerate(ring):
+            rlist[c].append(i)
 
-        dp = [[0] * len(ring) for _ in xrange(2)]
-        prev = [0]
-        for i in xrange(1, len(key)+1):
-            dp[i%2] = [float("inf")] * len(ring)
-            for j in lookup[key[i-1]]:
-                for k in prev:
-                    dp[i%2][j] = min(dp[i%2][j],
-                                     min((k+len(ring)-j) % len(ring), \
-                                         (j+len(ring)-k) % len(ring)) + \
-                                     dp[(i-1) % 2][k])
-            prev = lookup[key[i-1]]
-        return min(dp[len(key)%2]) + len(key)
+        dp0 = [0] * rsize
+        oldPoses = [0]
+        for c in key:
+            dp = [float('inf')] * rsize
+            for newPos in rlist[c]:
+                for oldPos in oldPoses:
+                    d = abs(newPos - oldPos)
+                    dp[newPos] = min(dp[newPos], dp0[oldPos] + min(d, rsize - d))
+            dp0 = dp
+            oldPoses = rlist[c]
+        return min(dp) + len(key)

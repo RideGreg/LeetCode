@@ -1,6 +1,14 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 1218
+# Given an integer array arr and an integer difference, return the length of the longest subsequence
+# in arr which is an arithmetic sequence such that the difference between adjacent elements
+# in the subsequence equals difference.
+
+# 1 <= arr.length <= 10^5
+# -10^4 <= arr[i], difference <= 10^4
+
 import collections
 
 
@@ -11,9 +19,13 @@ class Solution(object):
         :type difference: int
         :rtype: int
         """
-        result = 1
-        lookup = collections.defaultdict(int)
-        for i in xrange(len(arr)):
-            lookup[arr[i]] = lookup[arr[i]-difference] + 1
-            result = max(result, lookup[arr[i]])
-        return result
+        dp = collections.defaultdict(int)
+        ans = 1
+        for i in A:
+            dp[i] = dp[i-d] + 1
+            ans = max(ans, dp[i])
+        return ans
+
+print(Solution().longestSubsequence([1,2,3,4], 1)) # 4
+print(Solution().longestSubsequence([1,3,5,7], 1)) # 1
+print(Solution().longestSubsequence([1,5,7,8,5,3,4,2,1], -2)) # 4

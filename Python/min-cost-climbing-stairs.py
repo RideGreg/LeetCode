@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 746
 # On a staircase, the i-th step has some non-negative cost cost[i] assigned (0 indexed).
 #
 # Once you pay the cost, you can either climb one or two steps.
@@ -19,13 +20,43 @@
 #  - cost will have a length in the range [2, 1000].
 #  - Every cost[i] will be an integer in the range [0, 999].
 
+
+# DP: dp[x] = min(dp[x - 1], dp[x - 2]) + cost[x]
+
 class Solution(object):
     def minCostClimbingStairs(self, cost):
         """
         :type cost: List[int]
         :rtype: int
         """
-        dp = [0] * 3
-        for i in reversed(xrange(len(cost))):
-            dp[i%3] = cost[i] + min(dp[(i+1)%3], dp[(i+2)%3])
-        return min(dp[0], dp[1])
+        prev, cur = cost[0], cost[1]
+        for i in range(2, len(cost)):
+            prev, cur = cur, cost[i] + min(prev, cur)
+        return min(prev, cur)
+
+        ''' space not optimized
+        size = len(cost)
+        dp = [cost[0], cost[1]]
+        for x in range(2, size):
+            dp.append(min(dp[x - 1], dp[x - 2]) + cost[x])
+        return min(dp[-1], dp[-2])
+        '''
+
+    def minCostClimbingStairs_ming(self, cost):
+        N = len(cost)
+        dp = [None] * N
+
+        def re(n):
+            if dp[n] == None:
+                if n == 0 or n == 1:
+                    return cost[n]
+
+                dp[n] = cost[n] + min(re(n - 1), re(n - 2))
+
+            return dp[n]
+
+        return min(re(N-1), re(N-2))
+
+
+print(Solution().minCostClimbingStairs([0,1,2,0])) # 1
+print(Solution().minCostClimbingStairs([0,0,0,1])) # 0

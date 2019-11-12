@@ -1,6 +1,7 @@
 # Time:  O(T * S^T)
 # Space: O(T * S^T)
 
+# 691
 # We are given N different types of stickers. Each sticker has a lowercase English word on it.
 #
 # You would like to spell out the given target string by cutting individual letters
@@ -54,7 +55,38 @@ class Solution(object):
         :type target: str
         :rtype: int
         """
-        def minStickersHelper(sticker_counts, target, dp):
+        # dp 记录target字的所有子序列被覆盖所需最少的sticker数目
+        # similar to backpack dp, gradually go up until processing the target string
+        dp = [0] + [-1] * ((1 <<  len(target)) - 1)
+        tcnt = collections.Counter(target)
+
+        # 每个sticker能cover到的target字中的字符，过滤掉sticker with less coverage
+        scnts = [collections.Counter(s) & tcnt for s in stickers]
+        for x in range(len(scnts) - 1, -1, -1):
+            if any(scnts[x] & scnts[y] == scnts[x] for y in range(len(scnts)) if x != y):
+                scnts.pop(x)
+
+        # 从最短子序列逐步转移到长子序列
+        for status in range(1 << len(target)):
+            if dp[status] < 0: continue
+            for scnt in scnts:
+                nstatus = status
+                cnt = collections.Counter(scnt)  # copy scnt to avoid referencing to the same memory
+                for i, c in enumerate(target):
+                    if cnt[c] > 0 and status & (1 << i) == 0: # prev status not spell this position in 'target' string
+                        nstatus |= (1 << i)
+                        cnt[c] -= 1
+                if dp[nstatus] == -1 or dp[nstatus] > dp[status] + 1:
+                    dp[nstatus] = dp[status] + 1
+        return dp[-1]
+
+    def minStickers2(self, stickers, target):
+        """
+        :type stickers: List[str]
+        :type target: str
+        :rtype: int
+        """
+        def minStickersHelper(target, dp):
             if "".join(target) in dp:
                 return dp["".join(target)]
             target_count = collections.Counter(target)
@@ -67,7 +99,7 @@ class Solution(object):
                     if target_count[k] > sticker_count[k]:
                        new_target += [k]*(target_count[k] - sticker_count[k])
                 if len(new_target) != len(target):
-                    num = minStickersHelper(sticker_counts, new_target, dp)
+                    num = minStickersHelper(new_target, dp)
                     if num != -1:
                         result = min(result, 1+num)
             dp["".join(target)] = -1 if result == float("inf") else result
@@ -75,4 +107,11 @@ class Solution(object):
 
         sticker_counts = map(collections.Counter, stickers)
         dp = { "":0 }
-        return minStickersHelper(sticker_counts, target, dp)
+        return minStickersHelper(target, dp)
+
+
+print(Solution().minStickers(["with", "example", "science"], "thehat")) # 3
+# dp[0] = 0, dp[3]=1, dp[20]=1, dp[23]=2, dp[43]=2, dp[63]=3
+# ''         'th----' '--e-a-'  'the-a-'  'th-h-t'  'thehat'
+
+print(Solution().minStickers(["notice", "possible"], "basicbasic")) # -1

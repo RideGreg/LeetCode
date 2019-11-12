@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n * d)
 
+# 446
 # A sequence of numbers is called arithmetic if it consists of
 # at least three elements
 # and if the difference between any two consecutive elements is the same.
@@ -55,15 +56,26 @@ except NameError:
     xrange = range  # Python 3
 
 
+# DP: dp[i, d] stores the COUNT of arithmetic subsequence with diff d and ending at i.
 class Solution(object):
     def numberOfArithmeticSlices(self, A):
         """
         :type A: List[int]
         :rtype: int
         """
+        ans = 0
+        dp = collections.defaultdict(int) #single item has zero count, a pair items has 1 count
+        for i in range(len(A)):
+            for j in range(i):
+                d = A[i] - A[j]
+                dp[i, d] += (dp[j, d] + 1) # increment, not assign
+                ans += dp[j, d]
+        return ans
+
+    def numberOfArithmeticSlices_kamyu(self, A):
         result = 0
-        dp = [collections.defaultdict(int) for i in xrange(len(A))]
-        for i in xrange(1, len(A)):
+        dp = [collections.defaultdict(int) for _ in xrange(len(A))]
+        for i in xrange(len(A)):
             for j in xrange(i):
                 diff = A[i]-A[j]
                 dp[i][diff] += 1
@@ -71,3 +83,18 @@ class Solution(object):
                     dp[i][diff] += dp[j][diff]
                     result += dp[j][diff]
         return result
+
+    # cannot use same algorithm for longest arithmetic subsequence. Wrong on [2,2,3,4]
+    # need to record COUNT, not LENGTH.
+    def numberOfArithmeticSlices_wrong(self, A):
+        ans = 0
+        dp = collections.defaultdict(lambda: 1)
+        for i in range(len(A)):
+            for j in range(i):
+                d = A[i] - A[j]
+                dp[i,d] = dp[j,d] + 1  # LENGTH rely on prev item; COUNT should self-increment
+                ans += max(0, dp[i,d] - 2)
+        return ans
+
+print(Solution().numberOfArithmeticSlices([2,4,6,8,10])) # 7
+print(Solution().numberOfArithmeticSlices([2,2,3,4])) # 2

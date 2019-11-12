@@ -88,12 +88,10 @@ class Solution(object):
         for i, c in enumerate(coins):
             sums[i+1] = sums[i]+c
         dp = [0]*n
-        for i in reversed(xrange(n)):
-            for j in xrange(i, n):
-                if i == j:
-                    dp[j] = coins[i]
-                else:
-                    dp[j] = (sums[j+1]-sums[i]) - min(dp[j], dp[j-1])
+        for i in reversed(range(n)):
+            dp[i] = coins[i]
+            for j in range(i+1, n):
+                dp[j] = (sums[j+1]-sums[i]) - min(dp[j], dp[j-1])
 
         print dp[n-1]
         return dp[n-1]*2 >= sums[-1]

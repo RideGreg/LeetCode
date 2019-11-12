@@ -28,21 +28,33 @@ except NameError:
 class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
     # @param prices, a list of integer
     # @return an integer
+    def maxProfit(self, prices):
+        hold1, hold2 = float('-inf'), float('-inf')
+        cash1, cash2 = 0, 0
+        for p in prices:
+            # to be sequential, hold[j] refers to cash[j-1], and cash[j] refers to hold[j]
+            hold1 = max(hold1, -p)
+            cash1 = max(cash1, hold1+p)
+            hold2 = max(hold2, cash1-p)
+            cash2 = max(cash2, hold2+p)
+        return cash2
 
     # This solution is AN EXTENSION OF SOLUTION for buy-and-sell-stock-i, and can extend to k.
-    # bal_buy[i] is the balance after ith buy, bal_sell[i] is the balance after ith sell.
-    def maxProfit(self, prices):
+    # hold[i] is the balance after ith buy, cash[i] is the balance after ith sell.
+    def maxProfit_extend(self, prices):
         n, k = len(prices), 2
-        bal_buy = [float('-inf')] * k
-        bal_sell = [0] * k
+        hold = [float('-inf')] * k
+        cash = [0] * k
         for i in range(n):
-            # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set bal_buy[0].
+            # because k is constant, won't benefit much by doing the following optimization:
+            # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set hold[0].
             # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
             for j in range(min(k, i+1)):
-                bal_after_last_sell = bal_sell[j-1] if j > 0 else 0
-                bal_buy[j] = max(bal_buy[j], bal_after_last_sell - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
-                bal_sell[j] = max(bal_sell[j], bal_buy[j] + prices[i])
-        return bal_sell[k-1]
+                # to be sequential, hold[j] refers to cash[j-1], and cash[j] refers to hold[j]
+                last_cash = cash[j-1] if j > 0 else 0
+                hold[j] = max(hold[j], last_cash - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+                cash[j] = max(cash[j], hold[j] + prices[i])
+        return cash[k-1]
 
 
 # Time:  O(n)
@@ -91,5 +103,6 @@ class Solution3(object):
         return max(maxProfitsLeft[i]+maxProfitsRight[i]
                    for i in range(N)) if N else 0
 
+print(Solution().maxProfit([1,3,2,8,4,9])) # 12
 print(Solution().maxProfit([1,2,3,4,5])) # 4
 print(Solution().maxProfit([3,3,5,0,0,3,1,4])) # 6

@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 639
 # A message containing letters from A-Z is being encoded to numbers using the following mapping way:
 #
 # 'A' -> 1
@@ -25,12 +26,49 @@
 # The length of the input string will fit in range [1, 105].
 # The input string will only contain the character '*' and digits '0' - '9'.
 
+# DP: 令dp[x]表示 s[0 .. x] 对应的原串的可能个数
+#
+# 状态转移方程如下：
+# dp[x] = (dp[x - 2] * dmap[s[x - 1, x]] + dp[x - 1] * dmap[s[x]]) % MOD
+# 上式中，dmap[s]表示子串s对应的原串的可能个数，分别令s = '0', '1', ..., '9', '*'，
+# 以及'00', '01', ... '*9', '**'对dmap进行初始化
+
 class Solution(object):
-    def numDecodings(self, s):
+    def numDecodings(self, s): # USE THIS: bookshadow
         """
         :type s: str
         :rtype: int
         """
+        import collections
+        MOD = 10**9 + 7
+        dmap = collections.defaultdict(int)
+        ch = '0123456789*'
+        for m in ch:
+            if m == '*': dmap[m] = 9
+            elif '1' <= m <= '9': dmap[m] = 1
+            for n in ch:
+                r = m + n
+                if m == '*':
+                    if n == '*': dmap[r] = 15      # 11->19, 21->26
+                    elif '0' <= n <= '6': dmap[r] = 2   # 1n, 2n
+                    elif '7' <= n <= '9': dmap[r] = 1   # 1n
+                elif m == '1':
+                    if n == '*': dmap[r] = 9       # 11->19
+                    else: dmap[r] = 1
+                elif m == '2':
+                    if n == '*': dmap[r] = 6       # 21->26
+                    elif '0' <= n <= '6': dmap[r] = 1
+
+        cur = 0
+        prev = pprev = 1
+        lc = '-'   # using lastchar, so don't need to consider s[i-1] and i > 0
+        for c in s:
+            cur = (prev * dmap[c] + pprev * dmap[lc + c]) % MOD
+            lc = c
+            prev, pprev = cur, prev
+        return cur
+
+    def numDecodings_kamyu(self, s): # scrolling array, messier than using 3 variables
         M, W = 1000000007, 3
         dp = [0] * W
         dp[0] = 1
@@ -53,3 +91,8 @@ class Solution(object):
                 elif s[i - 1] == '*':
                     dp[(i + 1) % W] = (dp[(i + 1) % W] + (2 if s[i] <= '6' else 1) * dp[(i - 1) % W]) % M
         return dp[len(s) % W]
+
+print(Solution().numDecodings('*')) # 9
+print(Solution().numDecodings('**')) # 96:
+# AA, AB, ... AI, ..., IA, IB, .. II; K, L..S, U..Z
+# (1)(1), (1)(2) .. (9)(9); 11->19, 21->26

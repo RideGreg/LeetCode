@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 740
 # Given an array nums of integers, you can perform operations on the array.
 #
 # In each operation, you pick any nums[i] and delete it to earn nums[i] points.
@@ -28,8 +29,10 @@
 # - The length of nums is at most 20000.
 # - Each element nums[i] is an integer in the range [1, 10000].
 
+import collections
+
 class Solution(object):
-    def deleteAndEarn(self, nums):
+    def deleteAndEarn_bookshadow(self, nums):
         """
         :type nums: List[int]
         :rtype: int
@@ -42,7 +45,16 @@ class Solution(object):
             else:
                 skip, take = max(take, skip), c[k]*k + max(take, skip)
             prev = k
-        return max(use, avoid)
+        return max(take, skip)
+
+    def deleteAndEarn(self, nums):
+        cnt = collections.Counter(nums)
+        maxn = max(nums + [0])
+        dp = [0] * (maxn + 1)
+        for x in range(1, maxn + 1):
+            dp[x] = max(dp[x - 1], dp[x - 2] + cnt[x] * x)
+        return dp[maxn]
+
 ''' ming DP, bad - for loop iterate dummy zeros
         if not nums:
             return 0
@@ -63,24 +75,35 @@ class Solution(object):
         return val_i
 '''
 ''' ming DFS, TLE - many unnecessary steps
-        def dfs(nums, used, ans, cur):
-            print "\nnums, used, cur = ", nums, used, cur
-            if not nums:
-                print ans[0], cur
-                ans[0] = max(ans[0], cur)
+    def deleteAndEarn(self, nums):
+        from functools import lru_cache
 
-            for v in nums:
-                if v not in used:
-                    used[v] = 1
-                    earn = nums.count(v) * v
-                    newList = [x for x in nums if x > v+1 or x < v-1]
-                    dfs(newList, used, ans, cur+earn)
-                    del used[v]
+        # 1. use lru_cache cause TypeError: unhashable type: 'defaultdict'
+        # becuase lru_cache use param as key of a set.
+        # 2. comment out lru_cache -> TLE
+        #@lru_cache(None)
+        def dfs(dmap):
+            ans = 0
+            for k in dmap:
+                vk = dmap[k]
+                dmap[k] -= 1
+                if dmap[k] == 0: del dmap[k]
+                vk1 = dmap.pop(k - 1, None)
+                vk2 = dmap.pop(k + 1, None)
 
-        ans, used = [0], {}
-        dfs(nums, used, ans, 0)
-        return ans[0]
+                ans = max(ans, k + dfs(dmap))
+
+                dmap[k] = vk
+                if vk1: dmap[k - 1] = vk1
+                if vk2: dmap[k + 1] = vk2
+            return ans
+
+        dmap = collections.defaultdict(int)
+        for n in nums:
+            dmap[n] += 1
+
+        return dfs(dmap)
 '''
-print Solution().deleteAndEarn([3,4,2]) #6
-print Solution().deleteAndEarn([2, 2, 3, 3, 3, 4]) #9
-print Solution().deleteAndEarn([8,7,3,8,1,4,10,10,10,2])
+print(Solution().deleteAndEarn([3,4,2])) #6
+print(Solution().deleteAndEarn([2, 2, 3, 3, 3, 4])) #9
+print(Solution().deleteAndEarn([8,7,3,8,1,4,10,10,10,2])) # 52

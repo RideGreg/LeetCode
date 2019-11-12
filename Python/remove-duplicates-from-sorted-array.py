@@ -15,11 +15,21 @@
 class Solution(object):
     # @param a list of integers
     # @return an integer
-    def removeDuplicates(self, A):
+    def removeDuplicates(self, nums: List[int]) -> int:
+        i = 0 # the position ready to be written
+        for j in range(len(nums)):
+            # only write new number
+            if j == 0 or nums[j] != nums[j-1]:
+                nums[i] = nums[j]
+                i += 1
+        return i
+
+    # 写入次数少，但最后输出长度要加一
+    def removeDuplicates2(self, A):
         if not A:
             return 0
 
-        last = 0
+        last = 0 # the position already written last time
         for i in xrange(len(A)):
             if A[last] != A[i]:
                 last += 1

@@ -1,6 +1,7 @@
 # Time:  O(n * l^2)
 # Space: O(n * l)
 
+# 472
 # Given a list of words, please write a program that returns
 # all concatenated words in the given list of words.
 #
@@ -30,20 +31,46 @@ class Solution(object):
         lookup = set(words)
         result = []
         for word in words:
-            dp = [False] * (len(word)+1)
-            dp[0] = True
-            for i in xrange(len(word)):
-                if not dp[i]:
-                    continue
+            dp = [True] + [False] * len(word)
+            for i in range(len(word)):
+                if dp[i]: # word[:i] exist in dictionary
+                    for j in range(i+1, len(word)+1):
+                        if j - i < len(word) and word[i:j] in lookup:
+                            dp[j] = True
 
-                for j in xrange(i+1, len(word)+1):
-                    if j - i < len(word) and word[i:j] in lookup:
-                        dp[j] = True
-
-                if dp[len(word)]:
-                    result.append(word)
-                    break
+                    if dp[len(word)]:
+                        result.append(word)
+                        break
 
         return result
 
-print Solution().findAllConcatenatedWordsInADict(['sun', 'moon', 'star', 'sunmoon', 'sunstarsun', 'earthsun', 'suns', 'sunsun'])
+    # memorization
+    def findAllConcatenatedWordsInADict2(self, words):
+        wset = set(words)
+        ans, lookup = [], {}
+
+        def match(s):
+            if s not in lookup:
+                if s in wset:
+                    lookup[s] = True
+                else:
+                    for i in range(1, len(s)):
+                        if s[:i] in wset and match(s[i:]):
+                            lookup[s] = True
+                            break
+                    else:
+                        lookup[s] = False
+
+            return lookup[s]
+
+        for w in words:
+            for i in range(1, len(w)):
+                if match(w[:i]) and match(w[i:]):
+                    ans.append(w)
+                    break
+        return ans
+
+print(Solution().findAllConcatenatedWordsInADict(['sun', 'moon', 'star', 'sunmoon', 'sunstarsun', 'earthsun', 'suns', 'sunsun']))
+# ['sunmoon', 'sunstarsun', 'sunsun']
+print(Solution().findAllConcatenatedWordsInADict(["cat","cats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"]))
+# ["catsdogcats","dogcatsdog","ratcatdogcat"]

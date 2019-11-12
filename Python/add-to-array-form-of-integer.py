@@ -2,7 +2,18 @@
 # Space: O(1)
 
 class Solution(object):
-    def addToArrayForm(self, A, K): # USE THIS O(n) where n is length of A
+    def addToArrayForm(self, A, K): # USE THIS
+        A = A[::-1]
+        for i in range(len(A)):
+            if K == 0: break
+            A[i] += K
+            K, A[i] = divmod(A[i], 10)
+        while K:
+            K, x = divmod(K, 10)
+            A.append(x)
+        return A[::-1]
+
+    def addToArrayForm2(self, A, K): # convert to int calc may not allowed
         """
         :type A: List[int]
         :type K: int
@@ -22,7 +33,7 @@ class Solution(object):
         # or return map(int, str(n))
 
 
-    def addToArrayForm_LeetcodeOfficial(self, A, K):
+    def addToArrayForm_LeetcodeOfficial(self, A, K): # same to solution 1, but use while
         A.reverse()
         carry, i = K, 0
         A[i] += carry
@@ -36,3 +47,9 @@ class Solution(object):
             carry, A[i] = divmod(A[i], 10)
         A.reverse()
         return A
+
+print(Solution().addToArrayForm([1,2,0,0], 34)) # [1,2,3,4]
+print(Solution().addToArrayForm([2,7,4], 181)) # [4,5,5]
+print(Solution().addToArrayForm([2,1,5], 806)) # [1,0,2,1]
+print(Solution().addToArrayForm([9,9,9,9,9,9,9,9,9,9], 1)) # [1,0,0,0,0,0,0,0,0,0,0]
+print(Solution().addToArrayForm([8], 3333)) # [3,3,4,1]

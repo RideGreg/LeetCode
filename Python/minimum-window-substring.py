@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(k), k is the number of different characters
 
+# 76
 # Given a string S and a string T, find the minimum window in S which
 # will contain all the characters in T in complexity O(n).
 #
@@ -17,40 +18,57 @@
 # there will always be only one unique minimum window in S.
 
 class Solution(object):
-    def minWindow(self, s, t):
+    def minWindow(self, s: str, t: str) -> str:
         """
         :type s: str
         :type t: str
         :rtype: str
         """
-        current_count = [0 for i in xrange(52)]
-        expected_count = [0 for i in xrange(52)]
+        import collections
+        actual, expected = collections.defaultdict(int), collections.defaultdict(int)
+        for c in t:
+            expected[c] += 1
+        l, total, minStart, minWid = 0, 0, 0, float('inf')
+        for r, c in enumerate(s):
+            actual[c] += 1
+            if actual[c] <= expected[c]:
+                total += 1
 
+            if total == len(t):
+                while actual[s[l]] > expected[s[l]]:
+                    actual[s[l]] -= 1
+                    l += 1
+
+                if minWid > r - l + 1:
+                    minStart, minWid = l, r - l + 1
+        return s[minStart:minStart + minWid] if minWid != float('inf') else ''
+
+
+    def minWindow_kamyu(self, s, t):
+        actual = [0] * 58 # from A(65) to z(122)
+        expected = [0] * 58
         for char in t:
-            expected_count[ord(char) - ord('a')] += 1
+            expected[ord(char) - ord('A')] += 1
 
-        i, count, start, min_width, min_start = 0, 0, 0, float("inf"), 0
-        while i < len(s):
-            current_count[ord(s[i]) - ord('a')] += 1
-            if current_count[ord(s[i]) - ord('a')] <= expected_count[ord(s[i]) - ord('a')]:
+        count, start, min_width, min_start = 0, 0, float("inf"), 0
+        for i in range(len(s)):
+            actual[ord(s[i]) - ord('A')] += 1
+            if actual[ord(s[i]) - ord('A')] <= expected[ord(s[i]) - ord('A')]:
                 count += 1
 
             if count == len(t):
-                while expected_count[ord(s[start]) - ord('a')] == 0 or \
-                      current_count[ord(s[start]) - ord('a')] > expected_count[ord(s[start]) - ord('a')]:
-                    current_count[ord(s[start]) - ord('a')] -= 1
+                while actual[ord(s[start]) - ord('A')] > expected[ord(s[start]) - ord('A')]:
+                    actual[ord(s[start]) - ord('A')] -= 1
                     start += 1
 
                 if min_width > i - start + 1:
                     min_width = i - start + 1
                     min_start = start
-            i += 1
 
         if min_width == float("inf"):
             return ""
-
         return s[min_start:min_start + min_width]
 
-
-if __name__ == "__main__":
-    print Solution().minWindow("ADOBECODEBANC", "ABC")
+print(Solution().minWindow("azzzzbccab", 'abc')) # 'cab'
+print(Solution().minWindow("AuOZEaOzEBuNC", "AA")) # ''
+print(Solution().minWindow("ADOBECODEBANC", "ABC")) # 'BANC

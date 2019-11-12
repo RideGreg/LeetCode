@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(n)
 
+# 712
 # Given two strings s1, s2, find the lowest ASCII sum of deleted characters to make two strings equal.
 #
 # Example 1:
@@ -24,7 +25,42 @@
 
 # DP with rolling window
 class Solution(object):
-    def minimumDeleteSum(self, s1, s2):
+
+    def minimumDeleteSum(self, s1: str, s2: str) -> int: # USE THIS: ming's soluion, min delete equivalent to max keep
+        s1, s2 = list(map(ord, s1)), list(map(ord, s2))
+        sum1, sum2 = sum(s1), sum(s2)
+        if sum1 == 0:
+            return sum2
+        elif sum2 == 0:
+            return sum1
+
+        dp = [0] * len(s2)
+        for m in s1:
+            ndp = [max(dp[0], m * (m == s2[0]))]
+            for j in range(1, len(s2)):
+                if m == s2[j]:
+                    ndp.append(dp[j - 1] + m)
+                else:
+                    ndp.append(max(ndp[-1], dp[j]))
+            dp = ndp
+        return sum1 + sum2 - 2 * dp[-1]
+
+    def minimumDeleteSum_bookshadow(self, s1, s2): # also good, not do complimentary
+        a1, a2 = map(ord, s1), map(ord, s2)
+        l1, l2 = len(s1), len(s2)
+        dp = [0]
+        for x in range(l1):
+            dp.append(dp[-1] + a1[x])
+        for x in range(1, l2 + 1):
+            ndp = [dp[0] + a2[x - 1]]
+            for y in range(1, l1 + 1):
+                if a2[x - 1] == a1[y - 1]: ndp.append(dp[y - 1])
+                else: ndp.append(min(dp[y] + a2[x - 1], ndp[y - 1] + a1[y - 1]))
+            dp = ndp
+        return dp[-1]
+
+
+    def minimumDeleteSum_kamyu(self, s1, s2):
         """
         :type s1: str
         :type s2: str
@@ -70,3 +106,6 @@ class Solution2(object):
                                        dp[i+1][j] + ord(s2[j]))
 
         return dp[-1][-1]
+
+print(Solution().minimumDeleteSum("sea", "eat")) # 231
+print(Solution().minimumDeleteSum("delete", "leet")) # 403

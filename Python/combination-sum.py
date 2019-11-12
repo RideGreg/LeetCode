@@ -1,6 +1,7 @@
 # Time:  O(k * n^k)
 # Space: O(k)
-#
+
+# 39
 # Given a set of candidate numbers (C) and a target number (T),
 # find all unique combinations in C where the candidate numbers sums to T.
 #
@@ -20,7 +21,41 @@ class Solution:
     # @param candidates, a list of integers
     # @param target, integer
     # @return a list of lists of integers
-    def combinationSum(self, candidates, target):
+    def combinationSum(self, candidates, target): # USE THIS: sort and prune
+        def dfs(idx, cur, tgt):
+            if tgt == 0 and cur:
+                ans.append(list(cur)) ## KENG: must copy list to ans
+
+            for i in range(idx, len(A)):
+                if A[i] > tgt:        # prune
+                    break
+                cur.append(A[i])
+                dfs(i, cur, tgt - A[i])
+                cur.pop()
+
+        ans, A = [], sorted(candidates)
+        dfs(0, [], target)
+        return ans
+
+    # no sorting of input, no pruning
+    def combinationSum2(self, candidates, target):
+        def dfs(idx, cur, tgt):
+            if tgt == 0 and cur:
+                ans.append(list(cur))
+                return
+            elif tgt < 0:
+                return
+
+            for i in range(idx, len(A)):
+                cur.append(A[i])
+                dfs(i, cur, tgt - A[i])
+                cur.pop()
+
+        ans, A = [], candidates
+        dfs(0, [], target)
+        return ans
+
+    def combinationSum_kamyu(self, candidates, target):
         result = []
         self.combinationSumRecu(sorted(candidates), result, 0, [], target)
         return result
@@ -35,6 +70,5 @@ class Solution:
             start += 1
 
 if __name__ == "__main__":
-    candidates, target = [2, 3, 6, 7], 7
-    result = Solution().combinationSum(candidates, target)
-    print result
+    print(Solution().combinationSum([2, 3, 6, 7], 7)) # [[2,2,3], [7]]
+    print(Solution().combinationSum([2, 3, 5], 8)) # [[2,2,2,2], [2,3,3], [3,5]]
