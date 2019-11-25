@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 801
 # We have two integer sequences A and B of the same non-zero length.
 #
 # We are allowed to swap elements A[i] and B[i].
@@ -47,7 +48,7 @@ class Solution(object):
         In fact, n1/s1 and n2/s2 can use the same pair of vars.
         """
         n, s = 0, 1
-        for i in xrange(1, len(A)):
+        for i in range(1, len(A)):
             if A[i] <= B[i-1] or B[i] <= A[i-1]: # must swap both columns or no swap
                 n, s = n, s + 1
             elif A[i] <= A[i-1] or B[i] <= B[i-1]: # must swap 1 column
