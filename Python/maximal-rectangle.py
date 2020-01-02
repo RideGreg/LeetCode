@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n)
 
+# 85
 # Given a 2D binary matrix filled with 0's and 1's,
 # find the largest rectangle containing all ones and return its area.
 
@@ -30,8 +31,8 @@ class Solution(object):
 
         result = 0
         heights = [0] * len(matrix[0])
-        for i in xrange(len(matrix)):
-            for j in xrange(len(matrix[0])):
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
                 heights[j] = heights[j] + 1 if matrix[i][j] == '1' else 0
             result = max(result, largestRectangleArea(heights))
 
@@ -53,13 +54,13 @@ class Solution2(object):
         result = 0
         m = len(matrix)
         n = len(matrix[0])
-        L = [0 for _ in xrange(n)]
-        H = [0 for _ in xrange(n)]
-        R = [n for _ in xrange(n)]
+        L = [0 for _ in range(n)]
+        H = [0 for _ in range(n)]
+        R = [n for _ in range(n)]
 
-        for i in xrange(m):
+        for i in range(m):
             left = 0
-            for j in xrange(n):
+            for j in range(n):
                 if matrix[i][j] == '1':
                     L[j] = max(L[j], left)
                     H[j] += 1
@@ -70,7 +71,7 @@ class Solution2(object):
                     left = j + 1
 
             right = n
-            for j in reversed(xrange(n)):
+            for j in reversed(range(n)):
                 if matrix[i][j] == '1':
                     R[j] = min(R[j], right)
                     result = max(result, H[j] * (R[j] - L[j]))
@@ -86,4 +87,4 @@ if __name__ == "__main__":
               "11110",
               "11111",
               "00000"]
-    print Solution().maximalRectangle(matrix)
+    print(Solution2().maximalRectangle(matrix))

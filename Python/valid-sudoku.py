@@ -1,6 +1,7 @@
 # Time:  O(9^2)
 # Space: O(9)
 
+# 36
 # Determine if a Sudoku is valid,
 # according to: Sudoku Puzzles - The Rules.
 #
@@ -31,7 +32,7 @@ class Solution(object):
         return True
 
     def isValidList(self, xs):
-        xs = filter(lambda x: x != '.', xs)
+        xs = [x for x in xs if x != '.']  #list(filter(lambda x: x != '.', xs))
         return len(set(xs)) == len(xs)
 
 
@@ -45,4 +46,4 @@ if __name__ == "__main__":
              ['.', '.', '.', '.', '.', '.', 7, '.', '.'],
              ['.', '.', '.', '.', '.', '.', '.', 8, '.'],
              ['.', '.', '.', '.', '.', '.', '.', '.', 9]]
-    print Solution().isValidSudoku(board)
+    print(Solution().isValidSudoku(board)) # True

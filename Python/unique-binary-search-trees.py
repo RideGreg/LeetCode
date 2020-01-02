@@ -45,7 +45,9 @@
 # 4. count # of Binary Search Trees with n keys (consider left/right subtree)
 
 # geometry
-# 5. Triangulation problem: count # of ways to cut n+2 side polygon into n triangles
+# 5. Triangulation problem: count # of ways to cut n+2 side polygon into n triangles.
+#    Select one side, form a triangle by choosing the 3d vertex from remaining n vertices, so left/right
+#    has C_0 and C_n-1, C_1 and C_n-2 ... ways.
 # 6. handshake problem: C_n: # of ways that 2n people in a circle can pair off to shake hands, with no crossing hands.
 # assume people 0 pair with people 2i+1, then left side has 2i people, right side has 2(n-1-i) people.
 

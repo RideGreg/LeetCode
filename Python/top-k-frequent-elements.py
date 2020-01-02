@@ -14,7 +14,7 @@
 # Your algorithm's time complexity must be better
 # than O(n log n), where n is the array's size.
 
-# REQUIRE NOT TO DO FULLY SORTING
+# *** REQUIRE NOT TO DO FULLY SORTING ***
 
 # Bucket Sort Solution
 
@@ -60,7 +60,6 @@ class Solution2(object):
         :type k: int
         :rtype: List[int]
         """
-<<<<<<< HEAD
         def kthElement(A, k):
             def partition(l, r, pivot):
                 new_pivot = l
@@ -108,3 +107,6 @@ class Solution3(object):
 #
 # When k > 1 we need a data structure that has a fast access to the elements ordered by their frequencies.
 # The idea here is to use the heap which is also known as priority queue.
+
+print(Solution().topKFrequent([1,1,1,2,2,3], 2)) # [1,2]
+print(Solution().topKFrequent([1], 1)) # [1]

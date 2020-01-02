@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 41
 # Given an unsorted integer array, find the first missing positive integer.
 #
 # For example,
@@ -16,7 +17,8 @@ class Solution:
     def firstMissingPositive(self, A):
         i = 0
         while i < len(A):
-            if A[i] > 0 and A[i] - 1 < len(A) and A[i] != A[A[i]-1]:
+            # 排好序的数组应为[1,2..len(A)],如果1<=此数<=len(A),持续把它换到应属位置上去
+            if 1 <= A[i] <= len(A) and A[i] != A[A[i]-1]:
                 A[A[i]-1], A[i] = A[i], A[A[i]-1]
             else:
                 i += 1
@@ -27,5 +29,13 @@ class Solution:
         return len(A) + 1
 
 if __name__ == "__main__":
-    print Solution().firstMissingPositive([1,2,0])
-    print Solution().firstMissingPositive([3,4,-1,1])
+    print(Solution().firstMissingPositive([1,8,0])) # 2
+    print(Solution().firstMissingPositive([0,8,1])) # 2
+    print(Solution().firstMissingPositive([2,1,0])) # 3
+    print(Solution().firstMissingPositive([1,2,0])) # 3
+    print(Solution().firstMissingPositive([3,4,-1,1])) # 2
+    print(Solution().firstMissingPositive([])) # 1
+    print(Solution().firstMissingPositive([0])) # 1
+    print(Solution().firstMissingPositive([1])) # 2
+    print(Solution().firstMissingPositive([2])) # 1
+    print(Solution().firstMissingPositive([7,8,9,11,12])) # 1

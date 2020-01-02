@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(min(m, n))
-#
+
+# 63
 # Follow up for "Unique Paths":
 #
 # Now consider if some obstacles are added to the grids. How many unique paths would there be?
@@ -32,8 +33,8 @@ class Solution:
 
         ways = [0]*n
         ways[0] = 1
-        for i in xrange(m):
-            for j in xrange(n):
+        for i in range(m):
+            for j in range(n):
                 if obstacleGrid[i][j] == 1:
                     ways[j] = 0
                 elif j>0:
@@ -46,4 +47,5 @@ if __name__ == "__main__":
                       [0,1,0],
                       [0,0,0]
                    ]
-    print Solution().uniquePathsWithObstacles(obstacleGrid)
+    print(Solution().uniquePathsWithObstacles(obstacleGrid)) # 2
+    print(Solution().uniquePathsWithObstacles([[1]])) # 0
