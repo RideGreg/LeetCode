@@ -39,18 +39,16 @@ class NumMatrix(object):
 
         m, n = len(matrix), len(matrix[0])
         self.__sums = [[0] * (n+1) for _ in range(m+1)]
+        for i in xrange(1, m+1):
+            for j in xrange(1, n+1):
+                self.__sums[i][j] = self.__sums[i][j-1] + self.__sums[i-1][j] - \
+                                    self.__sums[i-1][j-1] + matrix[i-1][j-1]
+        '''
         for i in range(m):
             val = 0
             for j in range(n):
                 val += matrix[i][j]
                 self.__sums[i+1][j+1] = self.__sums[i][j+1] + val
-        '''
-        for i in xrange(1, m+1):
-            for j in xrange(1, n+1):
-                self.__sums[i][j] = self.__sums[i][j-1] + matrix[i-1][j-1]
-        for j in xrange(1, n+1):
-            for i in xrange(1, m+1):
-                self.__sums[i][j] += self.__sums[i-1][j]
         '''
 
     def sumRegion(self, row1, col1, row2, col2):
