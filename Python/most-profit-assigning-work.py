@@ -2,6 +2,9 @@
 #                        , n is the number of jobs
 # Space: O(n)
 
+
+# 826 weekly contest 82 4/28/2018
+
 # We have jobs: difficulty[i] is the difficulty of the ith job,
 # and profit[i] is the profit of the ith job.
 #
@@ -40,7 +43,7 @@ class Solution(object):
         :type worker: List[int]
         :rtype: int
         """
-        jobs = zip(difficulty, profit)
+        jobs = list(zip(difficulty, profit))
         jobs.sort()
         worker.sort()
         result, i, max_profit = 0, 0, 0
@@ -50,3 +53,22 @@ class Solution(object):
                 i += 1
             result += max_profit
         return result
+
+    def maxProfitAssignment_ming(self, difficulty, profit, worker):
+        data = list(zip(difficulty, profit))
+        data.sort()
+        pmax, d, p = 0, [], []
+        for da in data:
+            pmax = max(pmax, da[1])
+            d.append(da[0])
+            p.append(pmax) # get the max profit for a difficulty is unnecessary, see the above solution
+
+        ans, did = 0, 0
+        import bisect
+        for w in worker:
+            did = bisect.bisect(d, w)
+            if did > 0:
+                ans += p[did-1]
+        return ans
+
+print(Solution().maxProfitAssignment([2,6,10,4,8],[10,30,50,20,40],[4,6,5,7])) # 100

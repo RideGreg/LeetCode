@@ -1,6 +1,8 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 822 weekly contest 81 4/21/2018
+
 # On a table are N cards, with a positive integer printed on the front
 # and back of each card (possibly different).
 #
@@ -42,8 +44,14 @@ class Solution(object):
         :rtype: int
         """
         same = {n for i, n in enumerate(fronts) if n == backs[i]}
+        # OR same = {m for m, n in zip(fronts, backs) if m == n}
         result = float("inf")
+
+        # https://www.geeksforgeeks.org/python-ways-to-concatenate-two-lists/
         for n in itertools.chain(fronts, backs):
             if n not in same:
                 result = min(result, n)
         return result if result < float("inf") else 0
+
+print(Solution().flipgame([1,2,4,4,7], [1,3,4,1,3])) # 2
+print(Solution().flipgame([1],[1])) # 0

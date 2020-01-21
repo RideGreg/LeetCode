@@ -1,12 +1,21 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 1202 weekly contest 155 9/21/2020
+
+# You are given a string s, and an array of pairs of indices in the string pairs where pairs[i] = [a, b]
+# indicates 2 indices(0-indexed) of the string.
+#
+# You can swap the characters at any pair of indices in the given pairs any number of times.
+#
+# Return the lexicographically smallest string that s can be changed to after using the swaps.
+
 import collections
 
 
 class UnionFind(object):
     def __init__(self, n):
-        self.set = range(n)
+        self.set = list(range(n))
 
     def find_set(self, x):
         if self.set[x] != x:
@@ -28,19 +37,37 @@ class Solution(object):
         :type pairs: List[List[int]]
         :rtype: str
         """
-        union_find = UnionFind(len(s))
+        groups = UnionFind(len(s))
         for x,y in pairs: 
-            union_find.union_set(x, y)
-        components = collections.defaultdict(list)
-        for i in xrange(len(s)): 
-            components[union_find.find_set(i)].append(s[i])
-        for i in components.iterkeys(): 
-            components[i].sort(reverse=True)
-        result = []
-        for i in xrange(len(s)): 
-            result.append(components[union_find.find_set(i)].pop())
-        return "".join(result)
+            groups.union_set(x, y)
 
+        components = collections.defaultdict(list)
+        for i in range(len(s)):
+            id = groups.find_set(i)
+            components[id].append(s[i])  # store char, index is no longer useful
+        for comp in components.values():
+            comp.sort(reverse=True)
+
+        ans = []
+        for i in range(len(s)):
+            c = components[groups.find_set(i)].pop() # 倒排技术，可逐个consume
+            ans.append(c)
+        return "".join(ans)
+
+        ''' # 如不会倒排技术，就一次性把一个union全写入。坏处是需要维护两套list，一套是位置id，另一套是字符。
+        d = collections.defaultdict(list)
+        for i in range(len(s)):
+            id = groups.find_set(i)
+            d[id].append(i)
+
+        ss = ['']*len(s)
+        for v in d.values():
+            charset = [s[j] for j in v]
+            charset.sort()
+            for idx, char in zip(v, charset):  # pythonic way to join two lists by index
+                ss[idx] = char
+        return ''.join(ss)
+        '''
 
 # Time:  O(nlogn)
 # Space: O(n)
@@ -52,13 +79,12 @@ class Solution2(object):
         :type pairs: List[List[int]]
         :rtype: str
         """
-        def dfs(i, adj, lookup, component):
+        def dfs(i):
             lookup.add(i)
             component.append(i)
             for j in adj[i]:
-                if j in lookup:
-                    continue
-                dfs(j, adj, lookup, component)
+                if j not in lookup:
+                    dfs(j)
             
         adj = collections.defaultdict(list)
         for i, j in pairs:
@@ -66,13 +92,17 @@ class Solution2(object):
             adj[j].append(i)
         lookup = set()
         result = list(s)
-        for i in xrange(len(s)):
+        for i in range(len(s)):
             if i in lookup:
                 continue
             component = []
-            dfs(i, adj, lookup, component)
+            dfs(i)
             component.sort()
             chars = sorted(result[k] for k in component)
-            for comp, char in itertools.izip(component, chars):
+            for comp, char in zip(component, chars):
                 result[comp] = char
         return "".join(result)
+
+print(Solution().smallestStringWithSwaps("dcab", [[0,3],[1,2]])) # 'bacd'
+print(Solution().smallestStringWithSwaps("dcab", [[0,3],[1,2],[0,2]])) # 'abcd'
+print(Solution().smallestStringWithSwaps("cba", [[0,1],[1,2]])) # 'abc'

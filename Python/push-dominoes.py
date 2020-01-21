@@ -1,6 +1,8 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 838 weekly contest 85 5/19/2018
+
 # There are N dominoes in a line, and we place each domino vertically upright.
 #
 # In the beginning,
@@ -30,11 +32,11 @@
 #
 # Example 1:
 #
-# Input: ".L.R...LR..L.."
+# Input:  ".L.R...LR..L.."
 # Output: "LL.RR.LLRRLL.."
 # Example 2:
 #
-# Input: "RR.L"
+# Input:  "RR.L"
 # Output: "RR.L"
 # Explanation: The first domino expends no additional force
 # on the second domino.
@@ -78,3 +80,33 @@ class Solution(object):
 
         return "".join('.' if f == 0 else 'R' if f > 0 else 'L'
                        for f in force)
+
+
+    def pushDominoes_ming(self, dominoes):
+        dominoes = list(dominoes)
+        i, leftStart = 0, 0
+        while i < len(dominoes):
+            while i < len(dominoes) and dominoes[i] == '.':
+                i += 1
+            if i < len(dominoes):
+                if dominoes[i] == 'L':
+                    dominoes[leftStart:i+1] = 'L'*(i+1-leftStart)
+                    i += 1
+                    leftStart = i
+                elif dominoes[i] == 'R':
+                    j = i + 1
+                    while j < len(dominoes) and dominoes[j] == '.':
+                        j += 1
+                    if j == len(dominoes) or dominoes[j] == 'R':
+                        dominoes[i:j] = 'R' * (j-i)
+                        i = j
+                    elif dominoes[j] == 'L':
+                        half = (j+1-i) // 2
+                        dominoes[i:i+half] = 'R' * half
+                        dominoes[j+1-half:j+1] = 'L' * half
+                        i = j + 1
+                        leftStart = i
+        return ''.join(dominoes)
+
+print(Solution().pushDominoes(".L.R...LR..L..")) # "LL.RR.LLRRLL.."
+print(Solution().pushDominoes("RR.L")) # "RR.L"
