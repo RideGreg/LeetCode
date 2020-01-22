@@ -1,6 +1,11 @@
 # Time:  O(n^2 + d), d is the duplicated of result substrings size
 # Space: O(r), r is the size of result substrings set
 
+# 1316 biweekly contest 17 1/11/2020
+
+# Return the number of distinct non-empty substrings of text that can be written as the concatenation of some string
+# with itself (i.e. it can be written as a + a where a is some string).
+
 class Solution(object):
     def distinctEchoSubstrings(self, text):
         """
@@ -99,3 +104,37 @@ class Solution_TLE(object):
                     result.add(text[i+1:i+1+l])
                 pow_D = (pow_D*D) % MOD 
         return len(result)
+
+class Solution_ming:
+    def distinctEchoSubstrings(self, text: str) -> int:
+        n, ans, aset = len(text), 0, set()
+        for sz in range(2, n+1, 2):
+            for l in range(n+1-sz):
+                r = l+sz-1
+                k = l+sz//2-1
+                if text[l:k+1] == text[k+1:r+1] and text[l:r+1] not in aset:
+                    aset.add(text[l:r+1])
+                    ans += 1
+        return ans
+
+        '''
+        n, ans, aset = len(text), 0, set()
+        dp = [[text[i:j+1] for j in range(n)] for i in range(n)]
+        for sz in range(2, n+1):
+            for l in range(n+1-sz):
+                r = l+sz-1
+                for k in range(l, r):
+                    #if dp[l][k] and dp[k][r+1] and dp[l][k]==dp[k][r+1]:
+                    x, y = dp[l][k], dp[k+1][r]
+                    if dp[l][k] == dp[k+1][r]:
+                        dp[l][r] = dp[l][k]
+                        if text[l:r+1] not in aset:
+                            aset.add(text[l:r+1])
+                            ans += 1
+                        break
+        return ans
+        '''
+
+print(Solution().distinctEchoSubstrings("abcabcabc")) # 3
+print(Solution().distinctEchoSubstrings("leetcodeleetcode")) # 2
+print(Solution().distinctEchoSubstrings("aaaabbccbbcc")) # 5

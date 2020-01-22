@@ -1,6 +1,10 @@
 # Time:  O(nlog(logm)), n the length of nums, m is the max value of nums
 # Space: O(logm)
 
+# 1295 weekly contest 168 12/21/2019
+
+# Given an array nums of integers, return how many of them contain an even number of digits.
+
 import bisect
 
 
