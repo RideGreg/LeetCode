@@ -51,7 +51,7 @@ class Solution2(object):
                 for x in reversed(stuff):
                     stk[-1].append(x)
             else:
-                stk[-1].append(c)    
+                stk[-1].append(c)
         return "".join(stk.pop())
 
 
