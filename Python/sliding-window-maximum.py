@@ -41,6 +41,7 @@
 
 from collections import deque
 
+
 class Solution(object):
     def maxSlidingWindow(self, nums, k):
         """
@@ -49,15 +50,15 @@ class Solution(object):
         :rtype: List[int]
         """
         dq = deque()
-        max_numbers = []
-
+        result = []
         for i in xrange(len(nums)):
+            if dq and dq[0] <= i - k:
+                dq.popleft()
             while dq and nums[i] >= nums[dq[-1]]:
                 dq.pop()
             dq.append(i)
-            if i >= k and dq and dq[0] == i - k:
-                dq.popleft()
-            if i >= k - 1:
-                max_numbers.append(nums[dq[0]])
+            if i >= k-1:
+                result.append(nums[dq[0]])
+        return result
 
-        return max_numbers
+print(Solution().maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3)) # [3,3,5,5,6,7]
