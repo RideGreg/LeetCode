@@ -13,7 +13,30 @@ import heapq
 from typing import List
 
 class Solution(object):
-    def minFallingPathSum(self, arr: List[List[int]]) -> int:
+    def minFallingPathSum(self, arr): # USE THIS
+        """
+        :type arr: List[List[int]]
+        :rtype: int
+        """
+        for i in range(1, len(arr)):
+            min1, min2 = heapq.nsmallest(2, arr[i-1])
+            for j in range(len(arr[0])):
+                arr[i][j] += min2 if arr[i-1][j] == min1 else min1
+        return min(arr[-1])
+
+        ''' if don't allow to modify input list
+        dp = arr[0]
+        for i in range(1, len(arr)):
+            min1, min2 = heapq.nsmallest(2, dp)
+            ndp = arr[i][:]
+            for j in range(len(arr[0])):
+                ndp[j] += min1 if dp[j] != min1 else min2
+            dp = ndp
+        return min(dp)        
+        '''
+
+    # CON: no need to remember col
+    def minFallingPathSum_ming(self, arr: List[List[int]]) -> int:
         m1, m2, col = float('inf'), float('inf'), None
         firstRow = True
 
@@ -33,17 +56,6 @@ class Solution(object):
             if firstRow:
                 firstRow = False
         return m1
-
-    def minFallingPathSum_kamyu(self, arr):
-        """
-        :type arr: List[List[int]]
-        :rtype: int
-        """
-        for i in range(1, len(arr)):
-            smallest_two = heapq.nsmallest(2, arr[i-1])
-            for j in range(len(arr[0])):
-                arr[i][j] += smallest_two[1] if arr[i-1][j] == smallest_two[0] else smallest_two[0]
-        return min(arr[-1])
 
     # Con: not maintain m1,m2,i1, re-calcualte each time
     def minFallingPathSum_awice(self, arr):

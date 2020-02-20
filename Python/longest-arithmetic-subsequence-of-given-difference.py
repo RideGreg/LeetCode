@@ -1,7 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
-# 1218
+# 1218 weekly contest 157 10/5/2019
 # Given an integer array arr and an integer difference, return the length of the longest subsequence
 # in arr which is an arithmetic sequence such that the difference between adjacent elements
 # in the subsequence equals difference.

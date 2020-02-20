@@ -10,18 +10,17 @@
 # 1 <= d, f <= 30
 # 1 <= target <= 1000
 
+import collections
+
 class Solution(object):
     def numRollsToTarget(self, d: int, f: int, target: int) -> int: # USE THIS
-        M = 10**9+7
-        dp = [1] + [0]*target
+        M, dp = 10**9+7, {0:1}
         for _ in range(d):
-            ndp = [0]*(1+target)
-            for i in range(target): # 前面几个dice的点数和
-                if dp[i]:
-                    for j in range(1, f+1): #当前dice的点数
-                        if i+j > target: break
-                        ndp[i+j] += dp[i]
-                        ndp[i+j] %= M
+            ndp = collections.defaultdict(int)
+            for k, ways in dp.items(): # k: 前面几个dice的点数和
+                for i in range(1, f+1): #当前dice的点数
+                    if k+i <= target:
+                        ndp[k+i] = (ndp[k+i] + ways) % M
             dp = ndp
         return dp[target]
 

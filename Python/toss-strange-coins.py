@@ -20,10 +20,9 @@ class Solution(object):
         :type target: int
         :rtype: float
         """
-        dp = [1.0] #dp[heads] = prob
-        for p in prob:
-            dp.append(0)
-            for i in range(len(dp) - 1, -1, -1):
+        dp = [1.0] + [0] * target #dp[heads] = prob, when 0 coin, only 0 head has 100% chance
+        for k, p in enumerate(prob):
+            for i in range(min(len(dp)-1, k+1), -1, -1):
                 dp[i] *= (1 - p)
                 if i > 0:
                     dp[i] += p * dp[i-1]
@@ -34,3 +33,4 @@ print(Solution().probabilityOfHeads([0.4, 0.4], 2)) # 0.16000 = 0.4 * 0.4
 print(Solution().probabilityOfHeads([0.4, 0.4], 1)) # 0.48000 = 0.4*0.6 + 0.6*0.4
 print(Solution().probabilityOfHeads([0.4, 0.4], 0)) # 0.36000 = 0.6 * 0.6
 print(Solution().probabilityOfHeads([0.4] * 5, 0)) # 0.07776 = 0.6**5
+print(Solution().probabilityOfHeads([0.4] * 50, 3)) # 4.694e-8

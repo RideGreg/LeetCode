@@ -15,6 +15,8 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
+        # intuition: s+s[::-1] is guaranteed palindrome, try to melt them further by using LCS of s and s[::-1].
+        # e.g. "mbadm+mdabm" LCS="mdm" then min insertion is 2 chars "mbad(ab)m"
         def longestCommonSubsequence(text1, text2):
             if len(text1) < len(text2):
                 return self.longestCommonSubsequence(text2, text1)
@@ -27,22 +29,31 @@ class Solution(object):
 
         return len(s)-longestCommonSubsequence(s, s[::-1])
 
+    def minInsertions_ming(self, s: str) -> int: # USE THIS
+        n = len(s)
+        dp = [0]*n
+        for i in range(n-2, -1, -1):
+            ndp = [0]*n
+            for j in range(i+1, n):
+                ndp[j] = dp[j-1] if s[i]==s[j] else 1+min(ndp[j-1], dp[j])
+            dp = ndp
+        return dp[-1]
 
-    def minInsertions_ming(self, s: str) -> int:
+    # Time O(n^2), Space O(n^2)
+    def minInsertions_ming_iteratebysize(self, s: str) -> int:
         n = len(s)
         dp = [[0]*n for _ in range(n)]
         for sz in range(2, n+1):
             for l in range(n-sz+1):
                 r = l+sz-1
-                dp[l][r] = float('inf')
                 if s[l]==s[r]:
-                    dp[l][r] = min(dp[l][r], dp[l+1][r-1])
+                    dp[l][r] = dp[l+1][r-1]
                 else:
-                    dp[l][r] = min(dp[l][r], 1 + min(dp[l + 1][r], dp[l][r-1]))
+                    dp[l][r] = 1 + min(dp[l + 1][r], dp[l][r-1])
         return dp[0][-1]
 
-print(Solution().minInsertions('zzazz'))
-print(Solution().minInsertions('mbadm'))
-print(Solution().minInsertions('leetcode'))
-print(Solution().minInsertions('g'))
-print(Solution().minInsertions('no'))
+print(Solution().minInsertions('zzazz')) # 0
+print(Solution().minInsertions('mbadm')) # 2
+print(Solution().minInsertions('leetcode')) # 5 "leetcodeedocteel" shareing "eee" => "le(doct)etcode(l)"
+print(Solution().minInsertions('g')) # 0
+print(Solution().minInsertions('no')) # 1

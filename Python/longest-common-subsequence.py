@@ -21,6 +21,18 @@ class Solution(object):
         :type text2: str
         :rtype: int
         """
+        m, n = len(text1), len(text2)
+        dp = [0] * (n+1)
+        for i in range(1, m+1):
+            ndp = [0]
+            for j in range(1, n+1):
+                ndp.append(max(ndp[-1], dp[j]))
+                if text1[i-1] == text2[j-1]:
+                    ndp[j] = max(ndp[j], dp[j-1]+1)
+            dp = ndp
+        return dp[-1]
+
+    def longestCommonSubsequence_kamyu(self, text1, text2):
         if len(text1) > len(text2):
             return self.longestCommonSubsequence(text2, text1)
 

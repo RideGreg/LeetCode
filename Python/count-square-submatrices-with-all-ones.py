@@ -12,11 +12,16 @@ class Solution(object):
         :rtype: int
         """
         ans = 0
+        # for 1st row and 1st col, 0 means 0 square, 1 means 1 square. Don't need further processing.
+        # ? 1 1
+        # 1 1 2
+        # 1 2 1
         for i in range(1, len(matrix)):
             for j in range(1, len(matrix[0])):
                 if matrix[i][j]:
                     k = min(matrix[i-1][j], matrix[i][j-1])
                     matrix[i][j] = k+1 if matrix[i-k][j-k] else k
+                    # all cells in the (k+1)x(k+1) square are 1 except top-left cell
                     ans += matrix[i][j]
         return ans
         #return sum(x for row in matrix for x in row)

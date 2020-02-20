@@ -15,7 +15,12 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        dp = [0, 0, 0] # current maximum possible sum that sum % 3 = i
+        # ituition: last maximum possible sum of 3x can from 3 subproblems:
+        #  if last num is 3x: previous maximum possible sum of 3x + last num
+        #  if last num is 3x+1: previous maximum possible sum of (3x+2) + last num
+        #  if last num is 3x+2: previous maximum possible sum of (3x+1) + last num
+        # This hints DP to calculate previous maximum possible sum of [3x, 3x+1, 3x+2]
+        dp = [0, float('-inf'), float('-inf')] # current maximum possible sum for [3x, 3x+1, 3x+2]
         for num in nums:
             temp = [num+x for x in dp]
             for i in temp:

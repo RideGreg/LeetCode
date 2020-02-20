@@ -13,24 +13,22 @@
 
 class Solution:
     def maxLength(self, arr):  # USE THIS: dfs + bit op to detect conflict
+        import functools, operator
         def bitset(s):
-            ans = 0
+            return functools.reduce(operator.__or__,
+                                    [1<<(ord(c)-ord('a')) for c in s])
+            '''ans = 0
             for c in s:
                 x = ord(c) - ord('a')
-                ans |= 1 << x
-            return ans
+                ans |= 1 << xs
+            return ans'''
 
         def number_of_one(n):
             ans = 0
             while n:
-                n &= n - 1
+                n &= n - 1 # remove the right-most 1
                 ans += 1
             return ans
-
-        for i in range(len(arr) - 1, -1, -1):
-            if len(arr[i]) != len(set(arr[i])):
-                arr.pop(i)
-        N = len(arr)
 
         def dfs(i, cur):
             if i == N:
@@ -38,12 +36,25 @@ class Solution:
                 return
 
             dfs(i + 1, cur)
-            xset = bitset(arr[i])
-            if xset & cur == 0:
-                cur |= xset
+            if bits[i] & cur == 0:
+                dfs(i + 1, cur | bits[i])
+                '''cur |= bits[i]
                 dfs(i + 1, cur)
-                cur ^= xset
+                cur ^= bits[i]'''
 
+            '''aonther dfs
+            for j in range(i, N):
+                if bits[j] & cur == 0:
+                    dfs(j+1, cur | bits[j])
+                else:
+                    dfs(j+1, cur)
+            '''
+
+        for i in range(len(arr) - 1, -1, -1): # filter string with duplicate char
+            if len(arr[i]) != len(set(arr[i])):
+                arr.pop(i)
+        N = len(arr)
+        bits = [bitset(x) for x in arr]
         self.ans = 0
         dfs(0, 0)
         return self.ans
@@ -89,6 +100,7 @@ class Solution:
         dfs(0)
         return self.ans
 
+# global var used by 2 kamyu solution: power[k] = 2^k or 1<<k, log2[n] = log2(n)
 power = [1]
 log2 = {1:0}
 for i in range(1, 26):
@@ -96,7 +108,7 @@ for i in range(1, 26):
     log2[power[i]] = i
 
 
-class Solution(object):
+class Solution_kamyu(object):
     def maxLength(self, arr):  # dp (store all candidates) + bit op to detect conflict
         """
         :type arr: List[str]
@@ -132,7 +144,7 @@ class Solution(object):
 
 # Time:  O(2^n)
 # Space: O(1)
-class Solution2(object):  # hard to understand
+class Solution_kamyu2(object):  # hard to understand
     def maxLength(self, arr):
         """
         :type arr: List[str]
@@ -146,7 +158,7 @@ class Solution2(object):  # hard to understand
                 result |= power[ord(c)-ord('a')]
             return result
     
-        bitsets = [bitset(x) for x in arr]
+        bits = [bitset(x) for x in arr]
         result = 0
         for i in range(power[len(arr)]):
             curr_bitset, curr_len = 0, 0
@@ -154,15 +166,16 @@ class Solution2(object):  # hard to understand
                 j = i & -i  # rightmost bit
                 i ^= j
                 j = log2[j]  # log2(j)
-                if not bitsets[j] or (curr_bitset & bitsets[j]):
+                if not bits[j] or (curr_bitset & bits[j]):
                     break
-                curr_bitset |= bitsets[j]
+                curr_bitset |= bits[j]
                 curr_len += len(arr[j])
             else:
                 result = max(result, curr_len)
         return result
 
-print(Solution().maxLength(["un","iq","ue"])) # 4
+print(Solution().maxLength(["unz","iq","ue"])) # 5
+print(Solution().maxLength(["un","iq","uez"])) # 5
 print(Solution().maxLength(["cha","r","act","ers"])) # 6 "chaers" or "acters"
 print(Solution().maxLength(["abcdefghijklmnopqrstuvwxyz"])) # 26
 print(Solution().maxLength(["a","b","c","d","a","b","c"])) # 4

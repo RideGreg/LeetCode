@@ -18,6 +18,9 @@
 
 # Just need to handle two repeated arr. If the result cross 3 or more arrs,
 # all the arr above 2 would be full arr.
+
+# check related 1186 maximum-subarray-sum-with-one-deletion.py
+
 class Solution(object):
     def kConcatenationMaxSum(self, arr, k):
         """
@@ -27,6 +30,8 @@ class Solution(object):
         """
         def kadane_k(arr, k):
             result, curr = float("-inf"), float("-inf")
+            # init result as -inf if length of sub-array is at least 1; if can be empty sub-array, init result as 0
+
             for _ in range(k):
                 for x in arr:
                     curr = max(curr+x, x)
