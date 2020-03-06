@@ -1,7 +1,7 @@
 # Time:  O(m * n)
 # Space: O(m * n)
 
-# In MATLAB, there is a very useful function called 'reshape',
+# 566 In MATLAB, there is a very useful function called 'reshape',
 # which can reshape a matrix into a new one with different size but keep its original data.
 #
 # You're given a matrix represented by a two-dimensional array,

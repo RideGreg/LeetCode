@@ -1,6 +1,26 @@
 # Time:  O(n + logc), c is the number of candies
 # Space: O(1)
 
+# 1103 weekly contest 143 6/29/2019
+
+# We distribute some number of candies, to a row of num_people people in the following way:
+#
+# We then give 1 candy to the first person, 2 candies to the second person,
+# and so on until we give n candies to the last person.
+#
+# Then, we go back to the start of the row, giving n + 1 candies to the
+# first person, n + 2 candies to the second person, and so on until we
+# give 2 * n candies to the last person.
+#
+# This process repeats (with us giving one more candy each time, and moving
+# to the start of the row after we reach the end) until we run out of candies.
+# The last person will receive all of our remaining candies (not necessarily
+# one more than the previous gift).
+#
+# Return an array (of length num_people and sum candies) that represents
+# the final distribution of candies.
+#
+#
 class Solution(object):
     def distributeCandies(self, candies, num_people):
         """
@@ -19,7 +39,7 @@ class Solution(object):
         rows, cols = divmod(p, num_people)
         
         result = [0]*num_people
-        for i in xrange(num_people):
+        for i in range(num_people):
             result[i] = (i+1)*(rows+1) + (rows*(rows+1)//2)*num_people if i < cols else \
                         (i+1)*rows + ((rows-1)*rows//2)*num_people
         result[cols] += remaining
@@ -28,7 +48,7 @@ class Solution(object):
 
 # Time:  O(n + logc), c is the number of candies
 # Space: O(1)
-class Solution2(object):
+class Solution2(object): # USE THIS
     def distributeCandies(self, candies, num_people):
         """
         :type candies: int
@@ -36,27 +56,28 @@ class Solution2(object):
         :rtype: List[int]
         """
         # find max integer p s.t. sum(1 + 2 + ... + p) <= C
-        left, right = 1, candies
-        while left <= right:
-            mid = left + (right-left)//2
-            if not ((mid <= candies*2 // (mid+1))):
-                right = mid-1
+        l, r = 1, candies
+        while l < r:
+            m = (l+r+1) // 2
+            if m*(m+1)//2 < candies:
+                l = m
             else:
-                left = mid+1
-        p = right
+                r = m - 1
+        p = r
         remaining = candies - (p+1)*p//2
         rows, cols = divmod(p, num_people)
         
         result = [0]*num_people
-        for i in xrange(num_people):
+        for i in range(num_people):
             result[i] = (i+1)*(rows+1) + (rows*(rows+1)//2)*num_people if i < cols else \
                         (i+1)*rows + ((rows-1)*rows//2)*num_people
         result[cols] += remaining
         return result
 
 
-# Time:  O(sqrt(c)), c is the number of candies
+# Time:  O(sqrt(c) + n), c is the number of candies
 # Space: O(1)
+# assume total s step, s(s+1)//2 >= c => s^2 >= c => only need s>=sqrt(c)
 class Solution3(object):
     def distributeCandies(self, candies, num_people):
         """
