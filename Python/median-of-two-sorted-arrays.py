@@ -110,7 +110,7 @@ class Solution_Generic(object):
             res = 0
             for array in arrays:
                 if array:
-                    res += binary_search(array, 0, len(array) - 1, num, \
+                    res += binary_search(array, 0, len(array) - 1, num,
                                          lambda array, x, y: array[x] > y)
             return res >= target
 
