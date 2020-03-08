@@ -3,7 +3,7 @@
 ![Language](https://img.shields.io/badge/language-Python%20%2F%20C++11-orange.svg)&nbsp;
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)&nbsp;
 ![Update](https://img.shields.io/badge/update-weekly-green.svg)&nbsp;
-![Progress](https://img.shields.io/badge/progress-1369%20%2F%201369-ff69b4.svg)&nbsp;
+![Progress](https://img.shields.io/badge/progress-1377%20%2F%201377-ff69b4.svg)&nbsp;
 [![SayThanks](https://img.shields.io/badge/say-thanks-ff69f4.svg)](https://saythanks.io/to/kamyu104)&nbsp;
 ![Travis](https://travis-ci.org/kamyu104/LeetCode-Solutions.svg?branch=master)<br>
 ![Total](https://visitor-count-badge.herokuapp.com/total.svg?repo_id=kamyu104.leetcode.solutions)&nbsp;
@@ -258,6 +258,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 1343 | [Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold](https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/) | [C++](./C++/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold.cpp) [Python](./Python/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold.py) | _O(n)_ | _O(1)_      | Medium         || 
 1346 | [Check If N and Its Double Exist](https://leetcode.com/problems/check-if-n-and-its-double-exist/) | [C++](./C++/check-if-n-and-its-double-exist.cpp) [Python](./Python/check-if-n-and-its-double-exist.py) | _O(n)_ | _O(n)_      | Easy         || 
 1351 | [Count Negative Numbers in a Sorted Matrix](https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/) | [C++](./C++/count-negative-numbers-in-a-sorted-matrix.cpp) [Python](./Python/count-negative-numbers-in-a-sorted-matrix.py) | _O(m + n)_ | _O(1)_      | Easy         || 
+1375 | [Bulb Switcher III](https://leetcode.com/problems/bulb-switcher-iii/) | [C++](./C++/bulb-switcher-iii.cpp) [Python](./Python/bulb-switcher-iii.py) | _O(n)_ | _O(1)_      | Medium         ||
 
 ## String
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -370,6 +371,9 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 1332 | [Remove Palindromic Subsequences](https://leetcode.com/problems/remove-palindromic-subsequences/) | [C++](./C++/remove-palindromic-subsequences.cpp) [Python](./Python/remove-palindromic-subsequences.py) | _O(n)_ | _O(1)_ | Easy | |
 1347 | [Minimum Number of Steps to Make Two Strings Anagram](https://leetcode.com/problems/minimum-number-of-steps-to-make-two-strings-anagram/) | [C++](./C++/minimum-number-of-steps-to-make-two-strings-anagram.cpp) [Python](./Python/minimum-number-of-steps-to-make-two-strings-anagram.py) | _O(n)_ | _O(1)_ | Medium | |
 1358 | [Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/) | [C++](./C++/number-of-substrings-containing-all-three-characters.cpp) [Python](./Python/number-of-substrings-containing-all-three-characters.py) | _O(n)_ | _O(1)_ | Medium | | Sliding Window
+1370 | [Increasing Decreasing String](https://leetcode.com/problems/increasing-decreasing-string/) | [C++](./C++/increasing-decreasing-string.cpp) [Python](./Python/increasing-decreasing-string.py) | _O(n)_ | _O(1)_ | Easy | | Sort |
+1371 | [Find the Longest Substring Containing Vowels in Even Counts](https://leetcode.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/) | [C++](./C++/find-the-longest-substring-containing-vowels-in-even-counts.cpp) [Python](./Python/find-the-longest-substring-containing-vowels-in-even-counts.py) | _O(n)_ | _O(1)_ | Medium | |
+1374 | [Generate a String With Characters That Have Odd Count](https://leetcode.com/problems/generate-a-string-with-characters-that-have-odd-counts/) | [C++](./C++/generate-a-string-with-characters-that-have-odd-counts.cpp) [Python](./Python/generate-a-string-with-characters-that-have-odd-counts.py) | _O(n)_ | _O(1)_ | Easy | |
 
 ## Linked List
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -922,18 +926,19 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
 xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/)| [Python](./Python/kth-largest-element-in-a-stream.py)| | | Medium |
-220| [Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii/)  | [C++](./C++/contains-duplicate-iii.cpp) [Python](./Python/contains-duplicate-iii.py) | _O(nlogk)_        | _O(k)_          | Medium           ||
-230 | [Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) | [C++](./C++/kth-smallest-element-in-a-bst.cpp) [Python](./Python/kth-smallest-element-in-a-bst.py) | _O(max(h, k))_ | _O(min(h, k))_ | Medium ||
-235 | [Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/) | [C++](./C++/lowest-common-ancestor-of-a-binary-search-tree.cpp) [Python](./Python/lowest-common-ancestor-of-a-binary-search-tree.py) | _O(h)_ | _O(1)_ | Easy | EPI |
-270| [Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value/)| [C++](./C++/closest-binary-search-tree-value.cpp) [Python](./Python/closest-binary-search-tree-value.py)   | _O(h)_          | _O(1)_          | Easy         | 📖 |
-285| [Inorder Successor in BST](https://leetcode.com/problems/inorder-successor-in-bst/)| [C++](./C++/inorder-successor-in-bst.cpp) [Python](./Python/inorder-successor-in-bst.py)   | _O(h)_          | _O(1)_          | Medium         | 📖 |
-352 | [Data Stream as Disjoint Intervals](https://leetcode.com/problems/data-stream-as-disjoint-intervals/) | [C++](./C++/data-stream-as-disjoint-intervals.cpp) [Python](./Python/data-stream-as-disjoint-intervals.py) | _O(logn)_ | _O(n)_ | Hard | |
-449|[Serialize and Deserialize BST](https://leetcode.com/problems/serialize-and-deserialize-bst/)| [C++](./C++/serialize-and-deserialize-bst.cpp) [Python](./Python/serialize-and-deserialize-bst.py)| _O(n)_ | _O(h)_ | Medium | | |
-450|[Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/)| [C++](./C++/delete-node-in-a-bst.cpp) [Python](./Python/delete-node-in-a-bst.py)| _O(h)_ | _O(h)_ | Medium | | |
-530|[Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)| [C++](./C++/minimum-absolute-difference-in-bst.cpp) [Python](./Python/minimum-absolute-difference-in-bst.py)| _O(n)_ | _O(h)_ | Easy | | |
-776|[Split BST](https://leetcode.com/problems/split-bst/)| [C++](./C++/split-bst.cpp) [Python](./Python/split-bst.py)| _O(n)_ | _O(h)_ | Medium | 📖 | |
-783|[Minimum Distance Between BST Nodes](https://leetcode.com/problems/minimum-distance-between-bst-nodes/)| [C++](./C++/minimum-distance-between-bst-nodes.cpp) [Python](./Python/minimum-distance-between-bst-nodes.py)| _O(n)_ | _O(h)_ | Easy | | |
-510| [Inorder Successor in BST II](https://leetcode.com/problems/inorder-successor-in-bst-ii/)| [C++](./C++/inorder-successor-in-bst-ii.cpp) [Python](./Python/inorder-successor-in-bst-ii.py)   | _O(h)_          | _O(1)_          | Medium         | 🔒 |
+0220| [Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii/)  | [C++](./C++/contains-duplicate-iii.cpp) [Python](./Python/contains-duplicate-iii.py) | _O(nlogk)_        | _O(k)_          | Medium           ||
+0230 | [Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) | [C++](./C++/kth-smallest-element-in-a-bst.cpp) [Python](./Python/kth-smallest-element-in-a-bst.py) | _O(max(h, k))_ | _O(min(h, k))_ | Medium ||
+0235 | [Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/) | [C++](./C++/lowest-common-ancestor-of-a-binary-search-tree.cpp) [Python](./Python/lowest-common-ancestor-of-a-binary-search-tree.py) | _O(h)_ | _O(1)_ | Easy | EPI |
+0270| [Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value/)| [C++](./C++/closest-binary-search-tree-value.cpp) [Python](./Python/closest-binary-search-tree-value.py)   | _O(h)_          | _O(1)_          | Easy         | 🔒 |
+0285| [Inorder Successor in BST](https://leetcode.com/problems/inorder-successor-in-bst/)| [C++](./C++/inorder-successor-in-bst.cpp) [Python](./Python/inorder-successor-in-bst.py)   | _O(h)_          | _O(1)_          | Medium         | 🔒 |
+0352 | [Data Stream as Disjoint Intervals](https://leetcode.com/problems/data-stream-as-disjoint-intervals/) | [C++](./C++/data-stream-as-disjoint-intervals.cpp) [Python](./Python/data-stream-as-disjoint-intervals.py) | _O(logn)_ | _O(n)_ | Hard | |
+0449|[Serialize and Deserialize BST](https://leetcode.com/problems/serialize-and-deserialize-bst/)| [C++](./C++/serialize-and-deserialize-bst.cpp) [Python](./Python/serialize-and-deserialize-bst.py)| _O(n)_ | _O(h)_ | Medium | | |
+0450|[Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/)| [C++](./C++/delete-node-in-a-bst.cpp) [Python](./Python/delete-node-in-a-bst.py)| _O(h)_ | _O(h)_ | Medium | | |
+0530|[Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)| [C++](./C++/minimum-absolute-difference-in-bst.cpp) [Python](./Python/minimum-absolute-difference-in-bst.py)| _O(n)_ | _O(h)_ | Easy | | |
+0776|[Split BST](https://leetcode.com/problems/split-bst/)| [C++](./C++/split-bst.cpp) [Python](./Python/split-bst.py)| _O(n)_ | _O(h)_ | Medium | 🔒 | |
+0783|[Minimum Distance Between BST Nodes](https://leetcode.com/problems/minimum-distance-between-bst-nodes/)| [C++](./C++/minimum-distance-between-bst-nodes.cpp) [Python](./Python/minimum-distance-between-bst-nodes.py)| _O(n)_ | _O(h)_ | Easy | | |
+0510| [Inorder Successor in BST II](https://leetcode.com/problems/inorder-successor-in-bst-ii/)| [C++](./C++/inorder-successor-in-bst-ii.cpp) [Python](./Python/inorder-successor-in-bst-ii.py)   | _O(h)_          | _O(1)_          | Medium         | 🔒 | |
+1372| [Maximum Sum BST in Binary Tree](https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/) | [C++](./C++/maximum-sum-bst-in-binary-tree.cpp) [Python](./Python/maximum-sum-bst-in-binary-tree.py) | _O(n)_          | _O(h)_          | Hard           || DFS |
 
 ## Breadth-First Search
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
@@ -1049,6 +1054,8 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 1315| [Sum of Nodes with Even-Valued Grandparent](https://leetcode.com/problems/sum-of-nodes-with-even-valued-grandparent/) | [C++](./C++/sum-of-nodes-with-even-valued-grandparent.cpp) [Python](./Python/sum-of-nodes-with-even-valued-grandparent.py) | _O(n)_          | _O(h)_          | Medium           |||
 1319| [Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) | [C++](./C++/number-of-operations-to-make-network-connected.cpp) [Python](./Python/number-of-operations-to-make-network-connected.py) | _O(\|E\| + \|V\|)_          | _O(\|V\|)_          | Medium           || Union Find|
 1367| [Linked List in Binary Tree](https://leetcode.com/problems/linked-list-in-binary-tree/) | [C++](./C++/linked-list-in-binary-tree.cpp) [Python](./Python/linked-list-in-binary-tree.py) | _O(n + l)_          | _O(h + l)_          | Medium           || `KMP Algorithm` |
+1376| [Time Needed to Inform All Employees](https://leetcode.com/problems/time-needed-to-inform-all-employees/) | [C++](./C++/time-needed-to-inform-all-employees.cpp) [Python](./Python/time-needed-to-inform-all-employees.py) | _O(n)_          | _O(n)_          | Medium           |||
+1377| [Frog Position After T Seconds](https://leetcode.com/problems/frog-position-after-t-seconds/) | [C++](./C++/frog-position-after-t-seconds.cpp) [Python](./Python/frog-position-after-t-seconds.py) | _O(n)_          | _O(n)_          | Hard           |||
 
 ## Backtracking
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
