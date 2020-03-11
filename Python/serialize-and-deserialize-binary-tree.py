@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 297
 # Serialization is the process of converting a data structure or
 # object into a sequence of bits so that it can be stored in a file
 # or memory buffer, or transmitted across a network connection link
@@ -172,10 +173,10 @@ root.right.right.left = TreeNode(6)
 
 codec = Codec()
 data = codec.serialize(root) #: 1 2 # # 3 4 # # 5 6 # # #
-print data
+print(data)
 codec.deserialize(data)
 
 codec = Codec_levelorder()
 data = codec.serialize(root)
-print data
+print(data)
 codec.deserialize(data)

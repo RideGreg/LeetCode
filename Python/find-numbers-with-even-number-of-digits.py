@@ -4,6 +4,7 @@
 # 1295 weekly contest 168 12/21/2019
 
 # Given an array nums of integers, return how many of them contain an even number of digits.
+# 1 <= nums[i] <= 10^5
 
 import bisect
 
@@ -56,3 +57,5 @@ class Solution3(object):
         :rtype: int
         """
         return sum(len(str(n)) % 2 == 0 for n in nums)
+
+print(Solution().findNumbers([555,901,482,1771])) # 1

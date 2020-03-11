@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 99
 # Two elements of a binary search tree (BST) are swapped by mistake.
 #
 # Recover the tree without changing its structure.
@@ -16,7 +17,7 @@ class TreeNode:
         self.left = None
         self.right = None
 
-    def __repr__(self):
+    def __repr__(self): # helper to print tree in human-readable way
         if self:
             serial = []
             queue = [self]
@@ -41,7 +42,7 @@ class TreeNode:
         else:
             return None
 
-class Solution:
+class Solution_Morris:
     # @param root, a tree node
     # @return a tree node
     def recoverTree(self, root):
@@ -82,8 +83,30 @@ class Solution:
                 broken[0] = pre
             broken[1] = cur
 
+class Solution:     # USE THIS
+    def recoverTree(self, root):
+        na, nb, prev = None, None, None
+        stk = [(root, False)]
+        while stk:
+            node, visited = stk.pop()
+            if node:
+                if visited:
+                    if prev and prev.val > node.val:
+                        if not na:
+                            na = prev
+                        nb = node
+                    prev = node
+                else:
+                    stk.append((node.right, False))
+                    stk.append((node, True))
+                    stk.append((node.left, False))
+
+        na.val, nb.val = nb.val, na.val
+
+
 if __name__ == "__main__":
     root = TreeNode(0)
     root.left = TreeNode(1)
-    print root
-    print Solution().recoverTree(root)
+    print(root)  # [0, 1]
+    Solution().recoverTree(root)
+    print(root)  # [1, 0]

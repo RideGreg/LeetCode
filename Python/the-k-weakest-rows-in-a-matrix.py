@@ -1,6 +1,19 @@
 # Time:  O(m * n)
 # Space: O(k)
 
+# 1337 weekly contest 174 2/1/2020
+
+# Given a m * n matrix mat of ones (representing soldiers) and zeros (representing civilians),
+# return the indexes of the k weakest rows in the matrix ordered from the weakest to the strongest.
+#
+# A row i is weaker than row j, if the number of soldiers in row i is less than the number of soldiers
+# in row j, or they have the same number of soldiers but i is less than j. Soldiers are always stand
+# in the frontier of a row, that is, always ones may appear first and then zeros.
+
+# 2 <= n, m <= 100
+
+# ituition: special matrix (all ones appear before zeros), each row sorted, no more sorting needed.
+# Traverse by column to find zeros (weaker rows). If not enough, add all-one rows starting from smallest row id.
 class Solution(object):
     def kWeakestRows(self, mat, k):
         """
@@ -56,7 +69,7 @@ class Solution2(object):
         return lookup.keys()
 
 
-# Time:  O(m * n + klogk)
+# Time:  O(m * n + klogk) quick select
 # Space: O(m)
 import random
 
@@ -91,6 +104,20 @@ class Solution3(object):
                 else:  # new_pivot_idx < n
                     left = new_pivot_idx + 1
         
-        nums = [(sum(mat[i]), i) for i in xrange(len(mat))]
+        nums = [(sum(mat[i]), i) for i in range(len(mat))]
         nth_element(nums, k)
         return map(lambda x: x[1], sorted(nums[:k]))
+
+    # full sort has worse Time:  O(m * n + mlogm)
+    def kWeakestRows_ming(self, mat, k):
+        v = [(sum(mat[i]), i) for i in range(len(mat))]
+        v.sort(key=lambda x: (x[0], x[1])) # O(mlogm)
+        return [i for s, i in v[:k]]
+
+print(Solution().kWeakestRows([
+ [1,1,0,0,0],
+ [1,1,1,1,0],
+ [1,0,0,0,0],
+ [1,1,0,0,0],
+ [1,1,1,1,1]
+], 3)) # [2,0,3]

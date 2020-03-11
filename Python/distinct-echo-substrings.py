@@ -6,32 +6,40 @@
 # Return the number of distinct non-empty substrings of text that can be written as the concatenation of some string
 # with itself (i.e. it can be written as a + a where a is some string).
 
+try:
+    xrange
+except NameError:
+    xrange = range
+
 class Solution(object):
-    def distinctEchoSubstrings(self, text):
+    def distinctEchoSubstrings(self, text): # USE THIS
         """
         :type text: str
         :rtype: int
         """
-        def KMP(text, l, result):
-            prefix = [-1]*(len(text)-l)
+        def KMP(text, start, result): # only use KMP's getPrefix API, not do pattern search
+            prefix = [-1]*(len(text)-start)
             j = -1
             for i in xrange(1, len(prefix)):
-                while j > -1 and text[l+j+1] != text[l+i]:
+                while j > -1 and text[start+j+1] != text[start+i]:
                     j = prefix[j]
-                if text[l+j+1] == text[l+i]:
+                if text[start+j+1] == text[start+i]:
                     j += 1
                 prefix[i] = j
-                if (j+1) and (i+1) % ((i+1) - (j+1)) == 0 and \
-                   (i+1) // ((i+1) - (j+1)) % 2 == 0:
-                    result.add(text[l:l+i+1])
-            return len(prefix)-(prefix[-1]+1) \
-                   if prefix[-1]+1 and len(prefix) % (len(prefix)-(prefix[-1]+1)) == 0 \
+
+                total, rightPart = i + 1, i - j
+                q, r = divmod(total, rightPart)
+                if (j+1) and r == 0 and q % 2 == 0:
+                    result.add(text[start:start+i+1])
+
+            excludeSuffix = len(prefix)-(prefix[-1]+1)
+            return excludeSuffix if prefix[-1]+1 and len(prefix) % excludeSuffix == 0 \
                    else float("inf")
 
         result = set()
         i, l = 0, len(text)-1
         while i < l:  # aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcdefabcdefabcdef
-            l = min(l, i + KMP(text, i, result));
+            l = min(l, i + KMP(text, i, result))
             i += 1
         return len(result)
 
@@ -55,7 +63,7 @@ class Solution2(object):
                 result.add(text[len(text)-2*l:len(text)-2*l+l])
         return len(result)
 
-
+# rolling hash
 # Time:  O(n^2 + d), d is the duplicated of result substrings size
 # Space: O(r), r is the size of result substrings set
 class Solution3(object):
@@ -117,24 +125,7 @@ class Solution_ming:
                     ans += 1
         return ans
 
-        '''
-        n, ans, aset = len(text), 0, set()
-        dp = [[text[i:j+1] for j in range(n)] for i in range(n)]
-        for sz in range(2, n+1):
-            for l in range(n+1-sz):
-                r = l+sz-1
-                for k in range(l, r):
-                    #if dp[l][k] and dp[k][r+1] and dp[l][k]==dp[k][r+1]:
-                    x, y = dp[l][k], dp[k+1][r]
-                    if dp[l][k] == dp[k+1][r]:
-                        dp[l][r] = dp[l][k]
-                        if text[l:r+1] not in aset:
-                            aset.add(text[l:r+1])
-                            ans += 1
-                        break
-        return ans
-        '''
 
-print(Solution().distinctEchoSubstrings("abcabcabc")) # 3
-print(Solution().distinctEchoSubstrings("leetcodeleetcode")) # 2
-print(Solution().distinctEchoSubstrings("aaaabbccbbcc")) # 5
+print(Solution().distinctEchoSubstrings("abcabcabc")) # 3 "abcabc", "bcabca" and "cabcab"
+print(Solution().distinctEchoSubstrings("leetcodeleetcode")) # 2 "ee" and "leetcodeleetcode"
+print(Solution().distinctEchoSubstrings("aaaabbccbbcc")) # 5 'aa', 'aaaa', 'bb', 'cc', 'bbccbbcc'

@@ -23,7 +23,7 @@ class Solution(object):
             if curr == total//3:
                 parts += 1
                 curr = 0
-                if parts == 2: return True
+                if parts == 3: return True # check 2 parts is wrong [0,1,-1]
         return False
 
     def canThreePartsEqualSum_prefix(self, A):
@@ -36,6 +36,13 @@ class Solution(object):
 
         if ssum//3 in prefix:
             idx = prefix.index(ssum//3)
-            if ssum*2//3 in prefix[idx+1:]:
-                return True
+            prefix = prefix[idx+1:]
+
+            if ssum*2//3 in prefix:
+                idx = prefix.index(ssum*2//3)
+                if ssum in prefix[idx+1:]:
+                    return True
         return False
+
+print(Solution().canThreePartsEqualSum([0,2,1,-6,6,-7,9,1,2,0,1])) # True
+print(Solution().canThreePartsEqualSum([0,1,-1])) # False

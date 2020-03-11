@@ -22,6 +22,7 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
+        # c: smallest col which is not valid (i.e. >=0) because cannot guarantee initial col is valid
         result, c = 0, len(grid[0])-1
         for row in grid:
             while c >= 0 and row[c] < 0:

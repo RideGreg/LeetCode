@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
-#
+
+# 226
 # Invert a binary tree.
 #
 #      4
@@ -53,6 +54,20 @@ class Solution:
     # @param {TreeNode} root
     # @return {TreeNode}
     def invertTree(self, root):
+        import collections
+        if not root: return root
+
+        q = collections.deque([root])
+        while q:
+            cur = q.popleft()
+            cur.left, cur.right = cur.right, cur.left
+            if cur.left:
+                q.append(cur.left)
+            if cur.right:
+                q.append(cur.right)
+        return root
+
+    def invertTree_defind_Queue(self, root):
         if root is not None:
             nodes = Queue()
             nodes.push(root)
