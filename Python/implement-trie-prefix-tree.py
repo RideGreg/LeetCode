@@ -1,6 +1,6 @@
 # Time:  O(n), per operation
 # Space: O(1)
-#
+# 208
 # Implement a trie with insert, search, and startsWith methods.
 #
 # Note:
@@ -48,10 +48,9 @@ class Trie:
     def childSearch(self, word):
         cur = self.root
         for c in word:
-            if c in cur.leaves:
-                cur = cur.leaves[c]
-            else:
+            if c not in cur.leaves:
                 return None
+            cur = cur.leaves[c]
         return cur
 
 # Your Trie object will be instantiated and called as such:
