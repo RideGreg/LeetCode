@@ -13,31 +13,64 @@
 # 1,1,5 -> 1,5,1
 #
 
-class Solution:
-    # @param {integer[]} nums
-    # @return {void} Do not return anything, modify nums in-place instead.
-    def nextPermutation(self, num):
+class Solution(object):  # USE THIS: backward scan, break after find the first item
+    def nextPermutation(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
         k, l = -1, 0
-        for i in xrange(len(num) - 1):
-            if num[i] < num[i + 1]:
+        for i in reversed(range(len(nums)-1)):
+            if nums[i] < nums[i+1]:
+                k = i
+                break
+        else:
+            nums.reverse()
+            return
+
+        for i in reversed(range(k+1, len(nums))):
+            if nums[i] > nums[k]:
+                l = i
+                break
+        nums[k], nums[l] = nums[l], nums[k]
+
+        nums[k+1:] = nums[:k:-1] # reverse scan from last to k+1 [right:left:-1]
+        
+
+# Time:  O(n)
+# Space: O(1)
+class Solution2(object): # forward scan, don't break: find the last item for k and l
+    def nextPermutation(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        k, l = -1, 0
+        for i in range(len(nums)-1):
+            if nums[i] < nums[i+1]:
                 k = i
 
         if k == -1:
-            num.reverse()
+            nums.reverse()
             return
 
-        for i in xrange(k + 1, len(num)):
-            if num[i] > num[k]:
+        for i in range(k+1, len(nums)):
+            if nums[i] > nums[k]:
                 l = i
+        nums[k], nums[l] = nums[l], nums[k]
 
-        num[k], num[l] = num[l], num[k]
-        num[k + 1:] = num[:k:-1]
+        nums[k+1:] = nums[:k:-1]
+
 
 if __name__ == "__main__":
-    num = [1, 4, 3, 2]
+    num = [1,9,0,2,5,4,1]
     Solution().nextPermutation(num)
-    print num
+    print(num) # 1,9,0,4,1,2,5
+
+    num = [2, 4, 3, 1]
     Solution().nextPermutation(num)
-    print num
+    print(num) # 3,1,2,4
     Solution().nextPermutation(num)
-    print num
+    print(num) # 3,1,4,2
+    Solution().nextPermutation(num)
+    print(num) # 3,2,1,4
