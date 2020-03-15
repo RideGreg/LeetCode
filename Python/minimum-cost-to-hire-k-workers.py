@@ -91,4 +91,5 @@ class Solution(object):
                 ans = min(ans, sum(prices[:K]))
         return ans
 
+
 print(Solution().mincostToHireWorkers([3,1,10,10,1], [4,8,2,2,7], 3))
