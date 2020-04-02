@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 652
 # Given a binary tree, return all duplicate subtrees.
 # For each kind of duplicate subtrees, you only need to return the root node of any one of them.
 #
@@ -23,16 +24,31 @@
 # Therefore, you need to return above trees' root in the form of a list.
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 import collections
 
 
-class Solution(object):
+class Solution(object):     # USE THIS
+    def findDuplicateSubtrees(self, root):
+        def preOrder(node):
+            if not node:
+                return '#'
+            serial = '{},{},{}'.format(node.val, preOrder(node.left), preOrder(node.right))
+            map[serial] += 1
+            if map[serial] == 2:
+                ans.append(node)
+            return serial
+
+        ans, map = [], collections.Counter()
+        preOrder(root)
+        return ans
+
+class Solution3(object):
     def findDuplicateSubtrees(self, root):
         trees = collections.defaultdict()
         trees.default_factory = trees.__len__
@@ -68,7 +84,7 @@ class Solution(object):
 
 
 # Time:  O(n * h)
-# Space: O(n * h)
+# Space: O(n * h)nesting
 class Solution2(object):
     def findDuplicateSubtrees(self, root):
         """
@@ -92,31 +108,16 @@ class Solution2(object):
         postOrderTraversal(root, lookup, result)
         return result
 
-class Solution3(object):     # USE THIS
-    def findDuplicateSubtrees(self, root):
-        import collections
-        def preOrder(node):
-            if not node:
-                return '#'
-            serial = '{},{},{}'.format(node.val, preOrder(node.left), preOrder(node.right))
-            map[serial] += 1
-            if map[serial] == 2:
-                ans.append(node)
-
-            return serial
-
-        ans, map = [], collections.Counter()
-        preOrder(root)
-        return ans
 
 
 root = TreeNode(1)
 root.left, root.right = TreeNode(2), TreeNode(3)
 root.left.left, root.right.left, root.right.right = TreeNode(4), TreeNode(2), TreeNode(4)
 root.right.left.left = TreeNode(4)
+print(Solution().findDuplicateSubtrees(root))
 
 root2 = TreeNode(1)
 root2.left, root2.right = TreeNode(2), TreeNode(3)
 root2.right.left = TreeNode(2)
 
-print Solution().findDuplicateSubtrees(root2)
+print(Solution().findDuplicateSubtrees(root2))

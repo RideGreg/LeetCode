@@ -39,7 +39,7 @@ class Codec: # USE THIS: preorder
             return '#'
         return '{} {} {}'.format(root.val, self.serialize(root.left), self.serialize(root.right))
 
-    def serialize(self, root):
+    def serialize2(self, root):
         """Encodes a tree to a single string.
 
         :type root: TreeNode
@@ -96,11 +96,11 @@ class Codec: # USE THIS: preorder
             val = next(vals)
             if val == '#':
                 return None
-            else:
-                node = TreeNode(int(val))
-                node.left = deserializeHelper()
-                node.right = deserializeHelper()
-                return node
+            node = TreeNode(int(val))
+            node.left = deserializeHelper()
+            node.right = deserializeHelper()
+            return node
+
         def isplit(source, sep):
             sepsize = len(sep)
             start = 0
@@ -111,7 +111,9 @@ class Codec: # USE THIS: preorder
                     return
                 yield source[start:idx]
                 start = idx + sepsize
-        vals = iter(isplit(data, ' ')) # should use data.split(), otherwise MEMORY LIMIT EXCEED
+
+        vals = iter(data.split())
+        #vals = iter(isplit(data, ' ')) # need to use data.split(), as isplit causes MEMORY LIMIT EXCEED
         return deserializeHelper()
 
         ''' if not familiar with iter/next

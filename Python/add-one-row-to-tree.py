@@ -74,21 +74,36 @@ class TreeNode(object):
 
 
 class Solution(object):
-    def addOneRow(self, root, v, d):
-        """
-        :type root: TreeNode
-        :type v: int
-        :type d: int
-        :rtype: TreeNode
-        """
-        if d in (0, 1):
-            node = TreeNode(v)
+    def addOneRow(self, root, v, d): # USE THIS: tricky, good space complexity
+        def preOrder(root, d, dir):
             if d == 1:
-                node.left = root
-            else:
-                node.right = root
-            return node
-        if root and d >= 2:
-            root.left = self.addOneRow(root.left,  v, d-1 if d > 2 else 1)
-            root.right = self.addOneRow(root.right, v, d-1 if d > 2 else 0)
+                node = TreeNode(v)
+                if dir == 'l':
+                    node.left = root
+                else:
+                    node.right = root
+                return node
+
+            if root: # None node directly return None for parent node
+                root.left = preOrder(root.left, d-1, 'l')
+                root.right = preOrder(root.right, d-1, 'r')
+            return root
+
+        return preOrder(root, d, 'l')
+
+    def addOneRow_badSpaceComplexity(self, root, v, d): # easy to understand, bad space complexity O(2^h)
+        if d == 1:
+            ans = TreeNode(v)
+            ans.left = root
+            return ans
+
+        nodes, dep = [root], 1
+        while dep < d-1:
+            nodes = [y for x in nodes for y in (x.left, x.right) if y]
+            dep += 1
+        for x in nodes:
+            l, r = x.left, x.right
+            x.left, x.right = TreeNode(v), TreeNode(v)
+            x.left.left = l
+            x.right.right = r
         return root

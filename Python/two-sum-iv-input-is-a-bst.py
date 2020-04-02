@@ -1,6 +1,8 @@
+
 # Time:  O(n)
 # Space: O(h)
 
+# 653
 # Given a Binary Search Tree and a target number,
 # return true if there exist two elements in the BST such that their sum is equal to the given target.
 #
@@ -35,7 +37,31 @@ class TreeNode(object):
         self.right = None
 
 class Solution(object):
-    def findTarget(self, root, k):
+    # "yield from subgenerator()" == "for i in subgenerator(): yield i"
+    # http://simeonvisser.com/posts/python-3-using-yield-from-in-generators-part-1.html
+    def findTarget(self, root, k): # USE THIS, BST, save space
+        def left_generator(node):
+            if node.left: yield from left_generator(node.left)
+            yield node.val
+            if node.right: yield from left_generator(node.right)
+
+        def right_generator(node):
+            if node.right: yield from right_generator(node.right)
+            yield node.val
+            if node.left: yield from right_generator(node.left)
+
+        lGen, rGen = left_generator(root), right_generator(root)
+        lv, rv = next(lGen), next(rGen)
+        while lv < rv:
+            if lv + rv < k:
+                lv = next(lGen)
+            elif lv + rv > k:
+                rv = next(rGen)
+            else:
+                return True
+        return False
+
+    def findTarget4(self, root, k):
         """
         :type root: TreeNode
         :type k: int
@@ -76,8 +102,22 @@ class Solution(object):
                 right.next()
         return False
 
-    def findTarget2(self, root, k):
-        nums = []
+    # Time O(n) Space (n)
+    def findTarget2(self, root, k): # DFS+hash, avoid nest exceed limit
+        stack, seen = [root], set()
+        while stack:
+            curr = stack.pop()
+            if k - curr.val in seen:
+                return True
+            seen.add(curr.val)
+
+            if curr.left:
+                stack.append(curr.left)
+            if curr.right:
+                stack.append(curr.right)
+        return False
+
+    def findTarget3(self, root, k):
         def preOrder(root):
             if not root: return False
             if k-root.val in ht:
@@ -92,4 +132,4 @@ root = TreeNode(5)
 root.left, root.right = TreeNode(3), TreeNode(6)
 root.left.left, root.left.right = TreeNode(2), TreeNode(4)
 root.right.right = TreeNode(7)
-print Solution().findTarget(root, 9)
+print(Solution().findTarget(root, 9))

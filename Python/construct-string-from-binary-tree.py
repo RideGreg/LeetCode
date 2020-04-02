@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 606
 # You need to construct a string consists of parenthesis and integers from a binary tree with
 # the preorder traversing way.
 #
@@ -44,11 +45,21 @@
 #         self.right = None
 
 class Solution(object):
-    def tree2str(self, t):
+    def tree2str(self, t): # USE THIS: clearer scenarios
         """
         :type t: TreeNode
         :rtype: str
         """
+        if not t: return ''
+        if not t.left and not t.right:
+            return str(t.val)
+        if t.left and not t.right:
+            return "{}({})".format(t.val, self.tree2str(t.left))
+        return "{}({})({})".format(
+            t.val, self.tree2str(t.left), self.tree2str(t.right)
+        )
+
+    def tree2str_kamyu(self, t):
         if not t: return ""
         s = str(t.val)
         if t.left or t.right:

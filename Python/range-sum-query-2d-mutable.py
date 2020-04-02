@@ -3,6 +3,15 @@
 #        query:  O(logm * logn)
 # Space: O(m * n)
 
+# 308
+# Given a 2D matrix matrix, find the sum of the elements inside the rectangle defined by
+# its upper left corner (row1, col1) and lower right corner (row2, col2).
+
+try:
+    xrange
+except NameError:
+    xrange = range
+
 # Binary Indexed Tree (BIT) solution.
 class NumMatrix(object):
     def __init__(self, matrix):
@@ -12,9 +21,16 @@ class NumMatrix(object):
         """
         if not matrix:
             return
-        self.__matrix = matrix
+        m, n = len(matrix), len(matrix[0])
+        self.__matrix = [[0]*n for _ in range(m)]
         self.__bit = [[0] * (len(self.__matrix[0]) + 1) \
                       for _ in xrange(len(self.__matrix) + 1)]
+        for i in xrange(len(matrix)):
+            for j in xrange(len(matrix[0])):
+                self.update(i, j, matrix[i][j])
+
+        '''
+        self.__matrix = matrix
         for i in xrange(1, len(self.__bit)):
             for j in xrange(1, len(self.__bit[0])):
                 self.__bit[i][j] = matrix[i-1][j-1] + self.__bit[i-1][j] + \
@@ -24,6 +40,7 @@ class NumMatrix(object):
                 last_i, last_j = i - (i & -i), j - (j & -j)
                 self.__bit[i][j] = self.__bit[i][j] - self.__bit[i][last_j] - \
                                    self.__bit[last_i][j] + self.__bit[last_i][last_j]
+        '''
 
     def update(self, row, col, val):
         """
@@ -33,9 +50,18 @@ class NumMatrix(object):
         :type val: int
         :rtype: void
         """
-        if val - self.__matrix[row][col]:
-            self.__add(row, col, val - self.__matrix[row][col])
+        delta = val - self.__matrix[row][col]
+        if delta:
             self.__matrix[row][col] = val
+            row += 1
+            col += 1
+            while row <= len(self.__matrix):
+                j = col
+                while j <= len(self.__matrix[0]):
+                    self.__bit[row][j] += delta
+                    j += (j & -j)
+                row += (row & -row)
+
 
     def sumRegion(self, row1, col1, row2, col2):
         """
@@ -53,29 +79,24 @@ class NumMatrix(object):
         row += 1
         col += 1
         ret = 0
-        i = row
-        while i > 0:
+        while row > 0:
             j = col
             while j > 0:
-                ret += self.__bit[i][j]
+                ret += self.__bit[row][j]
                 j -= (j & -j)
-            i -= (i & -i)
+            row -= (row & -row)
         return ret
-
-    def __add(self, row, col, val):
-        row += 1
-        col += 1
-        i = row
-        while i <= len(self.__matrix):
-            j = col
-            while j <= len(self.__matrix[0]):
-                self.__bit[i][j] += val
-                j += (j & -j)
-            i += (i & -i)
 
 
 # Your NumMatrix object will be instantiated and called as such:
-# numMatrix = NumMatrix(matrix)
-# numMatrix.sumRegion(0, 1, 2, 3)
-# numMatrix.update(1, 1, 10)
-# numMatrix.sumRegion(1, 2, 3, 4)
+matrix = [
+    [3, 0, 1, 4, 2],
+    [5, 6, 3, 2, 1],
+    [1, 2, 0, 1, 5],
+    [4, 1, 0, 1, 7],
+    [1, 0, 3, 0, 5]
+]
+numMatrix = NumMatrix(matrix)
+print(numMatrix.sumRegion(2, 1, 4, 3)) # 8
+numMatrix.update(3, 2, 2)
+print(numMatrix.sumRegion(2, 1, 4, 3)) # 10

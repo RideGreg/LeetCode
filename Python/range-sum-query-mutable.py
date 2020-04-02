@@ -3,6 +3,7 @@
 #        query:  O(logn)
 # Space: O(n)
 
+# 307
 # Given an integer array nums, find the sum of
 # the elements between indices i and j (i <= j), inclusive.
 #
@@ -19,8 +20,23 @@
 # You may assume the number of calls to update
 # and sumRange function is distributed evenly.
 
+try:
+    xrange
+except NameError:
+    xrange = range
+
 # Binary Indexed Tree (BIT) solution.
-class NumArray(object):
+# https://www.geeksforgeeks.org/binary-indexed-tree-or-fenwick-tree-2/
+# input [2,4,5,7,8,9] will be stored as [0,2,6,5,18,8,17]. Root tree nodes is a dummy node.
+#
+# Tree structure: simpler than Segment Tree, parent node Id equals children node removing Last Set Bit.
+# BUT works for sum only, as not every disjoint range can directly get from BITree e.g. range[2-2] is
+# obtained from node2 - node1, cannot solve min/max/gcd/lcm.
+#                           0(0000)
+#  1(0001)  2(0010[1-2])      4(0100[1-4])                    8(1000[1-8])
+#           3(0011)       5(0101) 6(0110[5-6])     9(1001) 10(1010[9-10])  12(1100[9-12])
+#                                 7(0111)                  11(1011)    13(1101) 14(1110[13-14])
+class NumArray(object): # USE THIS for sum
     def __init__(self, nums):
         """
         initialize your data structure here.
@@ -28,14 +44,21 @@ class NumArray(object):
         """
         if not nums:
             return
-        self.__nums = nums
-        self.__bit = [0] * (len(self.__nums) + 1)
-        for i in xrange(1, len(self.__bit)):
-            self.__bit[i] = nums[i-1] + self.__bit[i-1]
+        self.__nums = [0] * len(nums)
+        self.BITree = [0] * (len(self.__nums) + 1) # logic tree, physical array
+        for i in range(len(nums)):
+            self.update(i, nums[i])
 
-        for i in reversed(xrange(1, len(self.__bit))):
-            last_i = i - (i & -i)
-            self.__bit[i] -= self.__bit[last_i]
+        ''' OR write more code by a different build
+        self.__nums = nums  # used to compare if update is noop
+        # first calc prefix sum, then remove value of parent node.
+        for i in xrange(1, len(self.BITree)):
+            self.BITree[i] = nums[i-1] + self.BITree[i-1]
+
+        for i in reversed(xrange(1, len(self.BITree))):
+            last_i = i - (i & -i) # get parent by removing last set bit
+            self.BITree[i] -= self.BITree[last_i] # don't store parent's value
+        '''
 
     def update(self, i, val):
         """
@@ -43,9 +66,13 @@ class NumArray(object):
         :type val: int
         :rtype: int
         """
-        if val - self.__nums[i]:
-            self.__add(i, val - self.__nums[i])
+        delta = val - self.__nums[i]
+        if delta:
             self.__nums[i] = val
+            i += 1
+            while i <= len(self.__nums):
+                self.BITree[i] += delta
+                i += (i & -i) # add Last Set Bit i.e. recursively visit all larger nodes containing the value of this node
 
     def sumRange(self, i, j):
         """
@@ -54,21 +81,67 @@ class NumArray(object):
         :type j: int
         :rtype: int
         """
-        return self.__sum(j) - self.__sum(i-1)
+        def sum(i): # add up nodes in THIS tree branch till root
+            i += 1
+            ret = 0
+            while i > 0:
+                ret += self.BITree[i]
+                i -= (i & -i) # deduct Last Set Bit = get parent
+            return ret
+        return sum(j) - sum(i-1)
 
-    def __sum(self, i):
-        i += 1
-        ret = 0
-        while i > 0:
-            ret += self.__bit[i]
-            i -= (i & -i)
-        return ret
 
-    def __add(self, i, val):
-        i += 1
-        while i <= len(self.__nums):
-            self.__bit[i] += val
-            i += (i & -i)
+# Time:  ctor:   O(n),
+#        update: O(logn),
+#        query:  O(logn)
+# Space: O(n)
+# Segment Tree solutoin implemented *using an array*.
+# ANY disjoint range can get from Segment Tree, good for min/max/gcd/lcm.
+# BUT when calc sum: worse than BITree: 1. need more space 2. query/update need to handle even/odd.
+
+# input [2,4,5,7,8,9] will be stored as [0,35,29,6,12,17,2,4,5,7,8,9]. All leaf nodes are for original input
+# values, every two nodes merges to a "range" node (each range node has two subtrees),
+# so we actually only need n-1 extra node, but we add a dummy node at begining which is convenient
+# for parent-children relationship i - [2*i, 2*i+1]. The actual tree is:
+#             1[6-11]
+#      2[8-11]       3[6-7]
+#   4[8-9] 5[10-11]  6   7
+#   8   9  10   11
+
+# 存储加倍，前半累加，每点存一disjoint区间 （build）
+# 延展下标，找到兄弟sibling alway even-odd order，更新父节点 （update）
+# 延展下标，分拆区间，前偶后奇向上走 （query)
+class NumArray2(object): # USE THIS for min/max/gcd/lcm
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.trees = [0] * self.n + nums
+        for i in reversed(range(1, self.n)):
+            self.trees[i] = self.trees[2*i] + self.trees[2*i+1]
+
+    def update(self, i, val):
+        i += self.n
+        if self.trees[i] == val: return
+
+        self.trees[i] = val
+        while i > 1:
+            sibling = i-1 if i % 2 else i+1  # this is general for min/max/sum/gcd/lcm
+            self.trees[i//2] = self.trees[i] + self.trees[sibling]
+            i //= 2
+
+    def sumRange(self, i, j):
+        i += self.n
+        j += self.n
+        sum = 0
+        while i <= j:
+            if i % 2 == 1:
+                sum += self.trees[i]
+                i += 1
+            if j % 2 == 0:
+                sum += self.trees[j]
+                j -= 1
+            i //= 2
+            j //= 2
+        return sum
 
 
 # Time:  ctor:   O(n),
@@ -77,7 +150,7 @@ class NumArray(object):
 # Space: O(n)
 # Segment Tree solution implemented using a tree.
 
-class NumArray2(object):
+class NumArray3(object):
     def __init__(self, nums,
                  query_fn=lambda x, y: x+y,
                  update_fn=lambda x, y: y,
@@ -107,7 +180,7 @@ class NumArray2(object):
              return
         if left == right:
             self.__tree[idx] = self.__update_fn(self.__tree[idx], nums[left])
-            return 
+            return
         mid = left + (right-left)//2
         self.__constructTree(nums, left, mid, idx*2 + 1)
         self.__constructTree(nums, mid+1, right, idx*2 + 2)
@@ -147,51 +220,12 @@ class NumArray2(object):
         if range_left <= left and right <= range_right:
             return self.__tree[idx]
         mid = left + (right-left)//2
-        return self.__query_fn(self.__queryRange(range_left, range_right, left, mid, idx*2 + 1), 
+        return self.__query_fn(self.__queryRange(range_left, range_right, left, mid, idx*2 + 1),
                                self.__queryRange(range_left, range_right, mid + 1, right, idx*2 + 2))
 
-
-# Time:  ctor:   O(n),
-#        update: O(logn),
-#        query:  O(logn)
-# Space: O(n)
-# Segment Tree solutoin implemented using an array.
-# input [2,4,5,7,8,9] will be stored as [0,35,29,6,12,17,2,4,5,7,8,9]. Left-right children are always even-odd indices of the underlying array.
-
-class NumArray3(object):
-    def __init__(self, nums):
-        self.n = len(nums)
-        self.trees = [0] * self.n + nums
-        for i in reversed(range(1, self.n)):
-            self.trees[i] = self.trees[2*i] + self.trees[2*i+1]
-
-    def update(self, i, val):
-        i += self.n
-        if self.trees[i] == val: return
-
-        self.trees[i] = val
-        while i > 1:
-            sibling = i-1 if i % 2 else i+1  # this is general for min/max/sum/gcd/lcm
-            self.trees[i/2] = self.trees[i] + self.trees[sibling]
-            i /= 2
-
-    def sumRange(self, i, j):
-        i += self.n
-        j += self.n
-        sum = 0
-        while i <= j:
-            if i % 2 == 1:
-                sum += self.trees[i]
-                i += 1
-            if j % 2 == 0:
-                sum += self.trees[j]
-                j -= 1
-            i /= 2
-            j /= 2
-        return sum
-
 # Your NumArray object will be instantiated and called as such:
-# numArray = NumArray(nums)
-# numArray.sumRange(0, 1)
-# numArray.update(1, 10)
-# numArray.sumRange(1, 2)
+numArray = NumArray([2,4,5,7,8,9])
+print(numArray.sumRange(0, 4)) # 26
+print(numArray.sumRange(0, 1)) # 6
+numArray.update(1, 10)
+print(numArray.sumRange(1, 2)) # 15

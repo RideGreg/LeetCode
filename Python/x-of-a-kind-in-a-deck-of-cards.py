@@ -1,6 +1,5 @@
-# Time:  O(n * (logn)^2)
-#     LeetCode says Time Complexity: O(N \log^2 N), where N is the number of votes.
-#     If there are C_i cards with number i, then each gcd operation is naively O(log^2 C_i).
+# Time:  O(n * logC)
+#     If there are C_i cards with number i, C is the max of C_i, gcd operation is O(logC).
 # Space: O(n)
 
 # 914
@@ -58,9 +57,10 @@ class Solution(object):
 
         vals = collections.Counter(deck).values()
         return reduce(gcd, vals) >= 2
-        ''' or 
+        ''' or
+        vals = list(vals) # change type dict_values -> list 
         g = vals[0]
-        for i in xrange(1, len(vals)):
+        for x in vals[1:]:
             g = gcd(g, vals[i])
         return g >= 2
         '''

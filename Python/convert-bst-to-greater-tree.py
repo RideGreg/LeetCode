@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 538
 # Given a Binary Search Tree (BST),
 # convert it to a Greater Tree such that every key of
 # the original BST is changed to the original key plus sum of
@@ -19,29 +20,43 @@
 #           20     13
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 class Solution(object):
-    def convertBST(self, root):
+    def convertBST(self, root): # USE THIS
         """
         :type root: TreeNode
         :rtype: TreeNode
         """
-        def convertBSTHelper(root, cur_sum):
+        def recur(root, addon):
             if not root:
-                return cur_sum
+                return addon
 
-            if root.right:
-                cur_sum = convertBSTHelper(root.right, cur_sum)
-            cur_sum += root.val
-            root.val = cur_sum;
-            if root.left:
-                cur_sum = convertBSTHelper(root.left, cur_sum)
-            return cur_sum
+            addon = recur(root.right, addon)
+            root.val += addon
+            addon = recur(root.left, root.val)
+            return addon
 
-        convertBSTHelper(root, 0)
+        recur(root, 0)
         return root
+
+    def convertBST_globalVar(self, root):
+        def traverse(node):
+            if node:
+                traverse(node.right)
+                node.val += self.delta
+                self.delta = node.val
+                traverse(node.left)
+
+        self.delta = 0
+        traverse(root)
+        return root
+
+rt = TreeNode(5)
+rt.left, rt.right = TreeNode(2), TreeNode(13)
+ans = Solution().convertBST(rt)
+print(ans)

@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 315
 # You are given an integer array nums and you have to
 # return a new counts array. The counts array has the
 # property where counts[i] is the number of smaller
@@ -17,22 +18,22 @@
 # Return the array [2, 1, 1, 0].
 
 # Divide and Conquer solution.
-class Solution(object):
+class Solution2(object):
     def countSmaller(self, nums):
         """
         :type nums: List[int]
         :rtype: List[int]
         """
-        def countAndMergeSort(num_idxs, start, end, counts):
-            if end - start <= 0:  # The size of range [start, end] less than 2 is always with count 0.
+        def countAndMergeSort(start, end):
+            if start >= end:  # The size of range [start, end] less than 2 is always with count 0.
                 return 0
 
-            mid = start + (end - start) / 2
-            countAndMergeSort(num_idxs, start, mid, counts)
-            countAndMergeSort(num_idxs, mid + 1, end, counts)
+            mid = start + (end - start) // 2
+            countAndMergeSort(start, mid)
+            countAndMergeSort(mid + 1, end)
             r = mid + 1
             tmp = []
-            for i in xrange(start, mid + 1):
+            for i in range(start, mid + 1):
                 # Merge the two sorted arrays into tmp.
                 while r <= end and num_idxs[r][0] < num_idxs[i][0]:
                     tmp.append(num_idxs[r])
@@ -47,28 +48,21 @@ class Solution(object):
         counts = [0] * len(nums)
         for i, num in enumerate(nums):
             num_idxs.append((num, i))
-        countAndMergeSort(num_idxs, 0, len(num_idxs) - 1, counts)
+        countAndMergeSort(0, len(num_idxs) - 1)
         return counts
 
 # Time:  O(nlogn)
 # Space: O(n)
-# BIT solution.
-class Solution2(object):
-    def countSmaller(self, nums):
+# BIT solution. Each update to BITree increment the node values by 1. Count how many valid numbers already found.
+# OK for smaller/larger/smaller+eq/larger+eq numbers before/after self.
+class Solution(object): # USE THIS,
+    def countSmaller(self, nums, compare="smaller", dir="right"):
         """
         :type nums: List[int]
+        :type compare: str - this is a param I add to test "smaller" vs "smaller and equal to"
         :rtype: List[int]
         """
-        def binarySearch(A, target, compare):
-            start, end = 0, len(A) - 1
-            while start <= end:
-                mid = start + (end - start) / 2
-                if compare(target, A[mid]):
-                    end = mid - 1
-                else:
-                    start = mid + 1
-            return start
-
+        import bisect
         class BIT(object):
             def __init__(self, n):
                 self.__bit = [0] * n
@@ -86,15 +80,22 @@ class Solution2(object):
                 return ret
 
         # Get the place (position in the ascending order) of each number.
+        # If asking larger numbers, sort in descending order.
         sorted_nums, places = sorted(nums), [0] * len(nums)
         for i, num in enumerate(nums):
-            places[i] = binarySearch(sorted_nums, num, lambda x, y: x <= y)
+            places[i] = bisect.bisect_left(sorted_nums, num)
 
-        # Count the smaller elements after the number.
         ans, bit= [0] * len(nums), BIT(len(nums) + 1)
-        for i in reversed(xrange(len(nums))):
-            ans[i] = bit.query(places[i])
-            bit.add(places[i] + 1, 1)
+
+        # Asks "after self", scan from right to left. For "before self", scan from left.
+        iterable = range(len(nums)) if dir == 'left' else reversed(range(len(nums)))
+        for i in iterable:
+            if compare == "smaller":
+                ans[i] = bit.query(places[i]) # places[i]+1 is self, for all smaller num, query places[i]
+            elif compare == "smaller_eq":
+                ans[i] = bit.query(places[i] + 1)
+
+            bit.add(places[i] + 1, 1) # after visit a num, increment self node and all nodes including it
         return ans
 
 # Time:  O(nlogn)
@@ -109,7 +110,7 @@ class Solution3(object):
         res = [0] * len(nums)
         bst = self.BST()
         # Insert into BST and get left count.
-        for i in reversed(xrange(len(nums))):
+        for i in reversed(range(len(nums))):
             bst.insertNode(nums[i])
             res[i] = bst.query(nums[i])
 
@@ -137,9 +138,9 @@ class Solution3(object):
                 if node.val < curr.val:
                     curr.count += 1  # Increase the number of left children.
                     if curr.left:
-                        curr = curr.left;
+                        curr = curr.left
                     else:
-                        curr.left = node;
+                        curr.left = node
                         break
                 else:  # Insert right if larger or equal.
                     if curr.right:
@@ -162,3 +163,8 @@ class Solution3(object):
                 else:  # Equal.
                     return count + curr.count
             return 0
+
+print(Solution().countSmaller([5,2,6,1])) # [2,1,1,0]
+print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller")) # [1,1,5,1,3,1,0,0]
+print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller_eq")) # [2,1,5,3,3,2,0,0]
+print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller", "left")) # [0,0,2,2,3,2,0,3]

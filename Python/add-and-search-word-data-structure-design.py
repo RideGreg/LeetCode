@@ -1,6 +1,7 @@
 # Time:  O(min(n, h)), per operation
 # Space: O(min(n, h))
-#
+
+# 211
 # Ming: Time Complexity:  addWord - O(L) ,   search - O(26L)，  Space Complexity - O(26L)   这里 L是单词的平均长度。
 # http://www.cnblogs.com/yrbbest/p/4979621.html
 # More follow up: http://www.cnblogs.com/EdwardLiu/p/5052887.html
@@ -45,7 +46,7 @@ class WordDictionary:
         curr = self.root
         for c in word:
             if c not in curr.leaves:
-                curr.leaves[c] = TrieNode()
+                curr.leaves[c] = TrieNode()  # use defaultdict(TreeNode) can save these two lines
             curr = curr.leaves[c]
         curr.is_string = True
 
@@ -54,21 +55,25 @@ class WordDictionary:
     # Returns if the word is in the data structure. A word could
     # contain the dot character '.' to represent any one letter.
     def search(self, word):
-        return self.searchHelper(word, 0, self.root)
+        def helper(i, node):
+            if i == len(word):
+                return node.is_string
 
-    def searchHelper(self, word, start, curr):
-        if start == len(word):
-            return curr.is_string
-        if word[start] in curr.leaves:
-            return self.searchHelper(word, start+1, curr.leaves[word[start]])
-        elif word[start] == '.':
-            for c in curr.leaves:
-                if self.searchHelper(word, start+1, curr.leaves[c]):
-                    return True
+            c = word[i]
+            if c in node.leaves:
+                return helper(i + 1, node.leaves[c])
+            elif c == '.':
+                for d in node.leaves:
+                    if helper(i + 1, node.leaves[d]):
+                        return True
+            return False
 
-        return False
+        return helper(0, self.root)
 
 # Your WordDictionary object will be instantiated and called as such:
-# wordDictionary = WordDictionary()
-# wordDictionary.addWord("word")
-# wordDictionary.search("pattern")
+wordDictionary = WordDictionary()
+wordDictionary.addWord("bad")
+print(wordDictionary.search("mad")) # False
+print(wordDictionary.search(".ad")) # True
+print(wordDictionary.search("b..")) # True
+print(wordDictionary.search("b.")) # False
