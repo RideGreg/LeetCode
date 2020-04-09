@@ -1,6 +1,7 @@
 # Time:  O(h * 2^h)
 # Space: O(h * 2^h)
 
+# 655
 # Print a binary tree in an m*n 2D string array following these rules:
 #
 # The row number m should be equal to the height of the given binary tree.
@@ -63,25 +64,26 @@ class Solution(object):
         :type root: TreeNode
         :rtype: List[List[str]]
         """
+        ''' this can be optimized w = 2**h - 1 for this problem
         def getWidth(root):
             if not root:
                 return 0
-            return 2 * max(getWidth(root.left), getWidth(root.right)) + 1
+            return 2 * max(getWidth(root.left), getWidth(root.right)) + 1'''
 
         def getHeight(root):
             if not root:
                 return 0
             return max(getHeight(root.left), getHeight(root.right)) + 1
 
-        def preorderTraversal(root, level, left, right, result):
-            if not root:
-                return
-            mid = left + (right-left)/2
-            result[level][mid] = str(root.val)
-            preorderTraversal(root.left, level+1, left, mid-1, result)
-            preorderTraversal(root.right, level+1, mid+1, right, result)
+        def preorderFill(root, level, left, right):
+            if root:
+                mid = left + (right-left)/2
+                result[level][mid] = str(root.val)
+                preorderFill(root.left, level+1, left, mid-1)
+                preorderFill(root.right, level+1, mid+1, right)
 
-        h, w = getHeight(root), getWidth(root)
-        result = [[""] * w for _ in xrange(h)]
-        preorderTraversal(root, 0, 0, w-1, result)
+        h = getHeight(root)
+        w = 2**h - 1 # or w = getWidth(root)
+        result = [[""] * w for _ in range(h)]
+        preorderFill(root, 0, 0, w-1)
         return result

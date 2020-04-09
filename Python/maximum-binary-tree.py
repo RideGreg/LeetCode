@@ -47,10 +47,10 @@ class Solution(object):
         for num in nums:
             node = TreeNode(num)
             while stack and num > stack[-1].val:
-                node.left = stack.pop()
+                node.left = stack.pop() # 弹栈：小数隔离在左边，不再需要
             if stack:
                 stack[-1].right = node
-            stack.append(node)
+            stack.append(node) # 压栈：每个数
         return stack[0]
 
     # Time: O(nlogn) avg, O(n^2) worst. At each level of the recursive tree, we traverse over all
@@ -58,7 +58,7 @@ class Solution(object):
     # leading to a complexity of O(nlogn). In the worst case, the depth of the recursive tree
     # can grow up to n, which happens in the case of a sorted nums array, giving a complexity of O(n^2).
 
-    # Space: O(n) worst
+    # Space: O(n) worst, i.e. O(h) worst case h = n
     def constructMaximumBinaryTree_recursion(self, nums):
         if not nums:
             return None

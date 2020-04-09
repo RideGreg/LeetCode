@@ -21,7 +21,7 @@ class Solution(object):
             return True
 
         N = len(s)
-        dp = [1] * N
+        dp = [1] * N # dp[i] the longest palindrome ending with s[j]
         for i in range(N-2, -1, -1):
             ndp = [1] * N
             for j in range(i+1, N):

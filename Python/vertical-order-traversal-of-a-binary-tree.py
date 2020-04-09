@@ -28,30 +28,30 @@ class TreeNode(object):
 
 
 class Solution(object):
-    def verticalTraversal(self, root): # USE THIS: 2 sorting: x, (y, val)
+    # TRAVERSE ONCE, SEGMENT ALL NODES
+    def verticalTraversal(self, root): # USE THIS: 2 sorting: x, (y, val). Put y, val in tuple, one sort can do both.
         """
         :type root: TreeNode
         :rtype: List[List[int]]
         """
         def dfs(node, x, y):
             if node:
-                v[x].append((y, node.val))
+                lookup[x].append((y, node.val))
                 dfs(node.left, x - 1, y + 1)
                 dfs(node.right, x + 1, y + 1)
 
-        import collections
-        v = collections.defaultdict(list)
+        lookup = collections.defaultdict(list)
         dfs(root, 0, 0)
         ans = []
-        for x, nodes in sorted(v.items()):
-            ans.append([n[1] for n in sorted(nodes)])
+        for x in sorted(lookup):
+            ans.append([v for _, v in sorted(lookup[x])])
         return ans
 
     # 3 sorting needed: x, y, val. The results from sorting y & val still need to be assembled.
     def verticalTraversal_LeetcodeOfficial(self, root):
         def dfs(node, x, y):
             if node:
-                lookup[x][y].append(node)
+                lookup[x][y].append(node.val)
                 dfs(node.left, x-1, y+1)
                 dfs(node.right, x+1, y+1)
                 
@@ -62,6 +62,41 @@ class Solution(object):
         for x in sorted(lookup):
             report = []
             for y in sorted(lookup[x]):
-                report.extend(sorted(node.val for node in lookup[x][y]))
+                report.extend(sorted(lookup[x][y]))
             result.append(report)
         return result
+
+    # best space complexity, no need temporary list for middle values. Need multiple traversal.
+    # Maybe better time complexity, minimal sorting required.
+    # Note: actually not really need to know the number of each column.
+    def verticalTraversal2(self, root):
+        # preorder traversal to get min/max column ids
+        def getMinMaxCol(node, c):
+            if node:
+                minmax[0] = min(minmax[0], c)
+                minmax[1] = max(minmax[1], c)
+                getMinMaxCol(node.left, c-1)
+                getMinMaxCol(node.right, c+1)
+        minmax = [float('inf'), float('-inf')]
+        getMinMaxCol(root, 0)
+        ans = [[] for _ in range(minmax[0], minmax[1]+1)]
+
+        # level order traversal: save the sort of row numbers.
+        level = [(root, -minmax[0])]
+        while level:
+            tmp, level2 = collections.defaultdict(list), []
+            for node, c in level:
+                tmp[c].append(node.val)
+                if node.left:
+                    level2.append((node.left, c-1))
+                if node.right:
+                    level2.append((node.right, c+1))
+            for c in tmp:
+                ans[c].extend(sorted(tmp[c]))
+            level = level2
+        return ans
+
+r = TreeNode(3)
+r.left, r.right = TreeNode(9), TreeNode(20)
+r.right.left, r.right.right = TreeNode(15), TreeNode(7)
+print(Solution().verticalTraversal(r)) # [[9],[3,15],[20],[7]]

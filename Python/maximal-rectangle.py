@@ -7,23 +7,22 @@
 
 # Ascending stack solution.
 class Solution(object):
-    def maximalRectangle(self, matrix):
+    def maximalRectangle(self, matrix): # USE THIS
         """
         :type matrix: List[List[str]]
         :rtype: int
         """
         def largestRectangleArea(heights):
-            increasing, area, i = [], 0, 0
-            while i <= len(heights):
-                if not increasing or (i < len(heights) and heights[i] > heights[increasing[-1]]):
-                    increasing.append(i)
+            incStack, area, i, N = [], 0, 0, len(heights)
+            while i <= N:
+                # 压栈只在大数进来做。栈里不存相邻的相等数，因为没必要在弹栈时一个一个计算
+                if not incStack or (i < N and heights[i] > heights[incStack[-1]]):
+                    incStack.append(i)
                     i += 1
-                else:
-                    last = increasing.pop()
-                    if not increasing:
-                        area = max(area, heights[last] * i)
-                    else:
-                        area = max(area, heights[last] * (i - increasing[-1] - 1 ))
+                else: # 弹栈：每个高度计算一次面积，栈里往回走高度递减
+                    last = incStack.pop()
+                    width = i - 1 - incStack[-1] if incStack else i
+                    area = max(area, heights[last] * width)
             return area
 
         if not matrix:
@@ -38,7 +37,6 @@ class Solution(object):
 
         return result
 
-
 # Time:  O(n^2)
 # Space: O(n)
 # DP solution.
@@ -48,15 +46,10 @@ class Solution2(object):
         :type matrix: List[List[str]]
         :rtype: int
         """
-        if not matrix:
-            return 0
-
+        if not matrix: return 0
         result = 0
-        m = len(matrix)
-        n = len(matrix[0])
-        L = [0 for _ in range(n)]
-        H = [0 for _ in range(n)]
-        R = [n for _ in range(n)]
+        m, n = len(matrix), len(matrix[0])
+        L, H, R = [0] * n, [0] * n, [0] * n
 
         for i in range(m):
             left = 0
@@ -77,7 +70,6 @@ class Solution2(object):
                     result = max(result, H[j] * (R[j] - L[j]))
                 else:
                     right = j
-
         return result
 
 if __name__ == "__main__":
@@ -87,4 +79,4 @@ if __name__ == "__main__":
               "11110",
               "11111",
               "00000"]
-    print(Solution2().maximalRectangle(matrix))
+    print(Solution().maximalRectangle(matrix)) # 9

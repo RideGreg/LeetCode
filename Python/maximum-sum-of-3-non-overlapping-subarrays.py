@@ -48,7 +48,7 @@ class Solution(object):
         total = accu[n]-accu[n-k]
         for i in reversed(range(n-k)):
             cur = accu[i+k]-accu[i]
-            if cur >= total:
+            if cur >= total:    #!!!! THIS IS IMPORTANT need lexicographically smallest when sums are equal
                 right_pos[i], total = i, cur
             else:
                 right_pos[i] = right_pos[i+1]

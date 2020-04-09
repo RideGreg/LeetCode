@@ -47,7 +47,7 @@ class Solution(object):
         :rtype: bool
         """
         color = {}
-        for node in xrange(len(graph)):
+        for node in range(len(graph)):
             if node in color:
                 continue
             stack = [node]
@@ -61,3 +61,28 @@ class Solution(object):
                     elif color[neighbor] == color[curr]:
                         return False
         return True
+
+    def isBipartite_ming(self, graph):
+        def dfs(node, tag):
+            if node in (A | B):
+                return tag == 0 and node in A or tag == 1 and node in B
+
+            if tag == 0:
+                A.add(node)
+            else:
+                B.add(node)
+
+            for n in graph[node]:
+                if not dfs(n, 1 - tag):
+                    return False
+            return True
+
+        A, B = set(), set()
+        for i in range(len(graph)):
+            if i not in (A | B):
+                if not dfs(i, 0):
+                    return False
+        return True
+
+print(Solution().isBipartite([[1,3], [0,2], [1,3], [0,2]])) # True
+print(Solution().isBipartite([[1,2,3], [0,2], [0,1,3], [0,2]])) # False

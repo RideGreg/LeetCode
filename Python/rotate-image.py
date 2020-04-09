@@ -18,15 +18,23 @@ class Solution:
     def rotate(self, matrix):
         n = len(matrix)
 
-        # anti-diagonal mirror
+        # 90 rotate => m[r][c] -> m[c][n-1-r]
+        # we can do horizontal mirror + diagonal mirror
+        # r,c -> n-1-r, c -> c, n-1-r
+        for i in range(n//2):
+            matrix[i], matrix[n-1-i] = matrix[n-1-i], matrix[i]
+        for i in range(n-1):
+            for j in range(i+1, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        # Or anti-diagonal mirror + horizontal mirror
+        # r,c -> n-1-c, n-1-r -> c, n-1-r
+        '''
         for i in range(n):
             for j in range(n - i):
                 matrix[i][j], matrix[n-1-j][n-1-i] = matrix[n-1-j][n-1-i], matrix[i][j]
-
-        # horizontal mirror
         for i in range(n // 2):
-            for j in range(n):
-                matrix[i][j], matrix[n-1-i][j] = matrix[n-1-i][j], matrix[i][j]
+            matrix[i], matrix[n-1-i] = matrix[n-1-i], matrix[i]'''
 
         return matrix
 
@@ -39,5 +47,5 @@ class Solution2:
         return [list(reversed(x)) for x in zip(*matrix)]
 
 
-print(Solution().rotate([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))
+print(Solution().rotate([[1, 2, 3], [4, 5, 6], [7, 8, 9]])) # [[7,4,1],[8,5,2],[9,6,3]]
 

@@ -22,21 +22,21 @@ class Solution(object):
         # Kadane's algorithm
         ans, cur = float('-inf'), 0 # cur can be initialized as float('-inf')
         for n in nums:
-            cur = max(0, cur) + n
+            cur = max(n, cur+n)  # cur = n+cur if cur else n IS WRONG, should be "if cur > 0"
             ans = max(ans, cur)
         return ans
 
     def maxSubArray_print_index(self, nums):
-        cur, s = float('-inf'), 0
+        cur, start = float('-inf'), 0
         ans = (float('-inf'), None, None)
         for i, n in enumerate(nums):
             if cur >= 0:
                 cur = n + cur
             else:
                 cur = n
-                s = i
+                start = i
             if cur > ans[0]:
-                ans = cur, s, i
+                ans = cur, start, i
         return ans
 
 if __name__ == "__main__":

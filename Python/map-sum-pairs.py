@@ -18,16 +18,42 @@
 
 import collections
 
+class TrieNode(object):
+    def __init__(self):
+        self.v = 0
+        self.leaves = collections.defaultdict(TrieNode)
 
-class MapSum(object):
+class MapSum:
+    def __init__(self):
+        self.root = TrieNode()
 
+    def insert(self, key: str, val: int) -> None:
+        cur = self.root
+        for c in key:
+            cur = cur.leaves[c]
+        cur.v = val
+
+    def sum(self, prefix: str) -> int:
+        ans, cur = 0, self.root
+        for c in prefix:
+            cur = cur.leaves.get(c, None)
+            if not cur: return 0
+
+        stk = [cur]
+        while stk:
+            node = stk.pop()
+            ans += node.v
+            for ch in node.leaves.values():
+                stk.append(ch)
+        return ans
+
+class MapSum2(object):
     def __init__(self):
         """
         Initialize your data structure here.
         """
         _trie = lambda: collections.defaultdict(_trie)
         self.__root = _trie()
-
 
     def insert(self, key, val):
         """
@@ -52,7 +78,6 @@ class MapSum(object):
                 curr["_count"] = delta
         curr["_end"] = val
 
-
     def sum(self, prefix):
         """
         :type prefix: str
@@ -68,6 +93,8 @@ class MapSum(object):
 
 
 # Your MapSum object will be instantiated and called as such:
-# obj = MapSum()
-# obj.insert(key,val)
-# param_2 = obj.sum(prefix)
+obj = MapSum()
+obj.insert("apple", 3)
+print(obj.sum("ap")) # 3
+obj.insert("app", 2)
+print(obj.sum("ap")) # 5

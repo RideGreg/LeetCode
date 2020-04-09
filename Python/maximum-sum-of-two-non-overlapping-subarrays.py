@@ -33,13 +33,14 @@ class Solution(object):
         """
         for i in range(1, len(A)):
             A[i] += A[i-1]
-        result, Lmax, Mmax = A[L+M-1], A[L-1], A[M-1]
+
+        result, maxL, maxM = A[L+M-1], A[L-1], A[M-1]
         for i in range(L+M, len(A)):
-            Lsum = A[i] - A[i-L]    # sum of the last L elements
-            Msum = A[i] - A[i-M]    # sum of the last M elements
-            Lmax = max(Lmax, A[i-M] - A[i-M-L]) # max sum of contiguous L elements before the last M elements
-            Mmax = max(Mmax, A[i-L] - A[i-L-M]) # max sum of contiguous M elements before the last L elements
-            result = max(result, Lmax + Msum, Mmax + Lsum)
+            lastL = A[i] - A[i-L]    # sum of the last L elements
+            lastM = A[i] - A[i-M]    # sum of the last M elements
+            maxL = max(maxL, A[i-M] - A[i-M-L]) # max sum of contiguous L elements before the last M elements
+            maxM = max(maxM, A[i-L] - A[i-L-M]) # max sum of contiguous M elements before the last L elements
+            result = max(result, maxL + lastM, maxM + lastL)
         return result
 
     # Time O(n^2), 1200 ms

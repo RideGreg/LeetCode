@@ -44,7 +44,7 @@
 
 class UnionFind(object):
     def __init__(self, n):
-        self.set = range(n)
+        self.set = list(range(n))
         self.count = n
 
     def find_set(self, x):
@@ -76,7 +76,7 @@ class Solution(object):
 
 
     # DFS in graph: 1. how to build graph: defaultdict(set);
-    #               2. how to dfs: traverse neighbor, filter visited, use 'any' when traversing neighbors
+    #               2. how to dfs: traverse neighbor, filter visited (don't go back), use 'any' when traversing neighbors
     #
     # Time: O(n^2), where n is # of vertices (also # of edges) in the graph. In the worst case, for every edge we include,
     #               we have to search every previously-occurring edge of the graph.
@@ -86,17 +86,18 @@ class Solution(object):
         graph = collections.defaultdict(set)
 
         def dfs(source, target):
-            if source not in seen:
-                seen.add(source)
-                if source == target: return True
-                return any(dfs(nei, target) for nei in graph[source])
-            return False
+            if source in seen:
+                return False
+            seen.add(source)
+            if source == target: return True
+            return any(dfs(nei, target) for nei in graph[source])
 
         for u, v in edges:
-            seen = set()
+            seen = set() # reset seen for each new edge
             if u in graph and v in graph and dfs(u, v):
                 return u, v
             graph[u].add(v)
             graph[v].add(u)
 
 print(Solution().findRedundantConnection([[1,2], [1,3], [2,3]])) # [2,3]
+print(Solution().findRedundantConnection([[1,2], [2,3], [3,4], [1,4], [1,5]])) # [1,4]
