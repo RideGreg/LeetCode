@@ -121,6 +121,62 @@ class Solution(object):
     #
     # This approach would lead to a O(K N^2) algorithm, not efficient enough for the given constraints.
     # However, we can try to speed it up.
+    def superEggDrop_2Ddp_myBisect_memo(self, K, N): # O(KNlogN) can USE THIS
+        def dp(k, n):
+            if (k, n) not in memo:
+                if n <= 1:
+                    ans = n
+                elif k == 1:
+                    ans = n
+                else:
+                    # find maximal x in [1, n] where t1 < t2
+                    lo, hi = 1, n
+                    while lo < hi:
+                        x = (lo + hi + 1) // 2
+                        t1 = dp(k-1, x-1)
+                        t2 = dp(k, n-x)
+                        if t1 < t2:
+                            lo = x
+                        else:
+                            hi = x - 1
+                    ans = 1 + min(max(dp(k-1, x-1), dp(k, n-x))
+                                  for x in (lo, lo + 1))
+
+                memo[k, n] = ans
+            return memo[k, n]
+
+        memo = {}
+        return dp(K, N)
+
+    def superEggDrop_2Ddp_myBisect_lrucache(self, K, N): # USE THIS ok too
+        from functools import lru_cache
+        @lru_cache(None)
+        def dp(k, n):
+            if n <= 1:
+                ans = n
+            elif k == 1:
+                ans = n
+            else:
+                lo, hi = 1, n
+                # keep a gap of 2 X values to manually check later
+                while lo < hi:
+                    x = (lo + hi + 1) // 2
+                    t1 = dp(k-1, x-1)
+                    t2 = dp(k, n-x)
+
+                    if t1 < t2:
+                        lo = x
+                    else:
+                        hi = x - 1
+
+                ans = 1 + min(max(dp(k-1, x-1), dp(k, n-x))
+                              for x in (lo, lo + 1))
+
+            return ans
+
+        return dp(K, N)
+
+
 
     def superEggDrop_2Ddp(self, K, N): # TLE O(KN^2)
         dp = [[float('inf')]*(N+1) for _ in xrange(K+1)]
@@ -160,7 +216,7 @@ class Solution(object):
                 dp[i][j] = 1 + min(max(dp[i][j-k], dp[i-1][k-1]) for k in (lo, hi))
         return dp[K][N]
 
-    def superEggDrop_2Ddp_bisect_memo(self, K, N):  # O(KNlogN) 800ms, not calculate every dp[i][j]
+    def superEggDrop_2Ddp_bisect_memo_leetcodeBisect(self, K, N):  # O(KNlogN) 800ms, not calculate every dp[i][j]
         def dp(k, n):
             if (k, n) not in memo:
                 if n == 0:
@@ -186,6 +242,16 @@ class Solution(object):
 
         memo = {}
         return dp(K, N)
+
+    def superEggDrop_wrong(self, K: int, N: int) -> int:
+        # WRONG: blindly use middle point as optimal
+        def dp(n, k):
+            if n == 1 and k > 0:
+                return 1
+            elif n <= 3 and k > 0:
+                return 2
+            return 1 + max(dp((n-1)//2, k-1), dp((n+1)//2, k))
+        return dp(N, K)
 
 print(Solution().superEggDrop(1,2)) # 2
 print(Solution().superEggDrop(2,6)) # 3

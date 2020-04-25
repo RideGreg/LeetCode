@@ -25,11 +25,13 @@ try:
 except NameError:
     xrange = range
 
-# Binary Indexed Tree (BIT) solution.
+# Binary Indexed Tree (BIT) solution. N-ARY TREE smaller & faster than segment tree.
 # https://www.geeksforgeeks.org/binary-indexed-tree-or-fenwick-tree-2/
 # input [2,4,5,7,8,9] will be stored as [0,2,6,5,18,8,17]. Root tree nodes is a dummy node.
 #
-# Tree structure: simpler than Segment Tree, parent node Id equals children node removing Last Set Bit.
+# Tree structure: node stores prefix sum. Each node stores a RANGE of prefix sum.
+# If binary representation of i has k training zeros, node i stores a RANGE of 2^k previous numbers.
+# Parent node Id equals children node removing Last Set Bit.
 # BUT works for sum only, as not every disjoint range can directly get from BITree e.g. range[2-2] is
 # obtained from node2 - node1, cannot solve min/max/gcd/lcm.
 #                           0(0000)
@@ -96,8 +98,9 @@ class NumArray(object): # USE THIS for sum
 #        query:  O(logn)
 # Space: O(n)
 # Segment Tree solutoin implemented *using an array*.
-# ANY disjoint range can get from Segment Tree, good for min/max/gcd/lcm.
-# BUT when calc sum: worse than BITree: 1. need more space 2. query/update need to handle even/odd.
+# Segment Tree is a BINARY TREE, each node is for a RANGE. ANY disjoint range can get from it,
+# good for min/max/gcd/lcm. 1. Need more space than BITree. 2. query need to handle even/odd, while
+# BITree needs to handle last set bit which is harder to remember.
 
 # input [2,4,5,7,8,9] will be stored as [0,35,29,6,12,17,2,4,5,7,8,9]. All leaf nodes are for original input
 # values, every two nodes merges to a "range" node (each range node has two subtrees),
@@ -120,13 +123,19 @@ class NumArray2(object): # USE THIS for min/max/gcd/lcm
 
     def update(self, i, val):
         i += self.n
-        if self.trees[i] == val: return
+        delta = val - self.trees[i]
+        if delta:
+            while i:
+                self.trees[i] += delta  # only work for sum
+                i //= 2
 
-        self.trees[i] = val
-        while i > 1:
-            sibling = i-1 if i % 2 else i+1  # this is general for min/max/sum/gcd/lcm
-            self.trees[i//2] = self.trees[i] + self.trees[sibling]
-            i //= 2
+            ''' OR
+            self.trees[i] = val
+            while i > 1:
+                sibling = i-1 if i % 2 else i+1  # this is general for min/max/sum/gcd/lcm
+                self.trees[i//2] = self.trees[i] + self.trees[sibling]
+                i //= 2
+            '''
 
     def sumRange(self, i, j):
         i += self.n

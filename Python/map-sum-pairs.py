@@ -20,12 +20,65 @@ import collections
 
 class TrieNode(object):
     def __init__(self):
+        self.sum = 0
         self.v = 0
         self.leaves = collections.defaultdict(TrieNode)
 
-class MapSum:
+class MapSum:   # USE THIS: calculation in 'insert' time, 'sum' is fast
     def __init__(self):
+        """
+        Initialize your data structure here.
+        """
         self.root = TrieNode()
+
+    def insert(self, key: str, val: int) -> None:
+        cur = self.root
+        for c in key:
+            cur = cur.leaves[c]
+
+        delta = val - cur.v  # if set new value to the same string, cannot simply add
+        cur.v = val
+
+        cur = self.root
+        for c in key:
+            cur = cur.leaves[c]
+            cur.sum += delta
+
+    def sum(self, prefix: str) -> int:
+        cur = self.root
+        for c in prefix:
+            if c not in cur.leaves:
+                return 0
+            cur = cur.leaves[c]
+        return cur.sum
+
+    ''' THIS IS WRONG when insert is actually OVERWRITE
+    ["MapSum", "insert", "sum", "insert", "sum"]
+    [[], ["aa",3], ["a"], ["aa",2], ["a"]]
+    if wnat to update values during insert, need to use delta
+    
+    def insert(self, key: str, val: int) -> None:
+        cur = self.root
+        for c in key:
+            cur = cur.leaves[c]
+            cur.v += val
+
+    def sum(self, prefix: str) -> int:
+        ans, cur = 0, self.root
+        for c in prefix:
+            if c not in cur.leaves:
+                return 0
+            cur = cur.leaves[c]
+        return cur.v'''
+
+class TrieNode2(object):
+    def __init__(self):
+        self.v = 0
+        self.leaves = collections.defaultdict(TrieNode2)
+
+class MapSum2:
+    def __init__(self):
+        self.root = TrieNode2()
 
     def insert(self, key: str, val: int) -> None:
         cur = self.root
@@ -35,10 +88,12 @@ class MapSum:
 
     def sum(self, prefix: str) -> int:
         ans, cur = 0, self.root
+        # find the node corresponding to 'prefix'
         for c in prefix:
-            cur = cur.leaves.get(c, None)
-            if not cur: return 0
-
+            if c not in cur.leaves:
+                return 0
+            cur = cur.leaves[c]
+        # DFS to sum up all words with the prefix
         stk = [cur]
         while stk:
             node = stk.pop()
@@ -47,7 +102,8 @@ class MapSum:
                 stk.append(ch)
         return ans
 
-class MapSum2(object):
+
+class MapSum_kamyu(object):
     def __init__(self):
         """
         Initialize your data structure here.
@@ -98,3 +154,5 @@ obj.insert("apple", 3)
 print(obj.sum("ap")) # 3
 obj.insert("app", 2)
 print(obj.sum("ap")) # 5
+obj.insert("app", 8)
+print(obj.sum("ap")) # 11

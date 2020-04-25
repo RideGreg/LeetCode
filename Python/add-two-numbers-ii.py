@@ -1,6 +1,7 @@
 # Time:  O(m + n)
 # Space: O(m + n)
 
+# 445
 # You are given two linked lists representing two non-negative numbers.
 # The most significant digit comes first and each of their nodes contain
 # a single digit.
@@ -18,13 +19,14 @@
 # Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
 # Output: 7 -> 8 -> 0 -> 7
 
+# 本题的主要难点在于链表中数位的顺序与我们做加法的顺序是相反的，为了*逆序*处理所有数位，
+# 我们可以使用栈：把所有数字压入栈中，再依次取出相加。
 
 # Definition for singly-linked list.
 class ListNode(object):
     def __init__(self, x):
         self.val = x
         self.next = None
-
 
 class Solution(object):
     def addTwoNumbers(self, l1, l2):
@@ -41,21 +43,27 @@ class Solution(object):
             stk2.append(l2.val)
             l2 = l2.next
 
-        prev, head = None, None
-        sum = 0
-        while stk1 or stk2:
-            sum /= 10
+        head, carry = None, 0
+        while stk1 or stk2 or carry:
             if stk1:
-                sum += stk1.pop()
+                carry += stk1.pop()
             if stk2:
-                sum += stk2.pop()
+                carry += stk2.pop()
 
-            head = ListNode(sum % 10)
-            head.next = prev
-            prev = head
-
-        if sum >= 10:
-            head = ListNode(sum / 10)
-            head.next = prev
-
+            carry, v = divmod(carry, 10)
+            cur = ListNode(v)
+            cur.next = head
+            head = cur
         return head
+
+l1 = ListNode(7)
+l1.next = ListNode(2)
+l1.next.next = ListNode(4)
+l1.next.next.next = ListNode(3)
+
+l2 = ListNode(5)
+l2.next = ListNode(6)
+l2.next.next = ListNode(4)
+
+ans = Solution().addTwoNumbers(l1, l2)
+print(ans) # 7 -> 8 -> 0 -> 7

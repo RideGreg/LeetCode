@@ -29,13 +29,14 @@ class Solution(object):
         :type stones: List[int]
         :rtype: int
         """
-        max_heap = [-x for x in stones]
+        max_heap = [-x for x in stones] # KENG: wrong, not heapify old list: heapq.heapify([-x for x in stones])
         heapq.heapify(max_heap)
 
-        for i in range(len(stones)-1):
-            x, y = -heapq.heappop(max_heap), -heapq.heappop(max_heap)
-            heapq.heappush(max_heap, -abs(x-y))
-        return -max_heap[0]
+        while len(max_heap) >= 2:
+            x, y = heapq.heappop(max_heap), heapq.heappop(max_heap)
+            if x < y:
+                heapq.heappush(max_heap, x-y)
+        return -max_heap[0] if max_heap else 0
 
     # Time O(n^2)
     def lastStoneWeight_bs(self, stones: List[int]) -> int:
@@ -45,7 +46,7 @@ class Solution(object):
             a = stones.pop()
             b = stones.pop()
             if a > b:
-                bisect.insort(stones, a-b)
+                bisect.insort(stones, a-b)  # O(n)
         return stones[0] if stones else 0
 
 print(Solution().lastStoneWeight([2,7,4,1,8,1])) # 1

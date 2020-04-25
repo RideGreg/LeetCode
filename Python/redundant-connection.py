@@ -87,9 +87,9 @@ class Solution(object):
 
         def dfs(source, target):
             if source in seen:
-                return False
+                return False # filter visited
             seen.add(source)
-            if source == target: return True
+            if source == target: return True # found another existing path leading to target
             return any(dfs(nei, target) for nei in graph[source])
 
         for u, v in edges:

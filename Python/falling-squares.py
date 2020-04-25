@@ -21,17 +21,14 @@
 # Example 1:
 # Input: [[1, 2], [2, 3], [6, 1]]
 # Output: [2, 5, 5]
-# Explanation:
 #
-# After the first drop of
-# positions[0] = [1, 2]:
+# Explanation: After the first drop of positions[0] = [1, 2]:
 # _aa
 # _aa
 # -------
 # The maximum height of any square is 2.
 #
-# After the second drop of
-# positions[1] = [2, 3]:
+# After the second drop of positions[1] = [2, 3]:
 # __aaa
 # __aaa
 # __aaa
@@ -42,8 +39,7 @@
 # The larger square stays on top of the smaller square despite where its center
 # of gravity is, because squares are infinitely sticky on their bottom edge.
 #
-# After the third drop of
-# positions[1] = [6, 1]:
+# After the third drop of positions[1] = [6, 1]:
 # __aaa
 # __aaa
 # __aaa
@@ -52,9 +48,7 @@
 # --------------
 # The maximum height of any square is still 5.
 #
-# Thus, we return an answer of
-# [2, 5, 5]
-# .
+# Thus, we return an answer of [2, 5, 5]
 #
 # Example 2:
 # Input: [[100, 100], [200, 100]]
@@ -63,37 +57,14 @@
 # Note:
 #
 # 1 <= positions.length <= 1000.
-# 1 <= positions[0] <= 10^8.
-# 1 <= positions[1] <= 10^6.
+# 1 <= positions[0] <= 10^8, 1 <= positions[1] <= 10^6.
 
-# Time:  O(nlogn) ~ O(n^2), 120 ms
-# Space: O(n)
 import bisect
-
-
-class Solution(object):
-    def fallingSquares(self, positions):
-        # two helper lists
-        pos = [-1] # x index for each new height
-        heights = [0]
-        maxH, result = 0, []
-        for left, side in positions:
-            # BISECT to determine the interval to be affected by new square. Index r is excluded.
-            l = bisect.bisect_right(pos, left)   # cannot be bisect_left: [[100,100],[200,100]] => [100, 100]
-            r = bisect.bisect_left(pos, left+side) # cannot be bisect_right: [[200,100], [100,100]] => [100, 100]
-            high = max(heights[l-1:r]) + side
-            # update. list slice assignment, previous indices in the interval were replaced
-            # https://stackoverflow.com/questions/10623302/how-assignment-works-with-python-list-slice
-            pos[l:r] = [left, left+side]         # Time: O(n)
-            heights[l:r] = [high, heights[r-1]]  # Time: O(n)
-            maxH = max(maxH, high)
-            result.append(maxH)
-        return result
 
 # Time:  O(nlogn), 1800 ms
 # Space: O(n)
-# Segment Tree solution.
-class mingSegmentTree(object):
+# Segment Tree solution (range max query).
+class SegmentTree(object):
     def __init__(self, n):
         # this segment tree cannot be pre-built. It stores max height for each
         # interval and is dynamically updated when a new square falls.
@@ -104,10 +75,10 @@ class mingSegmentTree(object):
         i += self.n
         if val != self.tree[i]:
             self.tree[i] = val
-            while i > 0:
+            while i > 1:
                 sibling = i - 1 if i % 2 else i + 1
-                self.tree[i / 2] = max(self.tree[i], self.tree[sibling])
-                i /= 2
+                self.tree[i // 2] = max(self.tree[i], self.tree[sibling])
+                i //= 2
 
     def query(self, i, j):
         i, j, maxv = i + self.n, j + self.n, 0
@@ -118,18 +89,20 @@ class mingSegmentTree(object):
             if j % 2 == 0:
                 maxv = max(maxv, self.tree[j])
                 j -= 1
-            i /= 2
-            j /= 2
+            i //= 2
+            j //= 2
         return maxv
 
-class SolutionMing(object):
+class Solution(object):       # USE THIS
     def fallingSquares(self, positions):
+        # 使用左右两端位置，极大地减少了segment tree的size。不然整条数轴每个点的高度都要记录，太多；
+        # 一条边只记两次很聪明。右端位置减一，不然查询时，相邻接触的square会误认为stack在上面。
         index = set()
         for left, size in positions:
             index.add(left)
             index.add(left+size-1)
         index = sorted(list(index))
-        tree = mingSegmentTree(len(index))
+        tree = SegmentTree(len(index))
 
         max_height = 0
         result = []
@@ -137,13 +110,13 @@ class SolutionMing(object):
             # determine the interval
             L, R = bisect.bisect_left(index, left), bisect.bisect_left(index, left+size-1)
             h = tree.query(L, R) + size
-            for i in xrange(L, R+1):
+            for i in range(L, R+1):
                 tree.update(i, h)
             max_height = max(max_height, h)
             result.append(max_height)
         return result
-
-class SegmentTree(object):
+'''
+class SegmentTree1(object):
     def __init__(self, N,
                  query_fn=min,
                  update_fn=lambda x, y: y,
@@ -154,7 +127,7 @@ class SegmentTree(object):
         self.update_fn = update_fn
         self.default_val = default_val
         self.tree = [default_val] * (2 * N)
-        self.lazy = [None] * N
+        self.lazy = [float('-inf')] * N   # not clear what is stored in 'lazy'
 
     def __apply(self, x, val):
         self.tree[x] = self.update_fn(self.tree[x], val)
@@ -162,11 +135,11 @@ class SegmentTree(object):
             self.lazy[x] = self.update_fn(self.lazy[x], val)
 
     def update(self, L, R, h):
-        def pull(x):
+        def pull(x): # pull up: update parents using values from children
             while x > 1:
                 x //= 2
                 self.tree[x] = self.query_fn(self.tree[x*2], self.tree[x*2 + 1])
-                if self.lazy[x] is not None:
+                if self.lazy[x] != float('-inf'):
                     self.tree[x] = self.update_fn(self.tree[x], self.lazy[x])
 
         L += self.N
@@ -179,20 +152,19 @@ class SegmentTree(object):
             if R & 1 == 0:
                 self.__apply(R, h)
                 R -= 1
-            L //= 2
-            R //= 2
+            L, R = L // 2, R // 2
         pull(L0)
         pull(R0)
 
     def query(self, L, R):
-        def push(x):
+        def push(x): # push down: update children using values from parents
             n = 2**self.H
             while n != 1:
                 y = x // n
-                if self.lazy[y] is not None:
+                if self.lazy[y] != float('-inf'):
                     self.__apply(y*2, self.lazy[y])
                     self.__apply(y*2 + 1, self.lazy[y])
-                    self.lazy[y] = None
+                    self.lazy[y] = float('-inf')
                 n //= 2
 
         result = self.default_val
@@ -210,16 +182,14 @@ class SegmentTree(object):
             if R & 1 == 0:
                 result = self.query_fn(result, self.tree[R])
                 R -= 1
-            L //= 2
-            R //= 2
+            L, R = L // 2, R // 2
         return result
     
     def data(self):
         showList = []
-        for i in xrange(self.N):
+        for i in range(self.N):
             showList.append(self.query(i, i))
         return showList
-
 
 class SegmentTree2(object):
     def __init__(self, nums,
@@ -227,7 +197,6 @@ class SegmentTree2(object):
                  update_fn=lambda x, y: y,
                  default_val=float("inf")):
         """
-        initialize your data structure here.
         :type nums: List[int]
         """
         N = len(nums)
@@ -237,7 +206,7 @@ class SegmentTree2(object):
         self.__update_fn = update_fn
         self.__default_val = default_val
         self.__tree = [default_val for _ in range(self.__tree_length)]
-        self.__lazy = [None for _ in range(self.__tree_length)]
+        self.__lazy = [float('-inf') for _ in range(self.__tree_length)]
         self.__constructTree(nums, 0, self.__original_length-1, 0)
 
     def update(self, i, j, val):
@@ -266,9 +235,9 @@ class SegmentTree2(object):
     def __updateTree(self, val, range_left, range_right, left, right, idx):
         if left > right:
             return
-        if self.__lazy[idx] is not None:
+        if self.__lazy[idx] != float('-inf'):
             self.__apply(left, right, idx, self.__lazy[idx])
-            self.__lazy[idx] = None
+            self.__lazy[idx] = float('-inf')
         if range_left > right or range_right < left:
             return
         if range_left <= left and right <= range_right:
@@ -283,9 +252,9 @@ class SegmentTree2(object):
     def __queryRange(self, range_left, range_right, left, right, idx):
         if left > right:
             return self.__default_val
-        if self.__lazy[idx] is not None:
+        if self.__lazy[idx] != float('-inf'):
             self.__apply(left, right, idx, self.__lazy[idx])
-            self.__lazy[idx] = None
+            self.__lazy[idx] = float('-inf')
         if right < range_left or left > range_right:
             return self.__default_val
         if range_left <= left and right <= range_right:
@@ -298,17 +267,17 @@ class SegmentTree2(object):
 # Time:  O(nlogn)
 # Space: O(n)
 # Segment Tree solution.
-class Solution2(object):
+class Solution_kamyu_segmentTree(object):  # DONT USE: the segment tree implementation is tedious
     def fallingSquares(self, positions):
         index = set()
         for left, size in positions:
-            index.add(left);
+            index.add(left)
             index.add(left+size-1)
         index = sorted(list(index))
-        tree = SegmentTree(len(index), max, max, 0)
+        tree = SegmentTree1(len(index), max, max, 0)
         # tree = SegmentTree2([0]*len(index), max, max, 0)
-        max_height = 0
-        result = []
+
+        max_height， result = 0, []
         for left, size in positions:
             L, R = bisect.bisect_left(index, left), bisect.bisect_left(index, left+size-1)
             h = tree.query(L, R) + size
@@ -316,7 +285,29 @@ class Solution2(object):
             max_height = max(max_height, h)
             result.append(max_height)
         return result
+'''
 
+# list slice assignment: maintain 2 lists: pos, heights for each change of contour height.
+# Time:  O(nlogn) ~ O(n^2), 120 ms
+# Space: O(n)
+class Solution2(object):
+    def fallingSquares(self, positions):
+        # two helper lists
+        pos = [-1] # x index for each new height
+        heights = [0]
+        maxH, result = 0, []
+        for left, side in positions:
+            # BISECT to determine the interval to be affected by new square. Index r is excluded.
+            l = bisect.bisect_right(pos, left)   # cannot be bisect_left: [[100,100],[200,100]] => [100, 100]
+            r = bisect.bisect_left(pos, left+side) # cannot be bisect_right: [[200,100], [100,100]] => [100, 100]
+            high = max(heights[l-1:r]) + side
+            # update. list slice assignment, previous indices in the interval were replaced
+            # https://stackoverflow.com/questions/10623302/how-assignment-works-with-python-list-slice
+            pos[l:r] = [left, left+side]         # Time: O(n)
+            heights[l:r] = [high, heights[r-1]]  # Time: O(n)
+            maxH = max(maxH, high)
+            result.append(maxH)
+        return result
 
 # Time:  O(n * sqrt(n))
 # Space: O(n)
@@ -350,7 +341,7 @@ class Solution3(object):
 
         index = set()
         for left, size in positions:
-            index.add(left);
+            index.add(left)
             index.add(left+size-1)
         index = sorted(list(index))
         W = len(index)
@@ -379,11 +370,11 @@ class Solution4(object):
         :rtype: List[int]
         """
         heights = [0] * len(positions)
-        for i in xrange(len(positions)):
+        for i in range(len(positions)):
             left_i, size_i = positions[i]
             right_i = left_i + size_i
             heights[i] += size_i
-            for j in xrange(i+1, len(positions)):
+            for j in range(i+1, len(positions)):
                 left_j, size_j = positions[j]
                 right_j = left_j + size_j
                 if left_j < right_i and left_i < right_j:  # intersect
@@ -403,9 +394,9 @@ class Solution_voyageck(object):
         h[0] = p[0][1]
         maxH = h[0]
         res = [maxH]
-        for i in xrange(1,n):
+        for i in range(1,n):
             # max height of all touchable prev squares or 0
-            h[i] = max(h[j] for j in xrange(i+1) \
+            h[i] = max(h[j] for j in range(i+1) \
                        if (p[i][0] < p[j][0]+p[j][1] \
                           and p[j][0] < p[i][0]+p[i][1]))
             h[i] += p[i][1]            # height of current square i
@@ -415,3 +406,4 @@ class Solution_voyageck(object):
 
 print(Solution().fallingSquares([[200,100], [100,100]])) # [100, 100]
 print(Solution().fallingSquares([[1,2], [2,3], [6,1]])) # [2, 5, 5]
+print(Solution().fallingSquares([[1,3], [2,3], [6,1]])) # [3, 6, 6]

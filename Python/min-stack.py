@@ -21,7 +21,7 @@ class MinStack:
             self.stack.append(0)
             self.min = x
         else:
-            self.stack.append(x - self.min)
+            self.stack.append(x - self.min) #只存与min的差值部分，如果差值为负（新数更小），要更新min
             if x < self.min:
                 self.min = x
 
@@ -35,15 +35,15 @@ class MinStack:
     def top(self):
         x = self.stack[-1]
         if x > 0:
-            return x + self.min
+            return x + self.min #存的是差值部分，要加回min
         else:
-            return self.min
+            return self.min #最新数最小，已存到min
 
     # @return an integer
     def getMin(self):
         return self.min
 
-# Time:  O(n)
+# Time:  O(1)
 # Space: O(n)
 class MinStack2:
     def __init__(self):
@@ -52,13 +52,10 @@ class MinStack2:
     # @return an integer
     def push(self, x):
         self.stack.append(x)
-        if len(self.minStack):
-            if x < self.minStack[-1][0]:
-                self.minStack.append([x, 1])
-            elif x == self.minStack[-1][0]:
-                self.minStack[-1][1] += 1
-        else:
-            self.minStack.append([x, 1])
+        if not self.minStack or x < self.minStack[-1][0]:
+            self.minStack.append([x, 1])  # [value, count]
+        elif x == self.minStack[-1][0]:
+            self.minStack[-1][1] += 1
 
     # @return nothing
     def pop(self):
@@ -77,17 +74,15 @@ class MinStack2:
         return self.minStack[-1][0]
 
 # time: O(1)
-# space: O(n)
-
+# space: O(n) bad, store min for every item
 class MinStack3(object):
-
     def __init__(self):
         self.stack = []
 
     def push(self, x):
         if self.stack:
             current_min = min(x, self.stack[-1][0])
-            self.stack.append((current_min, x))
+            self.stack.append((current_min, x))  # bad, double the storage
         else:
             self.stack.append((x, x))
 
@@ -102,5 +97,21 @@ class MinStack3(object):
 
 if __name__ == "__main__":
     stack = MinStack()
-    stack.push(-1)
-    print [stack.top(), stack.getMin()]
+    stack.push(2)
+    stack.push(6)
+    stack.push(2)
+    stack.push(10)
+    stack.push(1)
+    print(stack.top(), stack.getMin()) # 1, 1
+
+    stack.pop()
+    print(stack.top(), stack.getMin()) #, 10, 2
+
+    stack.pop()
+    print(stack.top(), stack.getMin()) #, 2, 2
+
+    stack.pop()
+    print(stack.top(), stack.getMin()) # 6, 2
+
+    stack.pop()
+    print(stack.top(), stack.getMin()) # 2, 2

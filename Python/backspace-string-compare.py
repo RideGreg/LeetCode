@@ -46,7 +46,7 @@ class Solution(object):
         :type T: str
         :rtype: bool
         """
-        def findNextChar(S):
+        def nextChar(S):
             skip = 0
             for i in reversed(xrange(len(S))):
                 if S[i] == '#':
@@ -57,7 +57,7 @@ class Solution(object):
                     yield S[i]
 
         return all(x == y for x, y in
-                   itertools.izip_longest(findNextChar(S), findNextChar(T)))
+                   itertools.zip_longest(nextChar(S), nextChar(T)))
 
     # Time O(m+n), worse Space O(m+n)
     def backspaceCompare_stack(self, S, T):
