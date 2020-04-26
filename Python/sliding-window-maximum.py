@@ -49,8 +49,7 @@ class Solution(object):
         :type k: int
         :rtype: List[int]
         """
-        dq = deque()
-        result = []
+        result, dq = [], deque()
         for i in xrange(len(nums)):
             if dq and dq[0] <= i - k:
                 dq.popleft()
