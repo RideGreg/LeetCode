@@ -54,7 +54,7 @@ class Solution(object):
         for i in xrange(len(nums)):
             if dq and dq[0] <= i - k:
                 dq.popleft()
-            while dq and nums[i] >= nums[dq[-1]]:
+            while dq and nums[dq[-1]] <= nums[i]:
                 dq.pop()
             dq.append(i)
             if i >= k-1:
