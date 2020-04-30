@@ -47,6 +47,21 @@ class Solution(object):
                 right -= 1
         return lists[0]
 
+    def mergeKLists_timeNotGood(self, lists):
+        dummy = cur = ListNode(-1)
+        lists = [l for l in lists if l]
+        while len(lists) > 1:
+            minNode = min(lists, key = lambda n: n.val)
+            cur.next = minNode
+            cur = cur.next
+            i = lists.index(minNode)
+            if lists[i].next:
+                lists[i] = lists[i].next
+            else:
+                lists.pop(i)
+        if lists:
+            cur.next = lists[0]
+        return dummy.next
 
 # Time:  O(nlogk)
 # Space: O(logk)
@@ -111,4 +126,4 @@ if __name__ == "__main__":
     list2 = ListNode(2)
     list2.next = ListNode(4)
 
-    print Solution().mergeKLists([list1, list2])
+    print(Solution().mergeKLists([list1, list2]))

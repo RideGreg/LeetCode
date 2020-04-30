@@ -29,14 +29,14 @@ class Solution(object):
     # @param root, a tree node
     # @return an integer
     def maxPathSum(self, root):
-        self.maxPathSumRecu(root)
+        self.dfs(root)
         return self.maxSum
 
-    def maxPathSumRecu(self, root):
+    def dfs(self, root):
         if root is None:
             return 0
-        left = max(0, self.maxPathSumRecu(root.left))
-        right = max(0, self.maxPathSumRecu(root.right))
+        left = max(0, self.dfs(root.left))
+        right = max(0, self.dfs(root.right))
         self.maxSum = max(self.maxSum, root.val + left + right)
         return root.val + max(left, right)
 
@@ -49,6 +49,11 @@ class Solution_passReturnVal(object):
             ans, rightM = getMax(node.right, ans)
             cur = node.val + max(0, leftM) + max(0, rightM)
             ans = max(ans, cur)
-            return (ans, node.val+max(0, leftM, rightM))
+            return (ans, node.val + max(0, leftM, rightM))
         
         return getMax(root, float('-inf'))[0] if root else 0
+
+root = TreeNode(-10)
+root.left, root.right = TreeNode(9), TreeNode(20)
+root.right.left, root.right.right = TreeNode(15), TreeNode(7)
+print(Solution().maxPathSum(root)) # 42

@@ -26,11 +26,13 @@
 # Hint: maintain two helper matrix left[][] and up[][] storing the consecutive 0s on the left and up direction.
 # dp[i][j] = min(dp[i - 1][j - 1], up[i - 1][j], left[i][j - 1]) + 1;
 
+from typing import List
+
 # DP with sliding window.
 class Solution:
     # @param {character[][]} matrix
     # @return {integer}
-    def maximalSquare(self, matrix): # USE THIS: bookshadow, best time complexity, fully use previous results
+    def maximalSquare_bookshadow(self, matrix): # USE THIS: bookshadow, best time/space complexity, fully use previous results
         """
         :type matrix: List[List[str]]
         :rtype: int
@@ -47,56 +49,35 @@ class Solution:
                 ans = max(ans, dp[i % 2][j])
         return ans ** 2
 
-    # Time complexity is not best
-    def maximalSquare_ming(self, matrix):
+    # Space O(n^2)
+    def maximalSquare_ming_badSpace(self, matrix: List[List[str]]) -> int: # similar to bookshadow, but worse space complexity
         if not matrix: return 0
-        m, n, dp = len(matrix), len(matrix[0]), [int(c) for c in matrix[0]]
-        ans = max(dp)
-        for i in range(1, m):
-            for j in reversed(range(0, n)):
-                if matrix[i][j] == '0':
-                    dp[j] = 0
-                else:
-                    dp[j] = 1
-                    if j != 0:
-                        # this loop increases time complexity. If don't loop, the test case fails.
-                        for k in range(dp[j-1]):
-                            if matrix[i][j-1-k] == '1' and matrix[i-1-k][j] == '1':
-                                dp[j] += 1
-                            else:
-                                break
-                ans = max(ans, dp[j])
-            print(dp)
+        m, n = len(matrix), len(matrix[0])
+        prev, ans = [0]*n, 0
+        for i in range(m):
+            cur = [0] * n  # allocate a NEW memory each time
+            for j in range(n):
+                cur[j] = int(matrix[i][j])
+                if i and j and cur[j]:
+                    cur[j] = 1 + min(prev[j-1], prev[j], cur[j-1])
+                ans = max(ans, cur[j])
+            prev = cur
         return ans ** 2
 
-    def maximalSquare_kamyu(self, matrix):
-        if not matrix:
-            return 0
-
-        m, n = len(matrix), len(matrix[0])
-        size = [[0 for j in range(n)] for i in range(2)]
-        max_size = 0
-
-        for j in range(n):
-            if matrix[0][j] == '1':
-                size[0][j] = 1
-            max_size = max(max_size, size[0][j])
-
-        for i in range(1, m):
-            if matrix[i][0] == '1':
-                size[i % 2][0] = 1
-            else:
-                size[i % 2][0] = 0
-            for j in range(1, n):
-                if matrix[i][j] == '1':
-                    size[i % 2][j] = min(size[i % 2][j - 1],
-                                         size[(i - 1) % 2][j],
-                                         size[(i - 1) % 2][j - 1]) + 1
-                    max_size = max(max_size, size[i % 2][j])
+    # space: use one line, but not pretty: need to check value in a matrix cell
+    def maximalSquare_ming(self, matrix):
+        if not matrix: return 0
+        dp = [0] + [int(x) for x in matrix[0]]
+        maxl = max(dp)
+        for i in range(1, len(matrix)):
+            for j in range(1, len(matrix[0])+1):
+                if matrix[i][j-1] == '1':
+                    l = min(dp[j], dp[j-1])
+                    dp[j] = l+1 if matrix[i-l][j-1-l] == '1' else l
+                    maxl = max(maxl, dp[j])
                 else:
-                    size[i % 2][j] = 0
-
-        return max_size * max_size
+                    dp[j] = 0
+        return maxl**2
 
 
 # Time:  O(n^2)
@@ -177,4 +158,10 @@ class Solution3:
 
         return max_square_area
 
-print(Solution().maximalSquare([["0","0","0","1"],["1","1","0","1"],["1","1","1","1"],["0","1","1","1"],["0","1","1","1"]]))
+print(Solution().maximalSquare([["0","0","0"],["0","0","0"],["1","1","1"]])) # 1
+print(Solution().maximalSquare([
+    ["0","0","0","1"],
+    ["1","1","0","1"],
+    ["1","1","1","1"],
+    ["0","1","1","1"],
+    ["0","1","1","1"]])) # 9

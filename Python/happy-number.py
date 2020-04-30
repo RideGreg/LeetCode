@@ -1,6 +1,7 @@
 # Time:  O(k), where k is the steps to be happy number
 # Space: O(k)
-#
+
+# 202
 # Write an algorithm to determine if a number is "happy".
 #
 # A happy number is a number defined by the following process:
@@ -20,20 +21,14 @@
 class Solution:
     # @param {integer} n
     # @return {boolean}
-    def isHappy(self, n):
-        lookup = {}
+    def isHappy(self, n):    # USE THIS
+        lookup = set()
         while n != 1 and n not in lookup:
-            lookup[n] = True
-            n = self.nextNumber(n)
+            lookup.add(n)
+            n = sum(int(c)**2 for c in str(n))
         return n == 1
 
-    def nextNumber(self, n):
-        new = 0
-        for char in str(n):
-            new += int(char)**2
-        return new
-
-    def isHappy2(self, n):    # USE THIS
+    def isHappy2(self, n):
         ht = set()
         while n != 1 and n not in ht:
             ht.add(n)
@@ -43,3 +38,5 @@ class Solution:
                 m += p**2
             n = m
         return n == 1
+
+print(Solution().isHappy(19)) # True
