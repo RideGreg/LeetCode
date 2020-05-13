@@ -16,7 +16,7 @@
 from typing import List
 
 class Solution(object):
-    # USE THIS
+    # USE THIS: same as the 2nd algorithm in lowest-common-ancestor-of-a-binary-tree.py
     # 1. preprocess: reverse index data
     # 2. build ancestor list for r1. Find r2's ancestors first shown in the r1's list.
     def findSmallestRegion(self, regions, region1, region2):

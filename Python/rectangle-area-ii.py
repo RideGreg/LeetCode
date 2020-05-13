@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 850
 # We are given a list of (axis-aligned) rectangles.
 # Each rectangle[i] = [x1, y1, x2, y2] ,
 # where (x1, y1) are the coordinates of the bottom-left corner,
@@ -29,7 +30,7 @@
 # - The total area covered by all rectangles will never exceed 2^63 - 1 and
 #   thus will fit in a 64-bit signed integer.
 
-# Segment Tree
+# Segment Tree VERY HARD TO UNDERSTAND, NOT MY SEGMENT TREE FRAMEWORK
 # As in solution below "Line Sweep", we want to support add(x1, x2), remove(x1, x2), and query(). This is
 # the perfect setting for using a segment tree.
 class SegmentTreeNode(object):
@@ -92,8 +93,8 @@ class Solution(object):
             cur_y = y
         return result % (10**9+7)
 
-# Line Sweep
-# Time Complexity: O(N^2*logN), where N is the number of rectangles.
+# Line Sweep  线性扫描 USE THIS
+# Time Complexity: O(N^2*logN), where N is the number of rectangles. In 2N events, sort active takes NLogN time.
 # Space Complexity: O(N).
 
 # Imagine we pass a horizontal line from bottom to top over the shape. We have some active intervals on this horizontal
@@ -115,6 +116,14 @@ class Solution(object):
 # similar to a classic LeetCode problem, Merge Intervals.
 class Solution2(object):
     def rectangleArea(self, rectangles):
+        def query():
+            ans, cur = 0, float('-inf')
+            for x1, x2 in active:
+                cur = max(cur, x1)
+                ans += max(0, x2 - cur)
+                cur = max(cur, x2)
+            return ans
+
         # Populate events
         OPEN, CLOSE = 0, 1
         events = []
@@ -123,35 +132,25 @@ class Solution2(object):
             events.append((y2, CLOSE, x1, x2))
         events.sort()
 
-        def query():
-            ans = 0
-            cur = -1
-            for x1, x2 in active:
-                cur = max(cur, x1)
-                ans += max(0, x2 - cur)
-                cur = max(cur, x2)
-            return ans
-
-        active = []
-        cur_y = events[0][0]
-        ans = 0
+        ans, active = 0, []
+        prev_y = events[0][0]
         for y, typ, x1, x2 in events:
             # For all vertical ground covered, update answer
-            ans += query() * (y - cur_y)
+            if y > prev_y:
+                ans += query() * (y - prev_y)
 
             # Update active intervals
             if typ is OPEN:
                 active.append((x1, x2))
-                active.sort()
+                active.sort() # O(NlogN)
             else:
                 active.remove((x1, x2))
-
-            cur_y = y
+            prev_y = y
 
         return ans % (10**9 + 7)
 
 
-# Principle of Inclusion-Exclusion
+# Principle of Inclusion-Exclusion 容斥原理
 # Time Complexity: O(N * 2^N), where N is the number of rectangles.
 # Space Complexity: O(N).
 
@@ -165,7 +164,7 @@ class Solution2(object):
 # For every subset of {1,2,...N}, calculate their intersection of rectangles and its area. Then add (or subtract) to total.
 class Solution3(object):
     def rectangleArea(self, rectangles):
-        import itertools
+        import itertools, functools
         def intersect(rec1, rec2):
             return [max(rec1[0], rec2[0]),
                     max(rec1[1], rec2[1]),
@@ -178,10 +177,19 @@ class Solution3(object):
             return dx * dy
 
         ans = 0
-        for size in xrange(1, len(rectangles) + 1):
+        for size in range(1, len(rectangles) + 1):
             for group in itertools.combinations(rectangles, size):
-                ans += (-1) ** (size + 1) * area(reduce(intersect, group))
+                ans += (-1) ** (size + 1) * area(functools.reduce(intersect, group))
 
         return ans % (10**9 + 7)
 
+print(Solution().rectangleArea([[0,0,4,4],[3,3,7,6],[1,5,2,6],[1,2,2,3],[4,5,5,7]])) # 29
+# 7              __
+# 6    __      _|_|__ __ __
+# 5   |_|     | |_|       |
+# 4  __ __ __ |__         |
+# 3 |   __    |_| __ __ __|
+# 2 |  |_|      |
+# 1 |           |
+# 0 |__ __ __ __|
 print(Solution().rectangleArea([[0,0,4,2],[2,0,4,3],[2,0,5,1]])) # 11

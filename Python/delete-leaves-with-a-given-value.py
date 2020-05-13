@@ -32,6 +32,7 @@ class Solution(object):
         root.left = self.removeLeafNodes(root.left, target)
         root.right = self.removeLeafNodes(root.right, target)
         return None if root.left == root.right and root.val == target else root
+        # 技巧：root.left == root.right 等同于 not root.left and not root.right
 
     def removeLeafNodes_ming(self, root: TreeNode, target: int) -> TreeNode:
         def postorder(cur):

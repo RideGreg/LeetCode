@@ -42,8 +42,28 @@ class Solution(object):
         dfs(root, [])
         return self.ans
 
-root = TreeNode(0)
-root.left, root.right = TreeNode(1), TreeNode(2)
-root.left.left, root.left.right = TreeNode(3), TreeNode(4)
-root.right.left, root.right.right = TreeNode(3), TreeNode(4)
-print(Solution().smallestFromLeaf(root)) # 'dba'
+    # WRONG: try to get a optimal answer from subtree doesn't work and dangerous
+    # the reuslted string may involve comparison of the parent node!!
+    def smallestFromLeaf_wrong(self, root): # WRONG return 'abz'
+        if not root: return ''
+
+        c = chr(ord('a')+root.val)
+        L, R = self.smallestFromLeaf(root.left), self.smallestFromLeaf(root.right)
+        if not L and not R:
+            return c
+        elif not L or not R:
+            return (L or R) + c
+        else:
+            return min(L+c, R+c)
+
+root = TreeNode(25)
+root.left, root.right = TreeNode(1), None
+root.left.left, root.left.right = TreeNode(0), TreeNode(0)
+root.left.left.left = TreeNode(1)
+root.left.left.left.left = TreeNode(0)
+print(Solution().smallestFromLeaf(root)) # 'ababz' easy to make mistake to return 'abz'
+#                  z
+#           b          None
+#      a        a
+#    b None  None None
+#  a  None

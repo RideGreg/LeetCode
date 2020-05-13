@@ -6,11 +6,12 @@
 # Space: O(t + p^2), t is the total size of ac automata trie
 #                  , space could be further improved by DAT (double-array trie)
 
-# Aho–Corasick automata
+# A simpler implementation of Aho–Corasick automata (not using indices and output at the same time)
 # reference:
 # - http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Small02.pdf
 # - http://algo.pw/algo/64/python
 
+#
 import collections
 
 

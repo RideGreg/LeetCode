@@ -45,7 +45,7 @@ class Solution(object):
         # depth stored on nodes. The following solution is doing dpeth and node at the same time.
         def dfs(node):
             if not node:
-                return (None, 0)
+                return (None, 0) # Recursive function returns a tuple (candidateNode, depth)
 
             lNode, lDepth = dfs(node.left)
             rNode, rDepth = dfs(node.right)

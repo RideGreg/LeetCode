@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(h)
-#
+# 236
 # Given a binary tree, find the lowest common ancestor (LCA)
 # of two given nodes in the tree.
 #
@@ -33,15 +33,36 @@ class Solution:
     # @param {TreeNode} q
     # @return {TreeNode}
     def lowestCommonAncestor(self, root, p, q):
-        if root in (None, p, q):
+        if not root:
+            return None
+        if root in (p, q): # 不可能走更低拿LCA
             return root
 
-        left, right = [self.lowestCommonAncestor(child, p, q) \
-                         for child in (root.left, root.right)]
-        # 1. If the current subtree contains both p and q,
-        #    return their LCA.
-        # 2. If only one of them is in that subtree,
-        #    return that one of them.
-        # 3. If neither of them is in that subtree,
-        #    return the node of that subtree.
-        return root if left and right else left or right
+        # 1. If the left and right subtrees contain p and q separately,
+        #    return current node as LCA.
+        # 2. If only one subtree contains p or q, return that subtree.
+        # 3. If neither subtree, return None.
+        l, r = self.lowestCommonAncestor(root.left, p, q), \
+               self.lowestCommonAncestor(root.right, p, q)
+        if l and r:
+            return root
+        return l or r
+
+    # 用哈希表存储父节点。从p向上移，记录经过的节点。再从q向上移，第一个共同点即为返回值。
+    def lowestCommonAncestor2(self, root, p, q):
+        def dfs(n, p):
+            if n:
+                par[n] = p
+                dfs(n.left, n)
+                dfs(n.right, n)
+
+        par, visited = {}, set()
+        dfs(root, None)
+        while p in par:
+            visited.add(p.val)
+            p = par[p]
+        while q.val not in visited:
+            q = par[q]
+        return q
+
+

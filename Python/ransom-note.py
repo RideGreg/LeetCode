@@ -15,6 +15,12 @@
 # canConstruct("aa", "ab") -> false
 # canConstruct("aa", "aab") -> true
 
+# 考察重复元素集合的关系
+# 所以set不能用，那就使用collection.Counter，它也有一部分集合运算功能
+# 判断标准：在ransomNote中不存在比magazine多的元素
+
+import collections
+
 class Solution(object):
     def canConstruct(self, ransomNote, magazine):
         """
@@ -22,6 +28,32 @@ class Solution(object):
         :type magazine: str
         :rtype: bool
         """
+        avail = collections.Counter(magazine)
+        for c in ransomNote:
+            if avail[c] < 1:
+                return False
+            avail[c] -= 1
+        return True
+
+    def canConstruct2(self, ransomNote, magazine):
+        return not collections.Counter(ransomNote) - collections.Counter(magazine)
+        # >>> cr=collections.Counter(‘aa')
+        # Counter({'a': 2})
+        # >>> cm=collections.Counter('ab')
+        # Counter({'a': 1, 'b': 1})
+        # >>> cm+cr
+        # Counter({'a': 3, 'b': 1})
+        # >>> cr-cm
+        # Counter({'a': 1}) subtract keeping only positive counts
+        # >>> cm-cr
+        # Counter({'b': 1}) subtract keeping only positive counts
+        # >>> cm&cr
+        # Counter({'a': 1}) intersection:  min(c[x], d[x])
+        # >>> cm|cr
+        # Counter({'a': 2, 'b': 1}) union:  max(c[x], d[x])
+
+    def canConstruct_list(self, ransomNote, magazine):
+        # 对于key明确且有限的情况，可以使用list代替dict统计字符数。代码冗长
         counts = [0] * 26
         letters = 0
 
@@ -39,15 +71,6 @@ class Solution(object):
 
         return letters == 0
 
-# Time:  O(n)
-# Space: O(1)
-import collections
-
-class Solution2(object):
-    def canConstruct(self, ransomNote, magazine):
-        """
-        :type ransomNote: str
-        :type magazine: str
-        :rtype: bool
-        """
-        return not collections.Counter(ransomNote) - collections.Counter(magazine)
+print(Solution().canConstruct('a', 'b')) # False
+print(Solution().canConstruct('aa', 'ab')) # False
+print(Solution().canConstruct('aa', 'aab')) # True

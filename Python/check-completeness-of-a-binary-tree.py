@@ -16,29 +16,43 @@ class TreeNode(object):
         self.left = None
         self.right = None
 
-
+import collections
 class Solution(object):
     # Representing the position of each node (root is 1, left/right children are 2v and 2v+1)
-    # maintain count of total nodes. Location of last node should equal to total count.
-    # Con: need to traverse ALL nodes and cannot early return.
+    # maintain count of total nodes. Location of each node should match the count.
     def isCompleteTree(self, root):  # USE THIS
         """
         :type root: TreeNode
         :rtype: bool
         """
+        q = collections.deque([(root, 1)])
+        cnt = 0
+        while q:
+            node, idx = q.popleft()
+            cnt += 1
+            if cnt != idx: return False
+
+           if node.left:
+                q.append((node.left, 2*idx))
+            if node.right:
+                q.append((node.right, 2*idx+1))
+        return True
+
+        ''' ALTERNATIVELY USE LIST REPLACE, NOT RECOMMENDED AS EACH TIME CREATE A NEW LIST
         cur = [(root, 1)]
         count = 0
         while cur:
-            count += len(cur)
             next_level = []
             for node, pos in cur:
+                count += 1
+                if count != pos: return False
                 if node.left:
                     next_level.append((node.left, 2 * pos))
                 if node.right:
                     next_level.append((node.right, 2 * pos + 1))
             cur = next_level
-        return pos == count
-
+        return True
+        '''
 
     def isCompleteTree_geeksforgeeks(self, root):
         # level order tranverse. Once a node is found which is NOT a Full Node, all the following nodes
@@ -63,7 +77,29 @@ class Solution(object):
                 havePartialNode = True
         return True
 
-
+    # Code is complex: three cases of incomplete tree, has to level order with list replace
+    # because need the # of nodes at this and upper level, cannot use deque.
+    def isCompleteTree_ming(self, root: TreeNode) -> bool:
+        cur, dep = [root], 0
+        while cur:
+            nxt = []
+            for i, node in enumerate(cur):
+                # case 1: has right child but no left child
+                if node.right and not node.left:
+                    return False
+                # case 2: siblings before this node is incomplete
+                if (node.left or node.right) and len(nxt) < 2 * i:
+                    return False
+                if node.left:
+                    nxt.append(node.left)
+                if node.right:
+                    nxt.append(node.right)
+            # case 3: upper level is incomplete
+            if nxt and len(cur) < 2 ** dep:
+                return False
+            cur = nxt
+            dep += 1
+        return True
 
 root = TreeNode(1)
 root.left, root.right = TreeNode(2), TreeNode(3)

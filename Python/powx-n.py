@@ -11,16 +11,16 @@ class Solution(object):
         :type n: int
         :rtype: float
         """
-        result = 1
-        abs_n = abs(n)
-        while abs_n:
-            if abs_n & 1:
-                result *= x
-            abs_n >>= 1
-            x *= x
+        if n < 0:
+            return 1.0 / self.myPow(x, -n)
 
-        return 1 / result if n < 0 else result
-
+        ans = 1.0
+        while n:
+            if n & 1:
+                ans *= x
+            x *= x # x = x**2 causes error OverflowError: (34, 'Numerical result out of range') when x > 1.34e+154
+            n //= 2
+        return ans
 
 # Time:  O(logn)
 # Space: O(logn)
@@ -44,5 +44,7 @@ class Solution2(object):
 
 
 if __name__ == "__main__":
-    print Solution().pow(3, 5)
-    print Solution().pow(3, -5)
+    print(Solution().myPow(2.00000, -2147483648)) # 0.0
+    print(Solution().myPow(3, 5)) # 243
+    print(Solution().myPow(3, -5)) # 0.00411522633745
+

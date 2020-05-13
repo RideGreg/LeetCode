@@ -41,24 +41,25 @@ except NameError:
 
 
 class Solution(object):
-    def distanceK_kamyu(self, root, target, K): # waste space to store neighbors
+    def distanceK_kamyu(self, root, target, K): # extra space neighbors if don't allow to alter the tree
+                                                # ok to use node value since values are unique
         """
         :type root: TreeNode
         :type target: TreeNode
         :type K: int
         :rtype: List[int]
         """
-        def dfs(parent, child, neighbors):
+        def dfs(parent, child):
             if not child:
                 return
             if parent:
                 neighbors[parent.val].append(child.val)
                 neighbors[child.val].append(parent.val)
-            dfs(child, child.left, neighbors)
-            dfs(child, child.right, neighbors)
+            dfs(child, child.left)
+            dfs(child, child.right)
 
         neighbors = collections.defaultdict(list)
-        dfs(None, root, neighbors)
+        dfs(None, root)
         bfs = [target.val]
         lookup = set(bfs)
         for _ in xrange(K):
@@ -68,7 +69,7 @@ class Solution(object):
             lookup |= set(bfs)
         return bfs
 
-    def distanceK(self, root, target, K): # USE THIS
+    def distanceK(self, root, target, K): # USE THIS if allow to alter the tree
         def dfs(node, par):
             if node:
                 node.par = par

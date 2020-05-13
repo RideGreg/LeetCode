@@ -1,6 +1,7 @@
 # Time:  O(logn)
 # Space: O(1)
 
+# 367
 # Given a positive integer num, write a function
 # which returns True if num is a perfect square else False.
 #
@@ -16,11 +17,22 @@
 # Returns: False
 
 class Solution(object):
-    def isPerfectSquare(self, num):
+    def isPerfectSquare(self, num): # USE THIS: similar to sqrt.py. find max y where y**2 <= x
         """
         :type num: int
         :rtype: bool
         """
+        if num < 2: return True
+        l, r = 1, num // 2
+        while l < r:
+            m = (r - l + 1) // 2 + l
+            if m*m <= num:
+                l = m
+            else:
+                r = m - 1
+        return l ** 2 == num
+
+    def isPerfectSquare_kamyu(self, num):
         left, right = 1, num
         while left <= right:
             mid = left + (right - left) / 2

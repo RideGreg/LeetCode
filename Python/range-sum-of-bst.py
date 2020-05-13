@@ -39,8 +39,8 @@ class Solution(object):
         else:
             return self.rangeSumBST(root.left, L, R)
 
-    # iterative, work for non-unique valued BST. If unique-valued BST, change <= to < in the last 2 if.
-    def rangeSumBST_dfs(self, root, L, R):
+    # iterative, work for both non-unique and unique valued BST. If unique-valued BST, can simplify <= to < in the last 2 if.
+    def rangeSumBST_iterative(self, root, L, R):
         result = 0
         s = [root]
         while s:

@@ -2,7 +2,7 @@
 # Space: O(h)
 
 # 897
-# Given a tree, rearrange the tree in in-order so that the leftmost node
+# Given a binary search tree, rearrange the tree in "in-order" so that the leftmost node
 # in the tree is now the root of the tree, and every node has no left child and only 1 right child.
 #
 # Example 1:
@@ -48,23 +48,39 @@ class TreeNode(object):
 
 
 class Solution(object):
-    def increasingBST(self, root):
+    def increasingBST(self, root): # USE THIS
         """
         :type root: TreeNode
         :rtype: TreeNode
         """
         def inorder(node):
-            if not node: return
+            if node:
+                inorder(node.left)
 
-            inorder(node.left)
-            node.left = None #KENG: if don't set left to None, cycle is formed
-            self.cur.right = node
-            self.cur = node
-            inorder(node.right)
+                self.cur.right = node
+                self.cur = self.cur.right
+                node.left = None #left visited and no longer needed. If don't disconnect left, cycle is formed
+
+                inorder(node.right)
 
         self.cur = head = TreeNode(-1)
         inorder(root)
         return head.right
+
+    # yield not take new space, but create many new nodes
+    def increasingBST_yield(self, root):
+        def inorder(node):
+            if node:
+                yield from inorder(node.left)
+                yield node.val
+                yield from inorder(node.right)
+
+        ans = cur = TreeNode(None)
+        for v in inorder(root):
+            cur.right = TreeNode(v)
+            cur = cur.right
+        return ans.right
+
 
     # hard to understand: result is obtained, then continue to modify the tree.
     def increasingBST_kamyu(self, root):

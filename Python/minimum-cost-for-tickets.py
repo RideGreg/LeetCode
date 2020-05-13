@@ -33,25 +33,23 @@
 from functools import lru_cache
 
 class Solution(object):
+    # DP: for each new day, choose the min cost when this day uses a 1/7/30 day ticket.
     def mincostTickets(self, days, costs): # USE THIS
         """
         :type days: List[int]
         :type costs: List[int]
         :rtype: int
         """
-        spend = [0] * (days[-1] + 1) # only consider up to the last day. 0,1,2...days[-1]+1, use day as list index
+        dp = [0] * (days[-1] + 1) # only consider up to the last day. 0,1,2...days[-1]+1, use day as list index
         for i, day in enumerate(days):
             if i:
                 prev = days[i - 1]
-                for k in xrange(prev+1, day):
-                    spend[k] = spend[prev]
+                # fill the cost for days in gap, so DP for next day can work
+                for k in range(prev+1, day):
+                    dp[k] = dp[prev]
 
-            spend[day] = min(
-                (spend[day - 1] + costs[0]) if day > 1 else costs[0],
-                (spend[day - 7] + costs[1]) if day > 7 else costs[1],
-                (spend[day - 30] + costs[2]) if day > 30 else costs[2]
-            )
-        return spend[-1]
+            dp[day] = min(dp(day-d) + c if day > d else c for c, d in zip(costs, [1,7,30]))
+        return dp[-1]
 
     # For each day, if you don't have to travel today, then it's strictly better to wait to buy a pass.
     # If you have to travel today, you have up to 3 choices: you must buy either a 1-day, 7-day, or 30-day pass.

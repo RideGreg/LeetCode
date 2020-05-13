@@ -17,14 +17,17 @@ class Solution(object):
         :rtype: int
         """
         if N == 0: return 1
-
-        ans, i = 0, 0
+        ans, power = 0, 0
         while N:
+            N, d = divmod(N, 2)
+            ans += (1 - d) * (2 ** power)
+            ''' OR USE BIT OP
             b = (N & 1) ^ 1    # "与"下来
-            if b:
-                ans |= b << i  # "或"上去
-            i += 1
             N >>= 1
+            if b:
+                ans |= b << power  # "或"上去
+            '''
+            power += 1
         return ans
 
 

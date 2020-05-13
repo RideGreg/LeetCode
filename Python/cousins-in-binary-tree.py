@@ -38,6 +38,7 @@ class Solution(object):
 
 
     # DFS to annotate parent and depth. Recursion hard to early return.
+    # space not good O(n)
     def isCousins_LeetcodeOfficial(self, root, x, y):
         parent = {}
         depth = {}

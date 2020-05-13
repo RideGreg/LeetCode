@@ -35,7 +35,7 @@ class Solution(object):
         def dfs(root, val):
             if not root:
                 return 0
-            val = val*2 + root.val
+            val = val*2 + root.val # KENG val<<1 + root.val is wrong, should be (val<<1) + root.val
             if not root.left and not root.right:
                 return val
             return dfs(root.left, val) + dfs(root.right, val)
@@ -68,3 +68,10 @@ class Solution(object):
 
         preorder(root, [root.val])
         return self.ans
+
+rt = TreeNode(1)
+rt.left, rt.right = TreeNode(0), TreeNode(1)
+rt.left.left, rt.left.right = TreeNode(0), TreeNode(1)
+rt.right.left, rt.right.right = TreeNode(0), TreeNode(1)
+
+print(Solution().sumRootToLeaf(rt)) # 22

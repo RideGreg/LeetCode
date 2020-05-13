@@ -39,7 +39,43 @@ class TreeNode(object):
         self.left = None
         self.right = None
 
-class CBTInserter(object):
+
+# 初始化：维护一个 deque，通过广度优先搜索将 deque 中插入含有incomplete node(0个或者1个孩子的节点)。只有它们才可能用作父节点。
+# 插入节点，父亲是 deque 的第一个元素，新节点加入到deque最后。
+import collections
+class CBTInserter(object): # USE THIS: only store uncomplete nodes
+    def __init__(self, root):
+        self.deque = collections.deque()
+        self.root = root
+        # BFS
+        q = collections.deque([root])
+        while q:
+            node = q.popleft()
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+            # incomplete node
+            if not node.left or not node.right:
+                self.deque.append(node)
+
+    def insert(self, v):
+        self.deque.append(TreeNode(v))
+        par = self.deque[0]
+        if not par.left:
+            par.left = self.deque[-1]
+        else:
+            par.right = self.deque[-1]
+            self.deque.popleft()
+        return par.val
+
+    def get_root(self):
+        return self.root
+
+
+# use a list to store all nodes by level order; use //2 to find the index of parent node.
+# Con: unnecessary space to store complete nodes which aren't be needed
+class CBTInserter2(object):
 
     def __init__(self, root):
         """

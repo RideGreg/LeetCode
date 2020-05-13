@@ -40,16 +40,30 @@ class TreeNode(object):
 
 
 class Solution(object):
+    # 扫描右子树的所有根节点，找到插入位置
     # Search on the right, find the node that cur.val > val > cur.right.val
     # put old cur.right as node.left, put node as new cur.right.
-    
-    # use 2 pointers cur, par; but don't need special handle edge case
+
+    # use only 1 pointer curr, use dummy node for edge case
     def insertIntoMaxTree(self, root, val): # USE THIS
         """
         :type root: TreeNode
         :type val: int
         :rtype: TreeNode
         """
+        dummy = TreeNode(float('inf'))
+        dummy.right = root
+        curr = dummy
+        while curr.right and curr.right.val > val:
+            curr = curr.right
+
+        node = TreeNode(val)
+        node.left = curr.right
+        curr.right = node
+        return dummy.right
+
+    # use 2 pointers cur, par; but don't need special handle edge case
+    def insertIntoMaxTree2(self, root, val):
         node = TreeNode(val)
         cur, par = root, None
         while cur and cur.val > val:
@@ -62,23 +76,6 @@ class Solution(object):
             return root
         else:
             return node
-
-    # use only 1 pointer curr, but need handle edge case separately
-    def insertIntoMaxTree_kamyu(self, root, val):
-        node = TreeNode(val)
-
-        if not root:
-            return node
-
-        if val > root.val:
-            node.left = root
-            return node
-        
-        curr = root
-        while curr.right and curr.right.val > val:
-            curr = curr.right
-        curr.right, node.left = node, curr.right
-        return root
 
     # recursion: Time O(h), Space O(h)
     # If root.val > val, recusion on the right.

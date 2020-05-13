@@ -1,27 +1,43 @@
 # Time:  O(logn) = O(1)
 # Space: O(1)
-#
+
+# 7
 # Reverse digits of an integer.
 #
 # Example1: x = 123, return 321
 # Example2: x = -123, return -321
+# x = 120, return 21
+
+# Bonus points for you if you have already thought through this!
 #
-# click to show spoilers.
+# 1. If the integer's last digit is 0, what should the output be? ie, cases such as 10, 100.
 #
-# Have you thought about this?
-# Here are some good questions to ask before coding. Bonus points for you if you have already thought through this!
-#
-# If the integer's last digit is 0, what should the output be? ie, cases such as 10, 100.
-#
-# Did you notice that the reversed integer might overflow? Assume the input is a 32-bit integer,
+# 2. Did you notice that the reversed integer might overflow? Assume the input is a 32-bit integer,
 # then the reverse of 1000000003 overflows. How should you handle such cases?
-#
-# Throw an exception? Good, but what if throwing an exception is not an option?
+# Assume we are dealing with an environment which could only store integers within the 32-bit
+# signed integer range: [−231,  231 − 1]. For the purpose of this problem, assume that your
+# function returns 0 when the reversed integer overflows.
+# Other handling: Throw an exception? Good, but what if throwing an exception is not an option?
 # You would then have to re-design the function (ie, add an extra parameter).
 
 
 class Solution(object):
     def reverse(self, x):
+        INT_MAX = 2**31 - 1 # 2147483647
+        sign, lastDigit = 1, 7
+        if x < 0:
+            sign, lastDigit = -1, 8
+            x  = -x
+
+        ans = 0
+        while x:
+            x, d = divmod(x, 10)
+            if ans > INT_MAX // 10 or (ans == INT_MAX//10 and d > lastDigit):
+                return 0
+            ans = ans * 10 + d
+        return sign * ans
+
+    def reverse_wrong(self, x): #这个方法危险，应该在溢出前先检查。
         """
         :type x: int
         :rtype: int
@@ -31,7 +47,7 @@ class Solution(object):
 
         result = 0
         while x:
-            result = result * 10 + x % 10
+            result = result * 10 + x % 10 # 已经溢出了
             x //= 10
         return result if result <= 0x7fffffff else 0  # Handle overflow.
 

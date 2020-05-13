@@ -39,14 +39,19 @@ class Solution(object):
         """
         i, lookup = 0, {}
         while i < len(S):
+            # get depth
             j = i
             while j < len(S) and S[j] == '-':
                 j += 1
+            dep = j - i
+            # get node
             k = j
             while k < len(S) and S[k].isdigit():
                 k += 1
-            dep = j - i
             node = TreeNode(int(S[j:k]))
+            i = k
+
+            # associate depth and node, and parent node
             lookup[dep] = node
             if dep:
                 p = lookup[dep-1]
@@ -54,7 +59,6 @@ class Solution(object):
                     p.left = node
                 else:
                     p.right = node
-            i = k
         return lookup[0]
 
     # save the construction path in a stack.
@@ -75,7 +79,7 @@ class Solution(object):
                 i += 1
             while len(stack) > level:   # pop until return to the parent level
                 stack.pop()
-            node = TreeNode(int("".join(val)))
+            node = TreeNode(int("".join(val))) # not good to use val storing all digits of a number, better to use begin/end index
             if stack:
                 if stack[-1].left is None:
                     stack[-1].left = node
@@ -98,7 +102,7 @@ class Solution2(object):
             j = i[0]
             while j < len(S) and S[j] == '-':
                 j += 1 
-            if level != j - i[0]:
+            if level != j - i[0]: # this seems weird and unwanted step
                 return None
             i[0] = j
             while j < len(S) and S[j] != '-':
@@ -110,3 +114,6 @@ class Solution2(object):
             return node
 
         return recoverFromPreorderHelper(S, 0, [0])
+
+print(Solution().recoverFromPreorder("1-2--3--4-5--6--7")) # [1,2,5,3,4,6,7]
+print(Solution().recoverFromPreorder("1-2--3---4-5--6---7")) # [1,2,5,3,null,6,null,4,null,7]

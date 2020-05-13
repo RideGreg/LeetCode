@@ -1,10 +1,51 @@
-# Time:  O(n + m + z), n is the total size of patterns
-#                    , m is the total size of query string
+# Time:  O(n + m + z), n is the total size of patterns (words)
+#                    , m is the total size of query string (text)
 #                    , z is the number of all matched strings
 # Space: O(t), t is the total size of ac automata trie
 
+# 1065
+# Given a text string and words (a list of strings), return all index pairs [i, j] so that
+# the substring text[i]...text[j] is in the list of words.
+
+# Input: text = "thestoryofleetcodeandme", words = ["story","fleet","leetcode"]
+# Output: [[3,7],[9,13],[10,17]]
+
+# Input: text = "ababa", words = ["aba","ab"]
+# Output: [[0,1],[0,2],[2,3],[2,4]]
+
+# It's guaranteed that all strings in words are different.
+# 1 <= text.length <= 100
+# 1 <= words.length <= 20
+# 1 <= words[i].length <= 50
+# Return the pairs [i,j] in sorted order
+
+# Hint: For each string of the set, look for matches and store those matches indices.
+
 import collections
 
+class TrieNode(object):
+    def __init__(self):
+        self.is_string = False
+        self.children = collections.defaultdict(TrieNode)
+
+class Solution(object): # USE THIS
+    def indexPairs(self, text, words):
+        trie = TrieNode()
+        for w in words:
+            p = trie
+            for c in w:
+                p = p.children[c]
+            p.is_string = True
+
+        ans = []
+        for i in range(len(text)):
+            p = trie
+            for j in range(i, len(text)):
+                p = p.children.get(text[j], None)
+                if p is None: break
+                if p.is_string:
+                    ans.append([i, j])
+        return ans
 
 class AhoNode(object):
     def __init__(self):
@@ -37,13 +78,13 @@ class AhoTrie(object):
 
     def __create_ac_suffix_and_output_links(self, root):  # Time:  O(n), Space: O(t)
         queue = collections.deque()
-        for node in root.children.itervalues():
+        for node in root.children.values():
             queue.append(node)
             node.suffix = root
 
         while queue:
             node = queue.popleft()
-            for c, child in node.children.iteritems():
+            for c, child in node.children.items():
                 queue.append(child)
                 suffix = node.suffix
                 while suffix and c not in suffix.children:
@@ -65,7 +106,7 @@ class AhoTrie(object):
         return result
     
 
-class Solution(object):
+class Solution2(object):
     def indexPairs(self, text, words):
         """
         :type text: str
@@ -75,8 +116,11 @@ class Solution(object):
         result = []
         reversed_words = [w[::-1] for w in words]
         trie = AhoTrie(reversed_words)
-        for i in reversed(xrange(len(text))):
+        for i in reversed(range(len(text))):
             for j in trie.step(text[i]):
                 result.append([i, i+len(reversed_words[j])-1])
         result.reverse()
         return result
+
+print(Solution().indexPairs("thestoryofleetcodeandme", ["story","fleet","leetcode"])) # [[3,7],[9,13],[10,17]]
+print(Solution().indexPairs("ababa", ["aba","ab"])) # [[0,1],[0,2],[2,3],[2,4]]

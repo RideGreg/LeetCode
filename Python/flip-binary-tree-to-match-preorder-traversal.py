@@ -24,12 +24,61 @@ class TreeNode(object):
 
         
 class Solution(object):
-    def flipMatchVoyage(self, root, voyage):
+    # Context: 因为所有节点的值都不相同，那么至多只有一种可行的遍历路径供我们选择。
+    # 进行深度优先遍历。如果遍历到某一个节点的时候，节点值不能与行程序列匹配，那么答案只能是 [-1]。
+    # 如果当前节点match，当行程序列中的下一个期望数字 voyage[i] 与我们即将遍历的子节点的值不同的时候，
+    # 只有另外一次机会翻转一下当前这个节点，看以后能否match。
+    def flipMatchVoyage(self, root, voyage): # USE THIS
         """
         :type root: TreeNode
         :type voyage: List[int]
         :rtype: List[int]
         """
+        def dfs(root):
+            if not root: # default case, doesn't violate
+                return True
+            if root.val != voyage[self.i]:
+                return False
+
+            # next expected value
+            self.i += 1
+            if root.left and root.left.val != voyage[self.i]:
+                ans.append(root.val)
+                return dfs(root.right) and dfs(root.left)
+            else:
+                return dfs(root.left) and dfs(root.right)
+
+        self.i = 0
+        ans = []
+        return ans if dfs(root) else [-1]
+
+    # same to above, but recursive function signaure doesn't return bool.
+    def flipMatchVoyage_leetcodeChinaOfficial(self, root, voyage):
+        self.flipped = []
+        self.i = 0
+
+        def dfs(node):
+            if node:
+                if node.val != voyage[self.i]:
+                    self.flipped = [-1]
+                    return
+                self.i += 1
+
+                if (self.i < len(voyage) and
+                        node.left and node.left.val != voyage[self.i]):
+                    self.flipped.append(node.val)
+                    dfs(node.right)
+                    dfs(node.left)
+                else:
+                    dfs(node.left)
+                    dfs(node.right)
+
+        dfs(root)
+        if self.flipped and self.flipped[0] == -1:
+            self.flipped = [-1]
+        return self.flipped
+
+    def flipMatchVoyage_tooComplex(self, root, voyage):
         def count(root):
             if not root: return 0
             ans = 1 + count(root.left) + count(root.right)
@@ -59,26 +108,15 @@ class Solution(object):
         return ans if match(root, voyage) else [-1]
 
 
-    # Not good: maintain a variable for index in voyage, increment the index in each iteration.
-    def flipMatchVoyage_kamyu(self, root, voyage):
-        def dfs(root, voyage, i, result):
-            if not root:
-                return True
-            if root.val != voyage[i[0]]:
-                return False
-            i[0] += 1
-            if root.left and root.left.val != voyage[i[0]]:
-                result.append(root.val)
-                return dfs(root.right, voyage, i, result) and \
-                       dfs(root.left, voyage, i, result)
-            return dfs(root.left, voyage, i, result) and \
-                   dfs(root.right, voyage, i, result)
-        
-        result = []
-        return result if dfs(root, voyage, [0], result) else [-1]
+root = TreeNode(1)
+root.left, root.right = TreeNode(8), TreeNode(6)
+root.left.left, root.left.right = TreeNode(7), TreeNode(3)
+root.right.right = TreeNode(5)
+print(Solution().flipMatchVoyage(root, [1,6,5,8,3,7])) # [1, 8]
 
 root2=TreeNode(1)
 root2.left, root2.right = TreeNode(2), TreeNode(3)
 print(Solution().flipMatchVoyage(root2, [1,2,3])) # []
 print(Solution().flipMatchVoyage(root2, [1,3,2])) # [1]
 print(Solution().flipMatchVoyage(root2, [2,3,1])) # [-1]
+

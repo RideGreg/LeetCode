@@ -27,6 +27,17 @@ class Solution(object):
         :rtype: TreeNode
         """
         import bisect
+        def build(i, j):
+            if i >= j: return None
+            node = TreeNode(preorder[i])
+            k = bisect.bisect(preorder, preorder[i], i, j)
+            node.left = build(i+1, k)
+            node.right = build(k, j)
+            return node
+        return build(0, len(preorder))
+
+    def bstFromPreorder_newList(self, preorder):
+        import bisect
         if not preorder:
             return None
         node = TreeNode(preorder[0])

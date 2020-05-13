@@ -49,6 +49,11 @@ class Solution(object):
 
 # Time:  O(n)
 # Space: O(n)
+# 前序遍历为： (根结点) (前序遍历左分支) (前序遍历右分支)
+# 而后序遍历为： (后序遍历左分支) (后序遍历右分支) (根结点)
+# 如果我们知道左分支有多少个结点，我们就可以对这些数组进行分组，并用递归生成树的每个分支。
+# 令左分支有 LL 个节点。我们知道左分支的头节点为 pre[1]，但它也出现在左分支的后序表示的最后。
+# 所以 pre[1] = post[L-1]（因为结点的值具有唯一性），因此 L = post.indexOf(pre[1]) + 1。
 class Solution2(object):
     def constructFromPrePost(self, pre, post): # USE THIS
         """
@@ -56,47 +61,43 @@ class Solution2(object):
         :type post: List[int]
         :rtype: TreeNode
         """
-        def re(s1, s2, n):
+        def re(s1, s2, n): # s1, s2: start position of pre/post subarray, n: length of subarray
             if n < 1: return None
             root = TreeNode(pre[s1])
             if n > 1:
-                left_size = post_idx_map[pre[s1 + 1]] - s2 + 1
+                left_size = post_idx_map[pre[s1 + 1]] - s2 + 1   # O(1)
+                # OR left_size = post.index(pre[s1+1]) - s2 + 1  O(n)
                 root.left = re(s1 + 1, s2, left_size)
                 root.right = re(s1 + 1 + left_size, s2 + left_size, n - 1 - left_size)
             return root
 
-        post_idx_map = {}
-        for i, v in enumerate(post):
-            post_idx_map[v] = i
+        post_idx_map = {v: i for i, v in enumerate(post)} # save multiple search of positions
+                                                          # change O(n^2) to O(n)
         return re(0, 0, len(pre))
 
 
-    def constructFromPrePost2(self, pre, post): # same as above, but use start/end
-        def constructFromPrePostHelper(pre_s, pre_e, post_s, post_e):
-            if pre_s >= pre_e or post_s >= post_e:
+    def constructFromPrePost2(self, pre, post): # same as above, but recursive function uses 4 params
+        def build(prei, prej, posti, postj):
+            if prei > prej or posti > postj:
                 return None
-            node = TreeNode(pre[pre_s])
-            if pre_e-pre_s > 1:
-                left_tree_size = post_entry_idx_map[pre[pre_s+1]]-post_s+1
-                node.left = constructFromPrePostHelper(pre_s+1, pre_s+1+left_tree_size,
-                                                       post_s, post_s+left_tree_size)
-                node.right = constructFromPrePostHelper(pre_s+1+left_tree_size, pre_e,
-                                                        post_s+left_tree_size, post_e-1)
+            node = TreeNode(pre[prei])
+            if prej > prei:
+                L = post_entry_idx_map[pre[prei+1]] - posti + 1
+                node.left = build(prei+1, prei+L, posti, posti+L-1)
+                node.right = build(prei+1+L, prej, posti+L, postj-1)
             return node
 
-        post_entry_idx_map = {}
-        for i, val in enumerate(post):
-            post_entry_idx_map[val] = i
-        return constructFromPrePostHelper(0, len(pre), 0, len(post))
+        post_entry_idx_map = {val : i for i, val in enumerate(post)}
+        return build(0, len(pre)-1, 0, len(post)-1)
 
-# not good: create subarrays
+# space not good: each recursion create new arrays
 class Solution3(object):
     def constructFromPrePost(self, pre, post):
         if not pre: return None
         root = TreeNode(pre[0])
         if len(pre) == 1:
             return root
-        id = post.index(pre[1])
-        root.left = self.constructFromPrePost(pre[1:id+2], post[:id+1])
-        root.right = self.constructFromPrePost(pre[id+2:], post[id+1:-1])
+        L = post.index(pre[1]) + 1
+        root.left = self.constructFromPrePost(pre[1:L+1], post[:L])
+        root.right = self.constructFromPrePost(pre[L+1:], post[L:-1])
         return root

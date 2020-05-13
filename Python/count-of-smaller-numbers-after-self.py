@@ -53,8 +53,16 @@ class Solution2(object):
 
 # Time:  O(nlogn)
 # Space: O(n)
-# BIT solution. Each update to BITree increment the node values by 1. Count how many valid numbers already found.
-# OK for smaller/larger/smaller+eq/larger+eq numbers before/after self.
+# BIT solution. OK for smaller/larger/smaller+eq/larger+eq numbers before/after self.
+# Don't do linear scan to see how many valid numbers already seen, which results in O(n^2).
+#
+# Use a helper data structure BITree to store what numbers were seen. Two extra things:
+# 1. Pre-process to find the position of each number in sorted array. 2. each number maps to a node in BITree;
+# after seeing a number, increment all BITree nodes (before and include the mapping noce) by 1.
+# underlying list of BITree [dummy, 0, 0, 0, 0, 0]
+# seeing 4th number -> [dummy, 0, 0, 0, 1, 0]
+# seeing 2nd number -> [dummy, 0, 1, 0, 2, 0]
+# seeing 1st number -> [dummy, 1, 2, 0, 3, 0]
 class Solution(object): # USE THIS,
     def countSmaller(self, nums, compare="smaller", dir="right"):
         """
