@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 402
 # Given a non-negative integer num represented as a string,
 # remove k digits from the number so that the new number is the smallest possible.
 #
@@ -25,16 +26,32 @@
 # Explanation: Remove all the digits from the number and it is left with nothing which is 0.
 
 class Solution(object):
+    # greedy with stack
+    # 删除规则: cliff的左侧数字。一旦从序列中删除一个数字，剩下数字就形成了一个新问题，不能盲目前进，必须继续使用删除规则。
     def removeKdigits(self, num, k):
         """
         :type num: str
         :type k: int
         :rtype: str
         """
-        result = []
+        stack = []
         for d in num:
-            while k and result and result[-1] > d:
-                result.pop()
+            while k and stack and stack[-1] > d:
+                stack.pop()
                 k -= 1
-            result.append(d)
-        return ''.join(result).lstrip('0')[:-k or None] or '0'
+            stack.append(d)
+        if k:
+            stack = stack[:-k] # stack[:0] is empty '', so need to check k
+        return ''.join(stack).lstrip('0') or '0'
+
+    # LTE 暴力法: 列举所有可能的组合，n! grows faster than k^n exponential time complexity
+    # 并找出其中最小的数字 (不可将数字字符串转换为数值比较，因为一个无符号的 32 位整数所能容纳的最大值是10位数字
+    # （即 4294967295），但很多测试用例是由数百位数字组成的。应该从左到右逐个比较数字序列）。
+    #
+
+print(Solution().removeKdigits("1432219", 3)) # '1219'
+print(Solution().removeKdigits('10200', 1)) # '200'
+print(Solution().removeKdigits('10', 2)) # '0'
+print(Solution().removeKdigits('12219', 1)) # '1219'
+print(Solution().removeKdigits('12219', 2)) # '119'
+print(Solution().removeKdigits('12269', 1)) # '1226'

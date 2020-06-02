@@ -22,19 +22,19 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        if len(s) == 0 or s[0] == '0':
-            return 0
-        prev, prev_prev = 1, 0
+        pre = 1
         for i in range(len(s)):
             cur = 0
-            if s[i] != '0':
-                cur = prev
-            if i > 0 and (10 <= int(s[i-1:i+1]) <= 26):
-                cur += prev_prev
-            prev, prev_prev = cur, prev
-        return prev
+            if '1' <= s[i] <= '9':
+                cur += pre
+            if i > 0 and 10 <= int(s[i-1:i+1]) <= 26:
+                cur += ppre
+            if cur == 0:
+                return 0
 
+            ppre, pre = pre, cur
+        return cur
 
 if __name__ == "__main__":
     for i in ["0", "10", "10", "103", "1032", "10323"]:
-        print Solution().numDecodings(i)
+        print(Solution().numDecodings(i)) # 0 1 1 1 1 2

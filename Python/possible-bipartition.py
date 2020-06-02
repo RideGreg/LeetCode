@@ -48,25 +48,24 @@ class Solution(object):
         :type dislikes: List[List[int]]
         :rtype: bool
         """
-        graph = collections.defaultdict(list)
+        graph = collections.defaultdict(set)
         for u, v in dislikes:
-            graph[u].append(v)
-            graph[v].append(u)
+            graph[u].add(v)
+            graph[v].add(u)
 
-        stk = []
-        color = {}
-        for node in xrange(1, N + 1):
+        color = {} # OR USE color = [None] * (N+1)
+        for node in range(1, N + 1):
             if node not in color:
                 color[node] = 0
-                stk.append(node)
+                stk = [node]
                 while stk:
-                    cur = stk.pop()
-                    for nei in graph[cur]:
-                        if nei not in color:
-                            color[nei] = 1 - color[cur]
-                            stk.append(nei)
-                        elif color[nei] == color[cur]:
+                    i = stk.pop()
+                    for nei in graph[i]:
+                        if nei in color and color[nei] == color[i]:
                             return False
+                        if nei not in color:
+                            color[nei] = 1 - color[i]
+                            stk.append(nei)
         return True
 
     def possibleBipartition_bfs(self, N, dislikes):
@@ -77,17 +76,37 @@ class Solution(object):
 
         q = collections.deque([])
         color = {}
-        for node in xrange(1, N+1):
+        for node in range(1, N+1):
             if node not in color:
                 color[node] = 0
                 q.append(node)
                 while q:
                     cur = q.popleft()
                     for nei in graph[cur]:
+                        if nei in color and color[nei] == color[cur]:
+                            return False
                         if nei not in color:
                             color[nei] = 1-color[cur]
                             q.append(nei)
-                        elif color[nei] == color[cur]:
-                            return False
         return True
- 
+
+    # sequential process of 'dislikes' may make wrong decision in the middle
+    # because it doesn't know the information in later pairs.
+    def possibleBipartition_wrong(self, N, dislikes):
+        sA, sB = set(), set()
+        for x, y in dislikes:
+            if x in sA:
+                if y in sA: return False
+                sB.add(y)
+            elif x in sB:
+                if y in sB: return False
+                sA.add(y)
+            else:
+                if y in sA:
+                    sB.add(x)
+                elif y in sB:
+                    sA.add(x)
+                else:
+                    sA.add(x) # problem: the partition here cannot be reliably determined
+                    sB.add(y)
+        return True

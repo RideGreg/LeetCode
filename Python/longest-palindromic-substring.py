@@ -1,4 +1,4 @@
-# Time:  O(n)
+# Time:  O(n) Manacher's Algorithm, O(n^2) dynamic programming
 # Space: O(n)
 
 # 5
@@ -8,7 +8,30 @@
 #
 
 class Solution(object):
-    def longestPalindrome(self, s): # USE THIS: space optimized
+    # 中心扩展算法 Time O(n^2)：长度为1和2的回文中心各有n和n−1个，每个回文中心最多会向外扩展O(n)次，
+    # Space O(1)
+    # 借鉴动态规划状态方程 P[i,j] = P[i+1,j-1] && Si==Sj，从最短串边界情况开始，可找出所有palindrome substring.
+    # 枚举所有的「回文中心」并尝试扩展，直到无法扩展为止，此时的回文串长度即为此「回文中心」下的最长
+    # 回文串长度，对所有的长度求出最大值。
+    def longestPalindrome(self, s: str) -> str: # USE THIS
+        def expandAroundCenter(left, right):
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return left + 1, right - 1
+
+        start, end = 0, 0
+        for i in range(len(s)):
+            left1, right1 = expandAroundCenter(i, i)
+            left2, right2 = expandAroundCenter(i, i + 1)
+            if right1 - left1 > end - start:
+                start, end = left1, right1
+            if right2 - left2 > end - start:
+                start, end = left2, right2
+        return s[start: end + 1]
+
+    # Dynamic Programming: time O(n^2) space optimized O(n)
+    def longestPalindrome_dp(self, s):
         if s == s[::-1]: # optimized from O(n^2)->O(n)
             return s
 
@@ -28,7 +51,7 @@ class Solution(object):
 
         return s[ri:rj + 1]
 
-    # Manacher's Algorithm
+    # Manacher's Algorithm O(n)
     # http://leetcode.com/2011/11/longest-palindromic-substring-part-ii.html
     def longestPalindrome_manacher(self, s):
         """

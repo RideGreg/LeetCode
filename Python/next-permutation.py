@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 31
 # Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.
 #
 # If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
@@ -19,23 +19,18 @@ class Solution(object):  # USE THIS: backward scan, break after find the first i
         :type nums: List[int]
         :rtype: None Do not return anything, modify nums in-place instead.
         """
-        k, l = -1, 0
-        for i in reversed(range(len(nums)-1)):
+        for i in range(len(nums)-2, -1, -1):
+            # find the rightmost elem smaller then its next elem
             if nums[i] < nums[i+1]:
-                k = i
-                break
+                for j in range(len(nums)-1, i, -1):
+                    # find the rightmost elem for swapping
+                    if nums[j] > nums[i]:
+                        nums[i], nums[j] = nums[j], nums[i]
+                        nums[i+1:] = nums[len(nums)-1 : i : -1] # sort the remain elems to ascending
+                        return
         else:
-            nums.reverse()
-            return
-
-        for i in reversed(range(k+1, len(nums))):
-            if nums[i] > nums[k]:
-                l = i
-                break
-        nums[k], nums[l] = nums[l], nums[k]
-
-        nums[k+1:] = nums[:k:-1] # reverse scan from last to k+1 [right:left:-1]
-        
+            nums.reverse() # in place edit of memory location changes test driver's nums
+            # nums = nums[::-1] # KENG: this fails test, because the test driver's nums not changed by assignment
 
 # Time:  O(n)
 # Space: O(1)
@@ -74,3 +69,7 @@ if __name__ == "__main__":
     print(num) # 3,1,4,2
     Solution().nextPermutation(num)
     print(num) # 3,2,1,4
+
+    num = [3,2,1]
+    Solution().nextPermutation(num)
+    print(num) # [1,2,3]

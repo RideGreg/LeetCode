@@ -22,13 +22,13 @@ def ArrayToTree(a):
     i = 1
     while i < len(a):
         p = q.popleft()
-        if a[i]:
+        if a[i] is not None:
             node = TreeNode(a[i])
             p.left = node
             q.append(node)
         i += 1
         if i >= len(a): break
-        if a[i]:
+        if a[i] is not None:
             node = TreeNode(a[i])
             p.right = node
             q.append(node)

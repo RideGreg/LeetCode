@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 253
 # Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...]
 # find the minimum number of conference rooms required.
 
@@ -12,12 +13,12 @@ class Interval:
         self.start = s
         self.end = e
 
-class Solution:
+class Solution: # USE THIS
     # @param {Interval[]} intervals
     # @return {integer}
     def minMeetingRooms(self, intervals):
         result, curr = 0, 0
-        line = [x for i, j in intervals for x in [[i, 1], [j, -1]]]
+        line = [x for s, e in intervals for x in [[s, 1], [e, -1]]]
         line.sort()
         for _, num in line:
             curr += num

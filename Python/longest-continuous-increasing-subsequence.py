@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 674
 # Given an unsorted array of integers,
 # find the length of longest continuous increasing subsequence.
 #
@@ -46,8 +47,11 @@ class Solution(object):
 '''
 # If direction is limited, e.g. left to right in single sequence, we know the order of DP transfer function. But this question
 # has undetermined directions, normal DP cannot solve this; must use dfs + memorization
-# (LCIS, visited) for each position is recorded in dp[][], dfs will solve the smaller position FIRST as leaf,
-# before use the value for larger position. Time complexity O(n*n) each position is visited once.
+# (LCIS, visited) for each position is recorded in dp[][]. 
+# In dfs: if matrix[x][y] > matrix[nx][ny] means extending to smaller num (ie. current is the tail of sequence), 
+# solving the smaller position FIRST as leaf, before use the value for larger position. 
+# if matrix[x][y] < matrix[nx][ny] also ok, extending to larger nums (i.e. current is the head of sequence).
+# Time complexity O(n*n) each position is visited once.
 '''
 
 class Solution2():
@@ -58,7 +62,8 @@ class Solution2():
             for dx, dy in dirs:
                 nx, ny = x+dx, y+dy
                 if 0<=nx<len(matrix) and 0<=ny<len(matrix[0]):
-                    if matrix[x][y] > matrix[nx][ny]:
+                    if matrix[x][y] > matrix[nx][ny]: # current as tail
+                    # if matrix[x][y] < matrix[nx][ny]: # current as head, both ok
                         ans = max(ans, dfs(nx, ny)+1)
 
             dp[x][y] = (ans, 1)
@@ -67,14 +72,14 @@ class Solution2():
         if not matrix: return 0
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         m, n, ans = len(matrix), len(matrix[0]), 1
-        dp = [[(1, 0)]*n for _ in xrange(m)] # (LCIS, visited)
-        for i in xrange(m):
-            for j in xrange(n):
+        dp = [[(1, 0)]*n for _ in range(m)] # (LCIS, visited) OR use a standalone 'visited' 2d array
+        for i in range(m):
+            for j in range(n):
                 ans = max(ans, dfs(i, j))
         return ans
 
-print Solution2().LCIS([
+print(Solution2().LCIS([
     [1,2,3],
     [8,9,4],
     [7,6,5]
-])
+]))

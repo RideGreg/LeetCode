@@ -37,6 +37,27 @@ class Solution:
                     stack.append((cur, True))
                     stack.append((cur.left, False))
 
+    def kthSmallest_recur_woGlobalVar(self, root, k): # pass k and node as param
+        def dfs(node, k):
+            if node is None:
+                return None, k
+            # left subtree
+            retVal, k = dfs(node.left, k)
+            if retVal is not None:
+                return retVal, k
+            # process one node, decrement k
+            if k == 1:
+                return node.val, 0
+            k -= 1
+            # right subtree
+            retVal, k = dfs(node.right, k)
+            if retVal is not None:
+                return retVal, k
+
+            return None, k
+
+        return dfs(root, k)[0]
+
     def kthSmallest_recur(self, root, k):
         self.ans = -1
         self.k = k

@@ -33,16 +33,16 @@ class Solution(object):
         :rtype: ListNode
         """
         if head:
-            odd_tail, cur = head, head.next
-            even_head = head.next
+            odd = head
+            even = even_head = head.next
 
-            while cur and cur.next:
-                odd_tail.next = cur.next
-                odd_tail = odd_tail.next
-                cur.next = odd_tail.next
-                cur = cur.next
+            while even and even.next:
+                odd.next = even.next
+                odd = odd.next
+                even.next = odd.next
+                even = even.next
 
-            odd_tail.next = even_head
+            odd.next = even_head
         return head
 
 head = ListNode(1)

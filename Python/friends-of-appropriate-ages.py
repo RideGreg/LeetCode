@@ -2,6 +2,7 @@
 #                    n is the number of people
 # Space: O(a)
 
+# 825
 # Some people will make friend requests.
 # The list of their ages is given and ages[i] is the age of the ith person.
 #
@@ -47,7 +48,9 @@ import collections
 
 
 class Solution(object):
-    def numFriendRequests(self, ages):
+    # answer depends on ages not people, so we should COMPRESS data first by merge people w/ same age.
+    # otherwise LTE with repeating calculation of people w/ same ages.
+    def numFriendRequests(self, ages): # USE THIS
         """
         :type ages: List[int]
         :rtype: int
@@ -56,12 +59,25 @@ class Solution(object):
             return 0.5*a+7 < b <= a
 
         c = collections.Counter(ages)
-        return sum(int(request(a, b)) * c[a]*(c[b]-int(a == b))
-                   for a in c
-                   for b in c)
-    # the above is better, because loop on c (small); below has one loop on people (large)
+        ans = 0
+        for a in c:
+            for b in c:
+                if request(a, b):
+                    ans += c[a]*c[b] if a != b else c[a]*(c[a]-1)
+        return ans
 
-    def numFriendRequests_bookshadow(self, ages):
+    def numFriendRequests_ming(self, ages): # similar to the above, but separate a-a and a-b, more clearly
+        cnt = collections.Counter(ages)
+        ans = sum(cnt[k]*(cnt[k]-1) for k in cnt if k > 14)
+
+        # sort so only consider one way
+        unique = sorted(cnt)
+        for i in range(len(unique)):
+            for j in range(i):
+                ans += int(unique[j] > (0.5*unique[i]+7)) * cnt[unique[i]] * cnt[unique[j]]
+        return ans
+
+    def numFriendRequests_bookshadow(self, ages): # 不用看了
         '''
         观察题设条件 1 <= ages[i] <= 120，年龄的范围很小, 统计每一个年龄的人数
         遍历每个人，统计符合其年龄条件约束的人数之和
@@ -74,3 +90,5 @@ class Solution(object):
             ans += sum(cnt[age] for age in range(left, right + 1))
             cnt[age] += 1
         return ans
+
+print(Solution().numFriendRequests([69, 24, 85, 8, 85])) # 4

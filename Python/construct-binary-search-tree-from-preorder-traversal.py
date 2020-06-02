@@ -21,7 +21,32 @@ class TreeNode(object):
 
 
 class Solution(object):
-    def bstFromPreorder(self, preorder): # USE THIS: easy to remember Time: hlogn, worse nlogn
+    # solution 2 creates 'inorder' list which doesn't provide extra info but triggers O(nlogn), thus time
+    # complexity can be further optimized.
+    # Maintain a counter self.i to build node one by one in preorder traverse manner, maintain a pair
+    # [leftBound, rightBound] to divert to left or right subtree.
+    def bstFromPreorder_bound(self, preorder): # USE THIS: use BST bound, not easy to remember
+        def rec(leftBound, rightBound):
+            if self.i == len(preorder) or \
+               preorder[self.i] < leftBound or preorder[self.i] > rightBound: # 值脱离预期范围，不可能建子树节点，回溯到父节点
+                return None
+
+            root = TreeNode(preorder[self.i])
+            self.i += 1
+            root.left = rec(leftBound, root.val)
+            root.right = rec(root.val, rightBound)
+            return root
+
+        self.i = 0
+        return rec(float("-inf"), float("inf"))
+
+    # solution 2: inorder = sorted(preorder), build tree using preorder+inorder.
+    # Time O(nlogn), where sorting nlogn, build tree O(n); Space O(n)
+
+
+    # WRONG: bisect used bisection algorithm on a SORTED list! Apply bisect on unsorted 'preorder' is not
+    # guaranteed if 'preorder' is not balanced!
+    def bstFromPreorder(self, preorder):
         """
         :type preorder: List[int]
         :rtype: TreeNode
@@ -36,6 +61,7 @@ class Solution(object):
             return node
         return build(0, len(preorder))
 
+    # WRONG: bisect used bisection algorithm on a SORTED list!
     def bstFromPreorder_newList(self, preorder):
         import bisect
         if not preorder:
@@ -45,19 +71,3 @@ class Solution(object):
         node.left = self.bstFromPreorder(preorder[1:k])
         node.right = self.bstFromPreorder(preorder[k:])
         return node
-
-    def bstFromPreorder_bound(self, preorder): # faster, use BST bound, not easy to remember
-        def rec(leftBound, rightBound):
-            if self.i == len(preorder) or \
-               preorder[self.i] < leftBound or \
-               preorder[self.i] > rightBound:
-                return None
-
-            root = TreeNode(preorder[self.i])
-            self.i += 1
-            root.left = rec(leftBound, root.val)
-            root.right = rec(root.val, rightBound)
-            return root
-
-        self.i = 0
-        return rec(float("-inf"), float("inf"))

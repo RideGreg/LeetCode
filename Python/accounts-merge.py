@@ -2,6 +2,7 @@
 #                  and the max length ofemail is 320, p.s. {64}@{255}
 # Space: O(n)
 
+# 721
 # Given a list accounts, each element accounts[i] is a list of strings,
 # where the first element accounts[i][0] is a name,
 # and the rest of the elements are emails representing emails of the account.
@@ -54,48 +55,77 @@ try:
 except NameError:
     xrange = range  # Python 3
 
-
-class UnionFind(object):
-    def __init__(self):
-        self.set = []
-
-    def get_id(self):
-        self.set.append(len(self.set))
-        return len(self.set)-1
-
-    def find_set(self, x):
-        if self.set[x] != x:
-            self.set[x] = self.find_set(self.set[x])  # path compression.
-        return self.set[x]
-
-    def union_set(self, x, y):
-        x_root, y_root = map(self.find_set, (x, y))
-        if x_root != y_root:
-            self.set[min(x_root, y_root)] = max(x_root, y_root)
-
-
-class Solution(object):
+# UnionFind on account (rather than emails which is too many)
+class Solution():
     def accountsMerge(self, accounts):
         """
         :type accounts: List[List[str]]
         :rtype: List[List[str]]
         """
-        union_find = UnionFind()
-        email_to_name = {}
-        email_to_id = {}
-        for account in accounts:
-            name = account[0]
-            for i in xrange(1, len(account)):
-                if account[i] not in email_to_id:
-                    email_to_name[account[i]] = name
-                    email_to_id[account[i]] = union_find.get_id()
-                union_find.union_set(email_to_id[account[1]],
-                                     email_to_id[account[i]])
+        def union(x, y):
+            print("union {} {}".format(x, y))
+            xroot, yroot = find(x), find(y)
+            if xroot != yroot:
+                pid[max(xroot, yroot)] = min(xroot, yroot)
 
-        result = collections.defaultdict(list)
-        for email in email_to_name.keys():
-            result[union_find.find_set(email_to_id[email])].append(email)
-        for emails in result.values():
-            emails.sort()
-        return [[email_to_name[emails[0]]] + emails
-                for emails in result.values()]
+        def find(x):
+            if pid[x] != x:
+                pid[x] = find(pid[x])
+            return pid[x]
+
+        N = len(accounts)
+        pid, email2id = list(range(N)), {}
+        for i, account in enumerate(accounts):
+            for email in account[1:]:
+                if email in email2id and accounts[email2id[email]][0] == accounts[i][0]:
+                    # duplicate email triggers union
+                    union(i, email2id[email])
+                else:
+                    # new email adds to hash
+                    email2id[email] = i
+
+        # group emails to single id
+        emaillist = collections.defaultdict(set)
+        for i, account in enumerate(accounts):
+            for email in account[1:]:
+                emaillist[find(i)].add(email)
+
+        return [[accounts[id][0]] + sorted(emaillist[id]) for id in emaillist]
+
+
+# DFS 如果两个电子邮件出现在同一个帐户中，则在它们之间连一条边。那么问题归结为找到这个图的连接组件（每个连通子图算一个组件）。
+# 具体算法：对于每个帐户，从第一个电子邮件到每个电子邮件画一条边。然后使用深度优先搜索合并相同的账户。
+class Solution2(object):
+    def accountsMerge(self, accounts):
+        em_to_name = {}
+        graph = collections.defaultdict(set)
+        for acc in accounts:
+            name = acc[0]
+            for email in acc[1:]:
+                em_to_name[email] = name
+                graph[acc[1]].add(email) # KENG: 要连一条边指向自身，不然不会出现在graph中
+                graph[email].add(acc[1])
+
+        seen, ans = set(), []
+        for email in graph:
+            if email not in seen:
+                seen.add(email)
+                stack = [email] # prepare for DFS
+                component = []
+                while stack:
+                    node = stack.pop()
+                    component.append(node)
+                    for nei in graph[node]:
+                        if nei not in seen:
+                            seen.add(nei)
+                            stack.append(nei)
+                ans.append([em_to_name[email]] + sorted(component))
+        return ans
+
+
+print(Solution2().accountsMerge([
+    ["John", "johnsmith@mail.com", "john00@mail.com"],
+    ["John", "johnnybravo@mail.com"],
+    ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+    ["Mary", "mary@mail.com"]
+])) # ["John", 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com'],  ["John", "johnnybravo@mail.com"], ["Mary", "mary@mail.com"]

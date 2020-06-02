@@ -34,9 +34,7 @@ class Trie:
     # Returns if the word is in the trie.
     def search(self, word):
         node = self.childSearch(word)
-        if node:
-            return node.is_string
-        return False
+        return node is not None and node.is_string
 
     # @param {string} prefix
     # @return {boolean}
@@ -48,9 +46,9 @@ class Trie:
     def childSearch(self, word):
         cur = self.root
         for c in word:
-            if c not in cur.leaves:
-                return None
-            cur = cur.leaves[c]
+            cur = cur.leaves.get(c, None)
+            if cur is None:
+                break
         return cur
 
 # Your Trie object will be instantiated and called as such:

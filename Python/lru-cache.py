@@ -99,10 +99,13 @@ class LRUCache2(object):
     def get(self, key):
         if key not in self.cache:
             return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+        '''OR
         val = self.cache[key]
         del self.cache[key]
         self.cache[key] = val
-        return val
+        return val'''
 
     def put(self, key, value):
         if key in self.cache:

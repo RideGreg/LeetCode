@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(n)
-#
+# 135
 # There are N children standing in a line. Each child is assigned a rating value.
 #
 # You are giving candies to these children subjected to the following requirements:
@@ -14,18 +14,17 @@ class Solution(object):
     # @param ratings, a list of integer
     # @return an integer
     def candy(self, ratings):
-        candies = [1 for _ in xrange(len(ratings))]
-        for i in xrange(1, len(ratings)):
-            if ratings[i] > ratings[i - 1]:
-                candies[i] = candies[i - 1] + 1
+        N = len(ratings)
+        ans = [1] * N
+        for i in range(1, N):
+            if ratings[i] > ratings[i-1]:
+                ans[i] = ans[i-1] + 1
+        for i in range(N-2, -1, -1):
+            if ratings[i] > ratings[i+1]:
+                ans[i] = max(ans[i], ans[i+1] + 1)
+        return sum(ans)
 
-        for i in reversed(xrange(1, len(ratings))):
-            if ratings[i - 1] > ratings[i] and candies[i - 1] <= candies[i]:
-                candies[i - 1] = candies[i] + 1
-
-        return sum(candies)
 
 if __name__ == "__main__":
-    result = Solution().candy([1, 2, 3, 2, 3, 5, 2, 5])
-    print result
+    print(Solution().candy([1, 2, 3, 2, 3, 5, 2, 5])) #15 = sum([1,2,3,1,2,3,1,2]
 

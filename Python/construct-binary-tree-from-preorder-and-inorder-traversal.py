@@ -19,19 +19,16 @@ class Solution:
     # @param inorder, a list of integers
     # @return a tree node
     def buildTree_ming(self, preorder, inorder): #USE THIS
-        def re(ib, ie, pb):
-            if ib > ie:
-                return None
-            im = lookup[preorder[pb]]
-            node = TreeNode(preorder[pb])
-            node.left = re(ib, im-1, pb+1)
-            node.right = re(im+1, ie, pb+im+1-ib)
+        def build(preleft, inleft, length):
+            if length <= 0: return None
+            idx = lookup[preorder[preleft]]
+            node = TreeNode(preorder[preleft])
+            node.left = build(preleft+1, inleft, idx-inleft)
+            node.right = build(preleft+idx-inleft+1, idx+1, length-(idx-inleft+1))
             return node
 
-        lookup = {}
-        for i, n in enumerate(inorder):
-            lookup[n] = i
-        return re(0, len(inorder)-1, 0)
+        lookup = {n: i for i, n in enumerate(inorder)}
+        return build(0, 0, len(preorder))
 
 
     def buildTree(self, preorder, inorder):
@@ -79,6 +76,6 @@ if __name__ ==  "__main__":
     preorder = [1, 2, 3]
     inorder = [2, 1, 3]
     result = Solution().buildTree(preorder, inorder)
-    print result.val
-    print result.left.val
-    print result.right.val
+    print(result.val)
+    print(result.left.val)
+    print(result.right.val)

@@ -32,28 +32,38 @@
 # Solution: Dynamic Programming
 # Ituition: try to put down digits 1 by 1.
 
-# dp[i][j] means the number of possible permutations of first i + 1 digits,
-# where the i + 1th digit using j + 1th smallest in the remaining of digits.
-# rows are form n+1, n, n-1 ... 1 digits sequence
-# cols 0 -> j in row i is to choose a digit from smallest to largest from the remaining available digits.
+# Ituition uses 2d, actual implementation uses 1d (each iteration represents a new row in dp[0], dp[1].. dp[n]).
+# dp[i][j] means # of possible permutations of first i + 1 digits,
+# where the i + 1th digit using j + 1th RELATIVELY smallest in the remaining of digits.
+# rows represent the sequence composed of n+1, n, n-1 ... 1 digits,
+# cols 0 -> j in row i is to choose a digit from RELATIVELY smallest to largest from the remaining available digits.
+# Sample dp array for 'DD':
+#   i=0: 1, 1, 1 (using 0, using 1, using 2 at 1st char all have 1 permutation)
+#          |  /|
+#          |/ |
+#         /  |
+#   i=1: 2, 1 (permutations using 0 at 2nd char = sum(perm of using k at 1 st char, where k is any digits > 0);
+#          |   permutations using 1 at 2nd char = perm of using 2 at 1 st char;
+#         |    permutations using 2 at 2nd char = None;
+#        |     In actual implementation, prefix / postfix sum is a shortcut for computation)
+#   i=2: 1
 class Solution(object):
     def numPermsDISequence(self, S):
         """
         :type S: str
         :rtype: int
         """
-        # Initially, any digit from the n+1 available digits can be put down, the possible ways for any of them is always 1
+        # Initially, for 1-digit permutation, any digit from the n+1 available digits can be used,
+        # # of permutations for using smallest (0) to largest digit (n) is always 1
         dp = [1]*(len(S)+1)
-        for c in S:
+        for c in S:         # for 2nd, 3rd ... digits
             if c == "I":
-                dp = dp[:-1] # if Increasing, the last col in previous row already used the largest digit, thus cannot use further
-                # calculate prefix sum: because every previous col can contribute to current largest digit, every previous col
-                # except the last can contribute to current 2nd-largest digit
-                for i in xrange(1, len(dp)):
+                dp = dp[:-1] # if Increasing, the last col in last dp used the largest digit, thus useless.
+                for i in range(1, len(dp)): # prefix sum
                     dp[i] += dp[i-1]
             else:
-                dp = dp[1:] # if Decreasing, the first col in previous row already used the smallest digit, thus cannot use further
-                for i in reversed(xrange(len(dp)-1)): # calculate suffix sum
+                dp = dp[1:] # if Decreasing, the first col in last dp represents using the relatively smallest digit, thus useless
+                for i in reversed(range(len(dp)-1)): # suffix sum
                     dp[i] += dp[i+1]
         return dp[0] % (10**9+7)
 

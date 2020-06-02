@@ -1,7 +1,11 @@
 # Time:  O(n)
 # Space: O(h), h is height of binary tree
-#
+
+# 114
 # Given a binary tree, flatten it to a linked list in-place.
+#
+# (Flatten a binary tree to a fake "linked list" in pre-order traversal.
+# Here we use the right pointer in TreeNode as the next pointer in ListNode.)
 #
 # For example,
 # Given
@@ -48,17 +52,22 @@ class Solution:
         else:
             return list_head
 
-class Solution2:
-    list_head = None
+# modified postOrder (right->left->parent), maintain the 'tail' var (always update tail as current processed node)
+class Solution2: # USE THIS
     # @param root, a tree node
     # @return nothing, do it in place
     def flatten(self, root):
-        if root:
-            self.flatten(root.right)
-            self.flatten(root.left)
-            root.right = self.list_head
-            root.left = None
-            self.list_head = root
+        def postOrder(node):
+            if node:
+                postOrder(node.right)
+                postOrder(node.left)
+                node.right = self.tail
+                node.left = None
+                self.tail = node
+
+        self.tail = None
+        postOrder(root)
+
 
 if __name__ == "__main__":
     root = TreeNode(1)

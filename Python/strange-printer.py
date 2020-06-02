@@ -26,23 +26,34 @@
 
 
 # DP: similar to but much easier than 546 remove boxes
-
+# dp[l][r] is min steps needed to print s[l..r]. Then convert to a smaller sub-problem.
 class Solution(object):
     def strangePrinter(self, s):
         """
         :type s: str
         :rtype: int
         """
-        def dfs(l, r):
+        def solve(l, r):
             if l > r: return 0
             if not dp[l][r]:
-                v = dfs(l, r-1) + 1
+                dp[l][r] = solve(l, r-1) + 1 # convert to smaller problem
                 for i in range(l, r):
-                    if ch[i] == ch[r]:
-                        v = min(v, dfs(l, i) + dfs(i+1, r-1))
-                dp[l][r] = v
+                    if ch[i] == ch[r]: # r can be printed in the same step with i, thus skip print r
+                        dp[l][r] = min(dp[l][r], solve(l, i) + solve(i+1, r-1))
             return dp[l][r]
+        ''' OR use lru_cache(None), no need dp array to memorize
+        from functools import lru_cache
+        @lru_cache(None)
+        def solve(l, r):
+            if l > r: return 0
+            ans = solve(l, r-1) + 1
+            for k in range(l, r):
+                if ch[k] == ch[r]:
+                    ans = min(ans, solve(l, k)+solve(k+1, r-1))
+            return ans
+        '''
 
+        # compress char blocks
         ch = []
         for c in s:
             if not ch or ch[-1] != c:
@@ -50,7 +61,7 @@ class Solution(object):
 
         M = len(ch)
         dp = [[0] * M for _ in range(M)]
-        return dfs(0, M-1)
+        return solve(0, M-1)
 
     '''
     bookshadow: 动态规划（Dynamic Programming）

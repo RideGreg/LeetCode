@@ -19,6 +19,10 @@
 # Could you come up with an one-pass algorithm using only constant space?
 #
 
+
+#  荷兰国旗问题：给每个数字设定一种颜色，并按照荷兰国旗颜色顺序对三色进行调整。
+# Dutch National Flag Problem
+
 class Solution(object):
     def sortColors(self, nums):
         """
@@ -27,11 +31,11 @@ class Solution(object):
         """
         def triPartition(nums, target):
             i, left, right = 0, 0, len(nums)-1
-            while i <= right:
-                if nums[i] > target:
+            while i <= right: # 不能用for loop
+                if nums[i] > target: # 右边从2区换过来的数没扫过，i不能前进
                     nums[i], nums[right] = nums[right], nums[i]
                     right -= 1
-                else:
+                else: # 包括<=target两种情况，i都要前进。左边从0区换过来的数已经扫过
                     if nums[i] < target:
                         nums[left], nums[i] = nums[i], nums[left]
                         left += 1

@@ -1,6 +1,7 @@
 # Time:  O(n * s), s is the sum of nums
 # Space: O(s)
 
+# 416
 # Given a non-empty array containing only positive integers,
 # find if the array can be partitioned into two subsets
 # such that the sum of elements in both subsets is equal.
@@ -23,6 +24,9 @@
 #
 # Explanation: The array cannot be partitioned into equal sum subsets.
 
+
+# backpack dp 背包动态规划
+
 class Solution(object):
     def canPartition(self, nums):
         """
@@ -36,7 +40,8 @@ class Solution(object):
         dp = [False] * (s/2 + 1)
         dp[0] = True
         for num in nums:
-            for i in reversed(xrange(1, len(dp))):
-                if num <= i:
-                    dp[i] = dp[i] or dp[i - num]
+            for i in reversed(range(num, len(dp))):
+                dp[i] = dp[i] or dp[i - num]
         return dp[-1]
+
+print(Solution().canPartition([1,5,11,5])) # True

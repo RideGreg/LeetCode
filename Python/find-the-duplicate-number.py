@@ -13,18 +13,16 @@
 #
 
 # Two pointers method, same as Linked List Cycle II.
+# 我们对nums数组建图，每个位置 i连一条 i→nums[i] 的边。由于存在的重复的数字 target，因此 target 这个位置
+# 一定有起码两条指向它的边，因此整张图一定存在环，要找的target 就是这个环的入口，那么问题就等价于 142环形链表 II。
 class Solution(object):
     def findDuplicate(self, nums):
         """
         :type nums: List[int]
         :rtype: int
         """
-        # Treat each (key, value) pair of the array as the (pointer, next) node of the linked list,
-        # thus the duplicated number will be the begin of the cycle in the linked list.
-        # Besides, there is always a cycle in the linked list which
-        # starts from the first element of the array.
-        slow = nums[0]
-        fast = nums[nums[0]]
+        # slow = fast = 0 # WRONG: cannot initialize slow/fast to 0 -> they don't enter the 1st while loop.
+        slow, fast = nums[0], nums[nums[0]]
         while slow != fast:
             slow = nums[slow]
             fast = nums[nums[fast]]
@@ -38,7 +36,10 @@ class Solution(object):
 
 # Time:  O(nlogn)
 # Space: O(1)
-# Binary search method.
+# Binary search method: 定义cnt[i]表示nums数组中小于等于 i的数有多少个，假设重复数target，
+# 那么 [1,target−1]里的所有数满足cnt[i]<=i，[target,n] 里的所有数满足cnt[i]>i，具有单调性。
+# 答案就是在[1,n]中寻找最小的 i 满足cnt[i]>i。
+
 class Solution2(object):
     def findDuplicate(self, nums):
         """
@@ -51,7 +52,7 @@ class Solution2(object):
             mid = left + (right - left) / 2
             # Get count of num <= mid.
             count = sum(x <= mid for x in nums)
-            if count > mid:
+            if count > mid: # mid is ok
                 right = mid
             else:
                 left = mid + 1
@@ -80,3 +81,5 @@ class Solution3(object):
             else:
                 break
         return duplicate
+
+print(Solution().findDuplicate([1,3,4,2,2])) # 2

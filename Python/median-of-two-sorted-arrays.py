@@ -8,6 +8,9 @@
 # Follow up: find the kth largest number of the two sorted arrays.
 
 class Solution(object):
+    # brute force: 1 merge two arrays; 2 two pointers to beginning elem of two arrays, move pointer until (m+n)//2 times.
+    # both O(m+n) not acceptable.
+
     '''
           left_part          |        right_part
     A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
@@ -22,9 +25,9 @@ class Solution(object):
         # The key point is to find a proper i, such that max_in_left <= min_in_right.
         # How to decide left? if len1+len2 is odd e.g 11, get left = 6th num; if len1+len2 is even e.g 10, get left = 5th num.
         # How to decide i? r needs to be the total # of nums1, so i is initialized as half of nums1, although i can start anywhere.
-        l, r, left = 0, len1, (len1 + len2 + 1) / 2
+        l, r, left = 0, len1, (len1 + len2 + 1) // 2
         while l <= r:
-            i = (r - l) / 2 + l
+            i = (r - l) // 2 + l
             j = left - i
             if i < len1 and nums2[j - 1] > nums1[i]:
                 l = i + 1
@@ -43,28 +46,29 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
-        def getKth(A, B, k):
-            m, n = len(A), len(B)
-            l, r = 0, m
+        def getk(k):
+            m, n = len(nums1), len(nums2)
+            l, r = 0, m # cannot use r=m-1: eg. nums1=[3] because l = i+1 = 1 will larger than r=0, thus break while but no return value
             while l <= r:
-                i = l + (r-l)//2
+                i = (l+r)//2 # i can be picked randomly
                 j = k - i
-                if j < 0 or (i>0 and 0<=j<n and A[i-1] > B[j]): # boundary check for general k
-                    r = i - 1
-                elif j > n or (i<m and j>0 and A[i] < B[j-1]):
-                    l = i + 1
+                Ai_1 = nums1[i-1] if 0<=i-1<m else float('-inf') if i-1<0 else float('inf')
+                Ai = nums1[i] if 0<=i<m else float('-inf') if i<0 else float('inf')
+                Bj_1 = nums2[j-1] if 0<=j-1<n else float('-inf') if j-1<0 else float('inf')
+                Bj = nums2[j] if 0<=j<n else float('-inf') if j<0 else float('inf')
+
+                if Ai_1 > Bj:
+                    r = i - 1 # r is beyond boundary, real possible largest elem is Ai_2
+                elif Bj_1 > Ai:
+                    l = i + 1 # because i = (l+r)//2, cannot set new l as i which may forever loop
                 else:
-                    return A[i-1] if j<1 else B[j-1] if i<1 else max(A[i-1], B[j-1])
+                    return max(Ai_1, Bj_1)
 
-        len1, len2 = len(nums1), len(nums2)
-        if len1 > len2:
-            return self.findMedianSortedArrays(nums2, nums1)
-
-        if (len1 + len2) % 2 == 1:
-            return getKth(nums1, nums2, (len1 + len2)/2 + 1)
+        m, n = len(nums1), len(nums2)
+        if (m+n) & 1:
+            return getk((m+n+1)//2)
         else:
-            return (getKth(nums1, nums2, (len1 + len2)/2) +
-                    getKth(nums1, nums2, (len1 + len2)/2 + 1)) * 0.5
+            return (getk((m+n)//2) + getk((m+n)//2 + 1)) / 2
 
 
     def getKth_kamyu(self, A, B, k): # hard to understand
@@ -162,12 +166,11 @@ class Solution_3(object): # good to get median from MORE THAN 2 sorted lists
             return C[indexM2] / 1.0
 
 if __name__ == "__main__":
-    print(Solution().findMedianSortedArrays([3], [4]))
-    print Solution().findMedianSortedArrays([], [2, 3])
-    print Solution().findMedianSortedArrays([2], [1, 3])
-    print Solution().findMedianSortedArrays([1, 2], [3, 4])
+    print(Solution().findMedianSortedArrays([3], [4])) # 3.5
+    print(Solution().findMedianSortedArrays([], [2, 3])) # 2.5
+    print(Solution().findMedianSortedArrays([2], [1, 3])) # 2
+    print(Solution().findMedianSortedArrays([1, 2], [3, 4])) # 2.5
 
-    print Solution().findMedianSortedArrays([1, 3, 5, 7], [2, 4, 6])
-    print Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
-    print Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])
+    print(Solution().findMedianSortedArrays([1, 3, 5, 7], [2, 4, 6])) # 4
+    print(Solution().findMedianSortedArrays([1, 3, 5], [2, 4, 6])) # 3.5
 

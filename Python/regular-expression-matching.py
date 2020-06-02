@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(n)
-#
+
+# 10 正则表达式匹配
 # Implement regular expression matching with support for '.' and '*'.
 #
 # '.' Matches any single character.
@@ -25,56 +26,58 @@
 class Solution:
     # @return a boolean
     def isMatch(self, s, p):
-        def matchSingleChar(cp, cs):
-            return cp == cs or cp == '.'
+        def singleMatch(i, j):
+            return (s[i] == p[j]) or (p[j] == '.')
 
-        k, m, n = 2, len(s), len(p)
-        if not n: return m == 0
-        dp = [[False] * (n + 1) for _ in range(k)]
+        dp = [[False]*(len(p)+1) for _ in range(2)]
 
-        dp[0][0] = True
-        for i in range(2, n + 1):
-            if p[i - 1] == '*':
-                # * match 0 char in s: not use * and the char before *
-                dp[0][i] = dp[0][i - 2]
+        # first padding row
+        dp[0][0] = True # empty string vs empty pattern
+        for j in range(2, len(p) + 1):
+            if p[j-1] == '*':
+                dp[0][j] = dp[0][j-2]
 
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                if p[j - 1] == '*':
-                    # * match 0 char in s: not use * and the char before *, or
-                    # * match 1+ chars in s: s' last char has to match the char before *, and removing s's last char, s[:i-1] also matchs p
-                    dp[i % k][j] = dp[i % k][j - 2] or (dp[(i - 1) % k][j] and matchSingleChar(p[j - 2], s[i - 1]))
+        for i in range(1, len(s)+1):
+            dp[i%2][0] = False # non-empty string vs empty pattern
+            for j in range(1, len(p)+1):
+                if p[j-1] != '*':
+                    dp[i%2][j] = singleMatch(i-1, j-1) and dp[(i-1)%2][j-1]
                 else:
-                    # last chars have to match and the substring w/o last chars have to match too
-                    dp[i % k][j] = dp[(i - 1) % k][j - 1] and matchSingleChar(p[j - 1], s[i - 1])
+                    #         * for 0 repeat  * for >= 1 repeat
+                    dp[i%2][j] = dp[i%2][j-2] or (singleMatch(i-1, j-2) and dp[(i-1)%2][j])
+        return dp[len(s)% 2][-1]
 
-            if i == 1:
-                dp[0][0] = False   # only dp[i][0] is always False except dp[0][0]
+    # without space optimization
+    def isMatch_fullSpace(self, s, p):
+        result = [[False] * (len(p) + 1) for _ in range(len(s) + 1)]
 
-        return dp[m % k][-1]
+        result[0][0] = True # empty string vs empty pattern
+        for j in range(2, len(p) + 1):
+            if p[j-1] == '*':
+                result[0][j] = result[0][j-2]
 
-
-# dp
-# Time:  O(m * n)
-# Space: O(m * n)
-class Solution2:
-    # @return a boolean
-    def isMatch(self, s, p):
-        result = [[False for j in xrange(len(p) + 1)] for i in xrange(len(s) + 1)]
-
-        result[0][0] = True
-        for i in xrange(2, len(p) + 1):
-            if p[i-1] == '*':
-                result[0][i] = result[0][i-2]
-
-        for i in xrange(1,len(s) + 1):
-            for j in xrange(1, len(p) + 1):
+        for i in range(1,len(s) + 1):
+            for j in range(1, len(p) + 1):
                 if p[j-1] != '*':
                     result[i][j] = result[i-1][j-1] and (s[i-1] == p[j-1] or p[j-1] == '.')
                 else:
                     result[i][j] = result[i][j-2] or (result[i-1][j] and (s[i-1] == p[j-2] or p[j-2] == '.'))
-
         return result[len(s)][len(p)]
+
+    # cannot handle '.*', should write a match function for a==b or b=='.'
+    def isMatch_wrong(self, s: str, p: str) -> bool:
+        dp = [[False]*(len(p)+1) for _ in range(len(s)+1)]
+        for i in range(len(s)+1):
+            dp[i][0] = False if i else True
+            for j in range(1, len(p)+1):
+                if p[j-1] == '.':
+                    dp[i][j] = dp[i-1][j-1] if i else False
+                elif p[j-1] == '*': # wrong for '.*'
+                    dp[i][j] = dp[i][j-2] or dp[i][j-1] or (i and s[i-1]==p[j-2] and dp[i-1][j])
+                else:
+                    dp[i][j] = s[i-1] == p[j-1] and dp[i-1][j-1]
+        return dp[-1][-1]
+
 
 # iteration
 class Solution3:
@@ -158,6 +161,7 @@ class Solution4:
             return self.isMatch(s, p[2:])
 
 if __name__ == "__main__":
+    print(Solution().isMatch('a', 'ab*a')) # False
     print(Solution().isMatch("ba", "")) # False
     print(Solution().isMatch("abab", "")) # False
     print(Solution().isMatch("abab", "a*b*")) # False

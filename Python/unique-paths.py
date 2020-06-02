@@ -33,7 +33,7 @@ class Solution:
             m, n = n, m
 
         # THIS IS how to do factorial
-        # initializer 1 is needed for empty list (m=2,n=1)
+        # initializer 1 is needed for empty list (m=2,n=1), otherwise TypeError: reduce() of empty sequence with no initial value
         fact = lambda x,y: functools.reduce(operator.mul, range(x,y+1), 1)
         return fact(m, m+n-2) // fact(1, n-1)
 

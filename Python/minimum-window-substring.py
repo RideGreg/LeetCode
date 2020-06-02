@@ -1,7 +1,7 @@
 # Time:  O(n)
 # Space: O(k), k is the number of different characters
 
-# 76
+# 76 最小覆盖子串
 # Given a string S and a string T, find the minimum window in S which
 # will contain all the characters in T in complexity O(n).
 #
@@ -50,24 +50,24 @@ class Solution(object):
         for char in t:
             expected[ord(char) - ord('A')] += 1
 
-        count, start, min_width, min_start = 0, 0, float("inf"), 0
-        for i in range(len(s)):
-            actual[ord(s[i]) - ord('A')] += 1
-            if actual[ord(s[i]) - ord('A')] <= expected[ord(s[i]) - ord('A')]:
+        count = 0 # very nice! otherwise have to compare actual vs expected to know all expected
+                  # chars were found
+        left, min_width, min_left = 0, float("inf"), 0
+        for right in range(len(s)):
+            id = ord(s[right]) - ord('A')
+            actual[id] += 1
+            if actual[id] <= expected[id]:
                 count += 1
 
             if count == len(t):
-                while actual[ord(s[start]) - ord('A')] > expected[ord(s[start]) - ord('A')]:
-                    actual[ord(s[start]) - ord('A')] -= 1
-                    start += 1
+                while actual[ord(s[left]) - ord('A')] > expected[ord(s[left]) - ord('A')]:
+                    actual[ord(s[left]) - ord('A')] -= 1
+                    left += 1
 
-                if min_width > i - start + 1:
-                    min_width = i - start + 1
-                    min_start = start
+                if right - left + 1 < min_width:
+                    min_width, min_left = right - left + 1, left
 
-        if min_width == float("inf"):
-            return ""
-        return s[min_start:min_start + min_width]
+        return '' if min_width == float("inf") else s[min_left:min_left + min_width]
 
 print(Solution().minWindow("azzzzbccab", 'abc')) # 'cab'
 print(Solution().minWindow("AuOZEaOzEBuNC", "AA")) # ''

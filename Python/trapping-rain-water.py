@@ -16,25 +16,49 @@ class Solution:
     # @return an integer
     def trap(self, A):  # USE THIS
         result = 0
-        top = A.index(max(A))
+        topId = A.index(max(A)) # first peak is enough, even there are multiple highest bars
 
-        second_top = 0
-        for i in range(top):
-            if A[second_top] < A[i]:
-                second_top = i
-            result += A[second_top] - A[i]
+        leftH = 0
+        for i in range(topId):
+            if A[i] > leftH:
+                leftH = A[i]
+            else:
+                result += leftH - A[i]
 
-        second_top = len(A) - 1
-        for i in reversed(range(top, len(A))):
-            if A[second_top] < A[i]:
-                second_top = i
-            result += A[second_top] - A[i]
+        rightH = 0
+        for i in reversed(range(topId+1, len(A))):
+            if A[i] > rightH:
+                rightH = A[i]
+            else:
+                result += rightH - A[i]
 
         return result
 
+# similar bad worse than Solution 1, but use two lists to store leftMax/rightMax (左右方向的peak)
+# solution 1 is smart by finding the peak and divide array into two parts.
+
+# Time O(n) Space O(n) 三次遍历
+# 存储数组中从下标 i 到最左端最高的条形块高度 left_max。
+# 存储数组中从下标 i 到最右端最高的条形块高度 right_max。
+# 扫描数组height, 累加 min(max_left[i], max_right[i]) − height[i] 到 ans
+class Solution2(object):
+    def trap(self, height):
+        N = len(height)
+        if N == 0: return 0
+
+        lMax, rMax = [0]*N, [0]*N
+        lMax[0] = height[0]
+        for i in range(1, N):
+            lMax[i] = max(height[i], lMax[i-1])
+        rMax[-1] = height[-1]
+        for i in range(N-2, -1, -1):
+            rMax[i] = max(height[i], rMax[i+1])
+        return sum(min(lMax[i], rMax[i])-height[i] for i in range(1, N-1))
+
+
 # Time:  O(n)
 # Space: O(n)
-# 不用像方法3那样存储最大高度，用栈来跟踪可能储水的最长的条形块。使用栈就可以在一次遍历内完成计算。
+# 不用像方法2那样存储最大高度，用栈来跟踪可能储水的最长的条形块。使用栈就可以在一次遍历内完成计算。
 #
 # 遍历数组时维护一个栈。如果当前的条形块小于或等于栈顶的条形块，我们将条形块的索引入栈，意思是
 # 当前的条形块被栈中的前一个条形块界定。如果我们发现一个条形块长于栈顶，我们可以确定栈顶的条形块
@@ -50,7 +74,7 @@ class Solution:
 #     - 往答案中累加积水量 ans+=distance×bounded_height
 #   - 将当前索引下标入栈, 将current 移动到下个位置
 #
-class Solution2:
+class Solution3:
     # @param A, a list of integers
     # @return an integer
     def trap(self, A):  # THIS stack solution also worth to remember
@@ -83,23 +107,7 @@ class Solution2:
 
         return result
 
-# Time O(n) Space O(n) 三次遍历
-# 存储数组中从下标 i 到最左端最高的条形块高度 left_max。
-# 存储数组中从下标 i 到最右端最高的条形块高度 right_max。
-# 扫描数组height, 累加 min(max_left[i], max_right[i]) − height[i] 到 ans
-class Solution3(object):
-    def trap(self, height):
-        N = len(height)
-        if N == 0: return 0
-
-        lMax, rMax = [0]*N, [0]*N
-        lMax[0] = height[0]
-        for i in range(1, N):
-            lMax[i] = max(height[i], lMax[i-1])
-        rMax[-1] = height[-1]
-        for i in range(N-2, -1, -1):
-            rMax[i] = max(height[i], rMax[i+1])
-        return sum(min(lMax[i], rMax[i])-height[i] for i in range(1, N-1))
 
 if __name__ == "__main__":
-    print(Solution().trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1])) # 6
+    print(Solution().trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1])) # 6 input has single peak
+    print(Solution().trap([1,0,2,1,0,2,0,1])) # 5 input has multiple peaks

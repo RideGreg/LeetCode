@@ -1,6 +1,10 @@
 # Time:  O(nlogn)
-# Space: O(n)
-#
+# Space: O(1)
+
+# 252
+# Given an array of meeting time intervals consisting of start and end times
+# [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
+
 # Definition for an interval.
 # class Interval:
 #     def __init__(self, s=0, e=0):
@@ -15,9 +19,9 @@ class Solution(object):
         :type intervals: List[List[int]]
         :rtype: bool
         """
-        intervals.sort(key=lambda x: x[0])
+        intervals.sort() # by default sort by 1st item, 2nd item
+        return all(intervals[i][0] >= intervals[i-1][1]
+                   for i in range(1, len(intervals)))
 
-        for i in xrange(1, len(intervals)):
-            if intervals[i][0] < intervals[i-1][1]:
-                return False
-        return True
+print(Solution().canAttendMeetings([(0,30),(5,10),(15,20)])) # False
+print(Solution().canAttendMeetings([(5,8),(9,15)])) # True

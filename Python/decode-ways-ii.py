@@ -34,7 +34,7 @@
 # 以及'00', '01', ... '*9', '**'对dmap进行初始化
 
 class Solution(object):
-    def numDecodings(self, s): # USE THIS: bookshadow
+    def numDecodings(self, s): # USE THIS: bookshadow 查字典，可扩展解决很多类似问题
         """
         :type s: str
         :rtype: int
@@ -68,6 +68,32 @@ class Solution(object):
             prev, pprev = cur, prev
         return cur
 
+    # DP: 无字典，char by char processing, not a systematic way
+    def numDecodings_ming(self, s: str) -> int:
+        M, pre = 10**9+7, 1
+        for i in range(len(s)):
+            cur = 0
+            if s[i] == '*':
+                cur += 9 * pre
+                if i > 0:
+                    if s[i-1] == '1': cur += 9 * ppre
+                    elif s[i-1] == '2': cur += 6 * ppre
+                    elif s[i-1] == '*': cur += 15 * ppre # for '**', include both first 2 cases
+            else:
+                if '1' <= s[i] <= '9':
+                    cur += pre
+                if i > 0:
+                    if s[i-1] == '*': # for '*1' '*0'
+                        if '0' <= s[i] <= '6': cur += 2 * ppre
+                        elif '7' <= s[i] <= '9': cur += ppre
+                    elif 10 <= int(s[i-1:i+1]) <= 26:
+                        cur += ppre
+            if cur == 0:
+                return 0
+
+            ppre, pre = pre, cur % M
+        return cur % M
+
     def numDecodings_kamyu(self, s): # scrolling array, messier than using 3 variables
         M, W = 1000000007, 3
         dp = [0] * W
@@ -92,6 +118,9 @@ class Solution(object):
                     dp[(i + 1) % W] = (dp[(i + 1) % W] + (2 if s[i] <= '6' else 1) * dp[(i - 1) % W]) % M
         return dp[len(s) % W]
 
+
+print(Solution().numDecodings('*1*1*0')) # 404
+print(Solution().numDecodings('*1')) # 11
 print(Solution().numDecodings('*')) # 9
 print(Solution().numDecodings('**')) # 96:
 # AA, AB, ... AI, ..., IA, IB, .. II; K, L..S, U..Z

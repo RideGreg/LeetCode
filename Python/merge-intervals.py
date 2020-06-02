@@ -26,16 +26,15 @@ class Solution(object):
         """
         if not intervals:
             return intervals
-        intervals.sort(key=lambda x: x.start)
-        result = [intervals[0]]
-        for i in xrange(1, len(intervals)):
-            prev, current = result[-1], intervals[i]
-            if current.start <= prev.end:
-                prev.end = max(prev.end, current.end)
+        intervals.sort(key=lambda x: x.start) # no need key, default sorting by x[0], x[1]
+        ans = [intervals[0]]
+        for interval in intervals:
+            if interval.start <= ans[-1].end:
+                ans[-1].end = max(interval.end, ans[-1].end)
             else:
-                result.append(current)
-        return result
+                ans.append(interval)
+        return ans
 
 
 if __name__ == "__main__":
-    print Solution().merge([Interval(1, 3), Interval(2, 6), Interval(8, 10), Interval(15,18)])
+    print(Solution().merge([Interval(1, 3), Interval(2, 6), Interval(8, 10), Interval(15,18)]))

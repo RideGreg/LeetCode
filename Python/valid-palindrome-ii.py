@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Soace: O(1)
 
+# 680
 # Given a non-empty string s, you may delete at most one character.
 # Judge whether you can make it a palindrome.
 #
@@ -20,7 +21,7 @@ class Solution(object):
         :type s: str
         :rtype: bool
         """
-        def validPalindrome(s, left, right):
+        def validPalindrome(left, right):
             while left < right:
                 if s[left] != s[right]:
                     return False
@@ -30,6 +31,6 @@ class Solution(object):
         left, right = 0, len(s)-1
         while left < right:
             if s[left] != s[right]:
-                return validPalindrome(s, left, right-1) or validPalindrome(s, left+1, right)
+                return validPalindrome(left, right-1) or validPalindrome(left+1, right)
             left, right = left+1, right-1
         return True

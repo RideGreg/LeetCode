@@ -41,7 +41,7 @@ except NameError:
 
 
 class Solution(object):
-    def distanceK_kamyu(self, root, target, K): # extra space neighbors if don't allow to alter the tree
+    def distanceK_kamyu(self, root, target, K): # Space not good: extra space neighbors
                                                 # ok to use node value since values are unique
         """
         :type root: TreeNode
@@ -49,14 +49,13 @@ class Solution(object):
         :type K: int
         :rtype: List[int]
         """
-        def dfs(parent, child):
-            if not child:
-                return
-            if parent:
-                neighbors[parent.val].append(child.val)
-                neighbors[child.val].append(parent.val)
-            dfs(child, child.left)
-            dfs(child, child.right)
+        def dfs(parent, node):
+            if node:
+                if parent:
+                    neighbors[parent.val].append(node.val)
+                    neighbors[node.val].append(parent.val)
+                dfs(node, node.left)
+                dfs(node, node.right)
 
         neighbors = collections.defaultdict(list)
         dfs(None, root)
@@ -69,17 +68,18 @@ class Solution(object):
             lookup |= set(bfs)
         return bfs
 
-    def distanceK(self, root, target, K): # USE THIS if allow to alter the tree
+    def distanceK(self, root, target, K): # USE THIS
         def dfs(node, par):
             if node:
-                node.par = par
+                parent[node] = par
                 dfs(node.left, node)
                 dfs(node.right, node)
 
+        parent = {}
         dfs(root, None)
         bfs, seen = [target], {target}
         for _ in xrange(K):
-            bfs = [nei for n in bfs for nei in (n.left, n.right, n.par) if nei and nei not in seen]
+            bfs = [nei for n in bfs for nei in (n.left, n.right, parent[n]) if nei and nei not in seen]
             seen |= set(bfs)
         return [n.val for n in bfs]
 
