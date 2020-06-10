@@ -40,7 +40,7 @@
 # Given two strings s1 and s2 of the same length, determine if s2 is a scrambled string of s1.
 #
 
-# DP solution
+# DP solution: dp[n][i][j] means whether s1[i:i+n] and s2[j:j+n] are scrambled.
 # Time:  O(n^4)
 # Space: O(n^3)
 class Solution:
@@ -51,20 +51,17 @@ class Solution:
 
         N = len(s1)
         dp = [[[False] * N for _ in range(N)] for _ in range(N + 1)]
-        for i in range(N):
-            for j in range(N):
-                if s1[i] == s2[j]:
-                    dp[1][i][j] = True
 
-        for n in range(2, N + 1): # substring length
+        for n in range(1, N + 1): # substring length
             for i in range(N - n + 1):
                 for j in range(N - n + 1):
-                    for k in range(1, n):
-                        if (dp[k][i][j] and dp[n - k][i + k][j + k]) or \
-                                (dp[k][i][j + n - k] and dp[n - k][i + k][j]):
-                            dp[n][i][j] = True
-                            break
+                    if n == 1:
+                        dp[n][i][j] = (s1[i] == s2[j])
+                    else:
+                        dp[n][i][j] = any((dp[k][i][j] and dp[n - k][i + k][j + k]) or
+                                          (dp[k][i][j + n - k] and dp[n - k][i + k][j])
+                                          for k in range(1, n))
         return dp[N][0][0]
 
 if __name__ == "__main__":
-    print Solution().isScramble("rgtae", "great")
+    print(Solution().isScramble("rgtae", "great")) # True

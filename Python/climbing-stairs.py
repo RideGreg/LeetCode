@@ -13,8 +13,8 @@ import itertools
 # Q = | 1 1 |
 #     | 1 0 |
 #
-# Q^2 = | 2 1 |
-#       | 1 1 |
+# Q^2 = | 2 1 |   Q^3 = | 3 2 |
+#       | 1 1 |         | 2 1 |
 # As per the method, the nth Fibonacci Number is given by Q^(n-1)[0,0].
 #
 # Let's look at the proof of this method.
@@ -34,22 +34,26 @@ class Solution(object):
         """
         def matrix_expo(A, K):
             N = len(A)
-            result = [[int(i==j) for j in range(N)]  for i in range(N)]
+            result = [[int(i==j) for j in range(N)] for i in range(N)]
             while K:
                 if K % 2:
                     result = matrix_mult(result, A)
                 A = matrix_mult(A, A)
-                K /= 2
+                K //= 2
             return result
 
         def matrix_mult(A, B):
+            return [[sum(a*b for a, b in zip(row, col)) for col in zip(*B)]
+                    for row in A]
+            ''' WRONG cannot write: ZB is iterated only once. Should use a new zip(*B) for each row.
             ZB = zip(*B)
-            return [[sum(a*b for a, b in itertools.izip(row, col)) \
-                     for col in ZB] for row in A]
+            return [[sum(a*b for a, b in zip(row, col)) for col in ZB]
+                    for row in A]
+            '''
 
         T = [[1, 1],
              [1, 0]]
-        return matrix_mult([[1,  0]], matrix_expo(T, n))[0][0]  # [a0, a(-1)] * T^n
+        return matrix_expo(T, n)[0][0]
 
 
 # Time:  O(n)
@@ -61,7 +65,7 @@ class Solution2(object):
     """
     def climbStairs(self, n): # Fibonacci Number
         prev, current = 0, 1
-        for i in xrange(n):
+        for i in range(n):
             prev, current = current, prev + current,
         return current
 
@@ -85,5 +89,5 @@ class Solution2(object):
 
 
 if __name__ == "__main__":
-    result = Solution().climbStairs(2)
-    print result
+    print(Solution().climbStairs(5)) # 8
+    print(Solution().climbStairs(10)) # 89
