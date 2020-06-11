@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 117
 # Follow up for problem "Populating Next Right Pointers in Each Node".
 #
 # What if the given tree could be any binary tree? Would your previous solution still work?
@@ -40,43 +40,24 @@ class TreeNode:
 class Solution:
     # @param root, a tree node
     # @return nothing
-    def connect(self, root):
+    def connect(self, root): # USE THIS
         head = root
         while head:
             prev, cur, next_head = None, head, None
             while cur:
-                if next_head is None:
-                    if cur.left:
-                        next_head = cur.left
-                    elif cur.right:
-                        next_head = cur.right
+                #if next_head is None:
+                #    next_head = cur.left if cur.left else cur.right # cur.right may be None, ok to set by next node
 
-                if cur.left:
-                    if prev:
-                        prev.next = cur.left
-                    prev = cur.left
-
-                if cur.right:
-                    if prev:
-                        prev.next = cur.right
-                    prev = cur.right
-
+                for node in [cur.left, cur.right]:
+                    if node:
+                        if prev:
+                            prev.next = node
+                        else:
+                            next_head = node # only called once in each level
+                        prev = node
                 cur = cur.next
             head = next_head
 
-    def connect_brief(self, root): # USE THIS
-        while root:
-            prev, parent, next_root = None, root, None
-            while parent:
-                if next_root is None:
-                    next_root = parent.left if parent.left else parent.right if parent.right else None
-                for cur in [parent.left, parent.right]:
-                    if cur:
-                        if prev:
-                            prev.next = cur
-                        prev = cur
-                parent = parent.next
-            root = next_root
 
 if __name__ == "__main__":
     root, root.left, root.right = TreeNode(1), TreeNode(2), TreeNode(3)
