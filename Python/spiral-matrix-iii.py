@@ -48,15 +48,28 @@ class Solution(object):
         """
         dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         ans = [[r0, c0]]
+        n = 0
+        while len(ans) < R * C:
+            dr, dc = dirs[n % 4]
+            steps = 1 + n // 2       # use n to get steps
+            for _ in range(steps):
+                r0, c0 = r0 + dr, c0 + dc
+                if 0 <= r0 < R and 0 <= c0 < C:
+                    ans.append([r0, c0])
+            n += 1
+        return ans
+
+    def spiralMatrixIII(self, R, C, r0, c0):  # hardcode set steps
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        ans = [[r0, c0]]
         n, steps = 0, 1
         while len(ans) < R * C:
             for _ in (0, 1):
                 dr, dc = dirs[n % 4]
-                for _ in xrange(steps):
-                    nr, nc = r0 + dr, c0 + dc
-                    if 0 <= nr < R and 0 <= nc < C:
-                        ans.append([nr, nc])
-                    r0, c0 = nr, nc
+                for _ in range(steps):
+                    r0, c0 = r0 + dr, c0 + dc
+                    if 0 <= r0 < R and 0 <= c0 < C:
+                        ans.append([r0, c0])
                 n += 1 # change direction
             steps += 1
         return ans
@@ -78,18 +91,6 @@ class Solution(object):
                 return ans
             if 0 <= nx < R and 0 <= ny < C:
                 ans.append([nx, ny])
-
-    def spiralMatrixIII2_kamyu(self, R, C, r0, c0):
-        r, c = r0, c0
-        result = [[r, c]]
-        x, y, n, i = 0, 1, 0, 0
-        while len(result) < R*C:
-            r, c, i = r+x, c+y, i+1
-            if 0 <= r < R and 0 <= c < C:
-                result.append([r, c])
-            if i == n//2+1:
-                x, y, n, i = y, -x, n+1, 0
-        return result
 
 
 print(Solution().spiralMatrixIII(1,1,0,0)) # [[0,0]]

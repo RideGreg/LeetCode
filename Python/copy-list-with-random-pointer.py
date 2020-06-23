@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 138
 # A linked list is given such that each node contains an additional random pointer
 # which could point to any node in the list or null.
 #
@@ -17,7 +17,7 @@ class RandomListNode:
 class Solution:
     # @param head, a RandomListNode
     # @return a RandomListNode
-    def copyRandomList(self, head):
+    def copyRandomList(self, head): # although best space, too complex to make mistakes
         # copy and combine copied list with original list
         current = head
         while current:
@@ -47,22 +47,23 @@ class Solution:
 class Solution2:
     # @param head, a RandomListNode
     # @return a RandomListNode
-    def copyRandomList(self, head):
-        dummy = RandomListNode(0)
-        current, prev, copies = head, dummy, {}
+    def copyRandomList(self, head):  # USE THIS: two steps, maintain mapping
+        dummy = pre = RandomListNode(-1)
+        mapping = {}
 
-        while current:
-            copied = RandomListNode(current.label)
-            copies[current] = copied
-            prev.next = copied
-            prev, current = prev.next, current.next
+        # copy a normal list without random pointer
+        cur = head
+        while cur:
+            node = RandomListNode(cur.val)
+            mapping[cur] = node
+            pre.next = node
+            pre, cur = pre.next, cur.next
 
-        current = head
-        while current:
-            if current.random:
-                copies[current].random = copies[current.random]
-            current = current.next
-
+        cur = head
+        while cur:
+            if cur.random:
+                mapping[cur].random = mapping[cur.random]
+            cur = cur.next
         return dummy.next
 
 # time: O(n)
@@ -70,7 +71,7 @@ class Solution2:
 from collections import defaultdict
 
 class Solution3(object):
-    def copyRandomList(self, head):
+    def copyRandomList(self, head): # very smart
         """
         :type head: RandomListNode
         :rtype: RandomListNode

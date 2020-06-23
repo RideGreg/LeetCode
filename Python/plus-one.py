@@ -7,7 +7,20 @@
 
 # in-place solution
 class Solution(object):
-    def plusOne(self, digits):
+    def plusOne(self, digits): # USE THIS
+        """
+        :type digits: List[int]
+        :rtype: List[int]
+        """
+        carry = 1
+        for i in reversed(range(len(digits))):
+            carry, digits[i] = divmod(digits[i]+carry, 10)
+            if carry == 0:
+                break
+        return [1] + digits if carry else digits
+
+
+    def plusOne2(self, digits):
         """
         :type digits: List[int]
         :rtype: List[int]
@@ -16,29 +29,11 @@ class Solution(object):
             if digits[i] == 9:
                 digits[i] = 0
             else:
-                digits[i] += 1
+                digits[i] += 1 # when a digit is not 9, we can stop here
                 return digits
-        digits[0] = 1
+        digits[0] = 1  # all 9s, change to 1000...
         digits.append(0)
         return digits
-
-
-# Time:  O(n)
-# Space: O(n)
-class Solution2(object):
-    def plusOne(self, digits):
-        """
-        :type digits: List[int]
-        :rtype: List[int]
-        """
-        result = digits[::-1]
-        carry = 1
-        for i in xrange(len(result)):
-            result[i] += carry
-            carry, result[i] = divmod(result[i], 10)
-        if carry:
-            result.append(carry)
-        return result[::-1]
 
 
 if __name__ == "__main__":

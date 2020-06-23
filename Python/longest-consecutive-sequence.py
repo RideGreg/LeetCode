@@ -13,11 +13,36 @@
 import collections
 
 class Solution:
-    # @param num, a list of integer
-    # @return an integer
+    # 扫描数组，对每个数向两边延伸 O(n^2)。优化：一旦一个数被扫描，直接将其从Set中踢出。每个数至多被扫描一次。
+    def longestConsecutive(self, num): # USE THIS: best running time
+        nset, ans = set(num), 0
+        while nset:
+            x = nset.pop()
+            cur = 1
+            for y in (x - 1, x + 1): # extend in both directions
+                while y in nset:
+                    cur += 1
+                    nset.remove(y)
+                    y += 1 if y > x else -1
+            ans = max(ans, cur)
+        return ans
+
+    # 扫描数组，对每个数以它为起点向后延伸 O(n^2)。优化：只考虑真正起点的数（无左边邻居）。
+    def longestConsecutive(self, num): # second best solution: worse running time because set size
+                                       # is not reduced, need to check a lot of uninterested values
+        nset, ans = set(num), 0
+        for x in num:
+            if x - 1 not in num:
+                cur = 1
+                while x + 1 in nset:
+                    cur += 1
+                    x += 1
+                ans = max(ans, cur)
+        return ans
+
 
     # only maintain the length for numbers at the two ends of consecutive sequence
-    def longestConsecutive(self, num):
+    def longestConsecutive3(self, num): # third best solution
         ans, lengths = 0, collections.defaultdict(int)
         for n in num:
             if lengths[n] != 0: continue # skip duplicate

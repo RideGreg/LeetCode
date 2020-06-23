@@ -1,6 +1,7 @@
 # Time:  O(1)
 # Space: O(1)
 
+# 468
 # In this problem, your job to write a function to check whether a input string
 # is a valid IPv4 address or IPv6 address or neither.
 #
@@ -56,18 +57,27 @@ class Solution(object):
         :rtype: str
         """
         blocks = IP.split('.')
-        if len(blocks) == 4:
-            for i in xrange(len(blocks)):
-                if not blocks[i].isdigit() or not 0 <= int(blocks[i]) < 256 or \
-                   (blocks[i][0] == '0' and len(blocks[i]) > 1):
-                    return "Neither"
+        if len(blocks) == 4 and \
+                all(v.isdigit() and 0<=int(v)<=255 and (v == '0' or v[0] != '0') for v in blocks):
             return "IPv4"
 
+        def testv6(s):
+            if not 1<=len(s)<=4:
+                return False
+            for c in s:
+                if not (c.isdigit() or 'a' <= c <= 'f' or 'A' <= c <= 'F'):
+                    return False
+            return True
+
         blocks = IP.split(':')
-        if len(blocks) == 8:
-            for i in xrange(len(blocks)):
-                if not (1 <= len(blocks[i]) <= 4) or \
-                   not all(c in string.hexdigits for c in blocks[i]):
-                    return "Neither"
+        if len(blocks) == 8 and all(1<=len(v)<=4 and all(c in string.hexdigits for c in v) for v in blocks):
+        # OR IF don't know string.hexdigits, use function testv6()
+        # if len(blocks) == 8 and all(testv6(v) for v in blocks):
             return "IPv6"
+
         return "Neither"
+
+print(Solution().validIPAddress("172.16.254.1")) # IPv4
+print(Solution().validIPAddress("256.256.256.256")) # Neither
+print(Solution().validIPAddress("2001:0db8:85a3:0:0:8A2E:0370:7334")) # IPv6
+print(Solution().validIPAddress("2001:0gb8:85a3:0:0:8A2E:0370:7334")) # Neither

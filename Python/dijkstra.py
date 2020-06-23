@@ -1,7 +1,7 @@
 # find shortest paths from a "source" node to all other nodes in a weighted directed graph,
 # producing a shortest-path tree (a subset of edges of original tree).
 # Also apply to undirected graph which is just a directed graph with bidirectional connections.
-# BFS is actaully Dijkstra for unweighted graph.
+# BFS is actaully Dijkstra for unweighted graph (all weights are 1).
 
 # https://medium.com/basecs/finding-the-shortest-path-with-a-little-help-from-dijkstra-613149fbdc8e
 
@@ -19,7 +19,10 @@ class Solution(object):
 
         while pq:
             d, node = heapq.heappop(pq)
-            # Each node is only visited once.
+            # If dest is given, can return here because this is guaranteed the min distance to dest
+            # if node == dest: return d
+
+            # Used to filter out duplicate path to a node. Each node is only visited once which path has min distance.
             if d > dist[node]: continue
 
             for nei, weight in graph[node].iteritems():

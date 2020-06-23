@@ -1,12 +1,23 @@
 # Time:  O(h + k)
 # Space: O(h)
 
+# 272
+# Given a non-empty binary search tree and a target value, find k values in the BST
+# that are closest to the target.
+#
+# Note:
+# - Given target value is a floating point.
+# - You may assume k is always valid, that is: k ≤ total nodes.
+# - You are guaranteed to have only one unique set of k values in the BST
+# that are closest to the target.
+
+
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 class Solution(object):
     def closestKValues(self, root, target, k):
@@ -46,7 +57,7 @@ class Solution(object):
 
         # Get the closest k values by advancing the iterators of the stacks.
         result = []
-        for _ in xrange(k):
+        for _ in range(k):
             if forward_stack and \
                 (not backward_stack or dist(forward_stack[-1]) < dist(backward_stack[-1])):
                 result.append(forward_stack[-1].val)
@@ -112,7 +123,7 @@ class Solution2(object):
 
         # Get the closest k values by advancing the iterators of the stacks.
         result = [stack[-1].val]
-        for _ in xrange(k - 1):
+        for _ in range(k - 1):
             if dist(smaller_node) < dist(larger_node):
                 result.append(smaller_node.val)
                 smaller_node = smaller_it.next()
@@ -120,5 +131,11 @@ class Solution2(object):
                 result.append(larger_node.val)
                 larger_node = larger_it.next()
         return result
-
+r = TreeNode(4)
+r.left, r.right = TreeNode(2), TreeNode(5)
+r.left.left, r.left.right = TreeNode(1), TreeNode(3)
+print(Solution().closestKValues(r, 3.7, 2)) # [4, 3]
+print(Solution().closestKValues(r, 3.2, 3)) # [3, 4, 2]
+print(Solution().closestKValues(r, 7.1, 2)) # [5, 4]
+print(Solution().closestKValues(r, 1.2, 5)) # [1,2,3,4,5]
 

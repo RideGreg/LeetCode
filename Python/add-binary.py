@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 67
 # Given two binary strings, return their sum (also a binary string).
 #
 # For example,
@@ -20,18 +20,18 @@ class Solution(object):
     # @param b, a string
     # @return a string
     def addBinary(self, a, b):
-        result, carry, val = "", 0, 0
-        for i in xrange(max(len(a), len(b))):
-            val = carry
-            if i < len(a):
-                val += int(a[-(i + 1)])
-            if i < len(b):
-                val += int(b[-(i + 1)])
-            carry, val = divmod(val, 2)
-            result += str(val)
-        if carry:
-            result += str(carry)
-        return result[::-1]
+        m, n, c = len(a)-1, len(b)-1, 0
+        ans = []
+        while m >= 0 or n >= 0 or c:
+            if m >= 0:
+                c += int(a[m])
+                m -= 1
+            if n >= 0:
+                c += int(b[n])
+                n -= 1
+            c, v = divmod(c, 2)
+            ans.append(str(v))
+        return ''.join(ans[::-1])
 
 
 # Time:  O(n)

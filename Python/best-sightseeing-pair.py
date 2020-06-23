@@ -11,14 +11,22 @@
 # Return the maximum score of a pair of sightseeing spots.
 
 class Solution(object):
+    # DP: for each new element, count the current best score in all previous sightseeing spot.
+    # 得分公式A[i] + A[j] + i - j 中：A[j]-j 是固定的，因此我们需要最大化 A[i]+i for all previous i.
     # maintain a previous best elem
-    # Count the current best score in all previous sightseeing spot.
     # Note that, as we go further, the score of previous spot decrement.
     def maxScoreSightseeingPair(self, A):
         """
         :type A: List[int]
         :rtype: int
         """
+        mx, ans = A[0] + 0, 0
+        for i in range(1, len(A)):
+            ans = max(ans, mx+A[i]-i)
+            mx = max(mx, A[i] + i)
+        return ans
+
+    def maxScoreSightseeingPair2(self, A):
         ans, i = 0, 0
         for j in range(1, len(A)):
             ans = max(ans, A[j] + A[i] - (j - i))

@@ -38,21 +38,22 @@ import heapq
 
 class Solution(object):
     def findCheapestPrice(self, n, flights, src, dst, K): # USE THIS
-        graph = [{} for _ in xrange(n)]
+        graph = [{} for _ in range(n)]
         for u, v, p in flights:
             graph[u][v] = p
 
         # K stops means can move K+1 steps, store and update the best price for each step separately
-        best = [[float('inf')] * (K + 2) for _ in xrange(n)]
+        # no need to fill best[src][0] as 0 like stepless Dijkstra does, because we won't go back to overwrite step 0.
+        best = [[float('inf')] * (K + 2) for _ in range(n)]
         minHeap = [(0, src, 0)]  # (price, node-to-reach, step-needed)
         while minHeap:
             price, node, step = heapq.heappop(minHeap)
             if node == dst:
                 return price
-            if price > best[node][step]:
+            if step > K or price > best[node][step]: # prune
                 continue
             for nei, p in graph[node].items():
-                if step + 1 <= K + 1 and price + p < best[nei][step + 1]:
+                if price + p < best[nei][step + 1]:
                     heapq.heappush(minHeap, (price + p, nei, step + 1))
                     best[nei][step + 1] = price + p
 
@@ -84,4 +85,5 @@ class Solution(object):
                     heapq.heappush(min_heap, (result+w, v, k-1))
         return -1
 
-print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 0))
+print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500],[1,0,600]], 0, 2, 1)) # 200
+print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 0)) # 500

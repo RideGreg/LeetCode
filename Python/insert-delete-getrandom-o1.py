@@ -1,6 +1,7 @@
 # Time:  O(1)
 # Space: O(n)
 
+# 380
 # Design a data structure that supports all following operations in O(1) time.
 #
 # insert(val): Inserts an item val to the set if not already present.
@@ -35,7 +36,12 @@
 # randomSet.getRandom();
 
 
-from random import randint
+# 哈希表+动态数组：RandomizedSet要求在O(1)实现insert, delete, getRandom
+# For insert, 哈希表dict/set和动态数组list是O(1)。哈希表没有索引，不能获得真正的随机值。
+# 只能用数组。数组可以常数insert/getRandom，但是删除需要线性时间，要优化到常数时间，
+# 解决方案是将待删元素和最后一个元素交换并删除最后一个元素，因此需要一个哈希表来存储数值到索引的映射。
+
+import random
 
 class RandomizedSet(object):
 
@@ -44,7 +50,7 @@ class RandomizedSet(object):
         Initialize your data structure here.
         """
         self.__set = []
-        self.__used = {}
+        self.__val2index = {}
 
 
     def insert(self, val):
@@ -53,14 +59,11 @@ class RandomizedSet(object):
         :type val: int
         :rtype: bool
         """
-        if val in self.__used:
-            return False
-
-        self.__set += val,
-        self.__used[val] = len(self.__set)-1
-
-        return True
-
+        if val not in self.__val2index:
+            self.__val2index[val] = len(self.__set)
+            self.__set.append(val)
+            return True
+        return False
 
     def remove(self, val):
         """
@@ -68,27 +71,40 @@ class RandomizedSet(object):
         :type val: int
         :rtype: bool
         """
-        if val not in self.__used:
-            return False
+        if val in self.__val2index:
+            '''pop HAS TO BE done AFTER re-assign, because for single entry, pop->re-assign will
+               add the entry back. insert(0), remove(0), insert(0) is wrong for following code
+            pos = self.__val2index.pop(val)
+            self.__val2index[self.__set[-1]] = pos
+            '''
+            self.__val2index[self.__set[-1]] = self.__val2index[val]
+            pos = self.__val2index.pop(val)
 
-        self.__used[self.__set[-1]] = self.__used[val]
-        self.__set[self.__used[val]], self.__set[-1] = self.__set[-1], self.__set[self.__used[val]]
-
-        self.__used.pop(val)
-        self.__set.pop()
-
-        return True
+            self.__set[pos], self.__set[-1] = self.__set[-1], self.__set[pos]
+            self.__set.pop()
+            return True
+        return False
 
     def getRandom(self):
         """
         Get a random element from the set.
         :rtype: int
         """
-        return self.__set[randint(0, len(self.__set)-1)]
+        if not self.__set: return None
+        return random.choice(self.__set)
+        # simpler than: return self.__set[random.randint(0, len(self.__set)-1)]
 
+obj = RandomizedSet()
+print(obj.insert(0)) # True
+print(obj.insert(1)) # True
+print(obj.remove(0)) # True
+print(obj.insert(2)) # True
+print(obj.remove(1)) # True
+print(obj.getRandom())  # 2
 
-# Your RandomizedSet object will be instantiated and called as such:
-# obj = RandomizedSet()
-# param_1 = obj.insert(val)
-# param_2 = obj.remove(val)
-# param_3 = obj.getRandom()
+obj = RandomizedSet()
+print(obj.insert(0)) # True
+print(obj.getRandom())  # 0
+print(obj.remove(0)) # True
+print(obj.getRandom())  # None
+print(obj.insert(0)) # True

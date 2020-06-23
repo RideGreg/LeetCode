@@ -42,9 +42,9 @@ class Solution: # USE THIS: revert sub linked list is very straightforward and e
     def reverse(self, head: ListNode, tail: ListNode):
         prev, cur = head, head.next
         while prev != tail:
-            next_cur = cur.next
-            cur.next = prev # the only
-            prev, cur = cur, next_cur
+            temp = cur.next
+            cur.next = prev # the only connection being reverted
+            prev, cur = cur, temp # move forward
         return tail, head
 
     def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
@@ -55,7 +55,7 @@ class Solution: # USE THIS: revert sub linked list is very straightforward and e
         while head:
             # 确定tail，nex
             tail = pre
-            for i in range(k): # 查看剩余部分长度是否大于等于 k
+            for _ in range(k): # 查看剩余部分长度是否大于等于 k
                 tail = tail.next
                 if not tail:
                     return dummy.next
@@ -63,12 +63,12 @@ class Solution: # USE THIS: revert sub linked list is very straightforward and e
 
             # 翻转，并把子链表重新接回原链表 head and tail participate reverse
             # pre->head->......->tail->nex
-            head, tail = self.reverse(head, tail)
-            pre.next = head
-            tail.next = nex
+            newhead, newtail = self.reverse(head, tail)
+            pre.next = newhead
+            newtail.next = nex
 
-            # 确定新的pre，head
-            pre, head = tail, tail.next
+            # move forward
+            pre, head = newtail, newtail.next
 
         return dummy.next
 
@@ -120,4 +120,11 @@ if __name__ == "__main__":
     head.next.next = ListNode(3)
     head.next.next.next = ListNode(4)
     head.next.next.next.next = ListNode(5)
-    print(Solution().reverseKGroup(head, 2))
+    print(Solution().reverseKGroup(head, 2)) # 2-1-4-3-5
+
+    head = ListNode(1)
+    head.next = ListNode(2)
+    head.next.next = ListNode(3)
+    head.next.next.next = ListNode(4)
+    head.next.next.next.next = ListNode(5)
+    print(Solution().reverseKGroup(head, 3)) # 3-2-1-4-5

@@ -35,40 +35,15 @@ class TreeNode(object):
         self.right = None
 class Codec: # USE THIS: preorder
     def serialize(self, root):  # BEST
+        """Encodes a tree to a single string.
+        :type root: TreeNode
+        :rtype: str
+        """
         if not root:
             return '#'
         return '{} {} {}'.format(root.val, self.serialize(root.left), self.serialize(root.right))
 
-    def serialize2(self, root):
-        """Encodes a tree to a single string.
-
-        :type root: TreeNode
-        :rtype: str
-        """
-        def serializeHelper(node):
-            if not node:
-                vals.append('#')
-            else:
-                vals.append(str(node.val))
-                serializeHelper(node.left)
-                serializeHelper(node.right)
-        vals = []
-        serializeHelper(root)
-        return ' '.join(vals)
-        ''' Memory Limit Exceeded if pass the array as param
-    def serialize(self, root):  #MLE
-        def preOrder(n, vals):
-            if not n:
-                vals.append('#')
-            else:
-                vals.append(str(n.val))
-                vals = preOrder(n.left, vals)
-                vals = preOrder(n.right, vals)
-            return vals
-
-        vals = preOrder(root, [])
-        return ' '.join(vals)
-
+    def serialize2(self, root): # second best
         # iteration solution:
         vals, stk = [], [(root, False)]
         while stk:
@@ -83,17 +58,42 @@ class Codec: # USE THIS: preorder
                 stk.append((node.left, False))
                 stk.append((node, True))
         return ' '.join(vals)
-        '''
+    '''
+    def serialize(self, root): # this uses a global 'vals'
+        def helper(node):
+            if not node:
+                vals.append('#')
+            else:
+                vals.append(str(node.val))
+                helper(node.left)
+                helper(node.right)
+        vals = []
+        helper(root)
+        return ' '.join(vals)
+
+    # Memory Limit Exceeded if pass the array as param
+    def serialize(self, root):  #MLE
+        def preOrder(n, vals):
+            if not n:
+                vals.append('#')
+            else:
+                vals.append(str(n.val))
+                vals = preOrder(n.left, vals)
+                vals = preOrder(n.right, vals)
+            return vals
+
+        vals = preOrder(root, [])
+        return ' '.join(vals)
+    '''
 
 
     def deserialize(self, data):
         """Decodes your encoded data to tree.
-
         :type data: str
         :rtype: TreeNode
         """
         def deserializeHelper():
-            val = next(vals)
+            val = next(it)
             if val == '#':
                 return None
             node = TreeNode(int(val))
@@ -112,7 +112,7 @@ class Codec: # USE THIS: preorder
                 yield source[start:idx]
                 start = idx + sepsize
 
-        vals = iter(data.split())
+        it = iter(data.split())
         #vals = iter(isplit(data, ' ')) # need to use data.split(), as isplit causes MEMORY LIMIT EXCEED
         return deserializeHelper()
 
@@ -172,7 +172,10 @@ class Codec_levelorder: # Memory Limit Exceeded
 root, root.left, root.right = TreeNode(1), TreeNode(2), TreeNode(3)
 root.right.left, root.right.right = TreeNode(4), TreeNode(5)
 root.right.right.left = TreeNode(6)
-
+#      1
+#   2    3
+#      4   5
+#         6
 codec = Codec()
 data = codec.serialize(root) #: 1 2 # # 3 4 # # 5 6 # # #
 print(data)
@@ -180,5 +183,5 @@ codec.deserialize(data)
 
 codec = Codec_levelorder()
 data = codec.serialize(root)
-print(data)
+print(data) # 1 2 3 # # 4 5 # # 6 # # #
 codec.deserialize(data)

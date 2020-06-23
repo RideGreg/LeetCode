@@ -43,7 +43,20 @@ class Solution(object):
 
         triPartition(nums, 1)
 
+    def sortColors_wrong(self, nums):
+        l, r, i = 0, len(nums)-1, 0
+        while i < len(nums): # WRONG: right右边全是2. 如果 i > right继续做，又把2换到中间去了
+            if nums[i] == 0:
+                nums[i], nums[l] = nums[l], nums[i]
+                l += 1
+                i += 1
+            elif nums[i] == 2:
+                nums[i], nums[r] = nums[r], nums[i]
+                r -= 1
+            else:
+                i += 1
+        return nums
 if __name__ == "__main__":
-    A = [2, 1, 1, 0, 0, 2]
-    Solution().sortColors(A)
-    print A
+    for A in ([2,1,1,0,0,2], [2,0,2,1,1,0]):
+        Solution().sortColors(A)
+        print(A)

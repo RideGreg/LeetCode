@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 82
 # Given a sorted linked list, delete all nodes that have duplicate numbers,
 #  leaving only distinct numbers from the original list.
 #
@@ -27,23 +27,21 @@ class Solution(object):
         :type head: ListNode
         :rtype: ListNode
         """
-        dummy = ListNode(0)
-        pre, cur = dummy, head
-        while cur:
-            if cur.next and cur.next.val == cur.val:
-                val = cur.val;
-                while cur and cur.val == val:
-                    cur = cur.next
-                pre.next = cur
-            else:
-                pre.next = cur
-                pre = cur
-                cur = cur.next
+        dummy = pre = ListNode(0) # head may need to be removed
+        while head:
+            if head.next and head.next.val == head.val: # skip over all dups
+                val = head.val
+                while head and head.val == val:
+                    head = head.next
+                pre.next = head
+            else: # do not remove anything
+                pre.next = head
+                pre, head = head, head.next
         return dummy.next
 
 if __name__ == "__main__":
     head, head.next, head.next.next = ListNode(1), ListNode(2), ListNode(3)
     head.next.next.next, head.next.next.next.next = ListNode(3), ListNode(4)
     head.next.next.next.next.next, head.next.next.next.next.next.next = ListNode(4), ListNode(5)
-    print Solution().deleteDuplicates(head)
+    print(Solution().deleteDuplicates(head)) # 1-2-5
 

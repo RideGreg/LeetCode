@@ -16,10 +16,9 @@ class Solution(object):
     # @param a list of integers
     # @return an integer
     def removeDuplicates(self, nums: List[int]) -> int:
-        i = 0 # the position ready to be written
-        for j in range(len(nums)):
-            # only write new number
-            if j == 0 or nums[j] != nums[j-1]:
+        i = 1 # the position ready to be written
+        for j in range(1, len(nums)):
+            if nums[j] != nums[j-1]: # also ok to check nums[j] != nums[i-1], where i-1 is last written
                 nums[i] = nums[j]
                 i += 1
         return i

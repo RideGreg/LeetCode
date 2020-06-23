@@ -45,33 +45,18 @@ class Solution:
     # In addition, if grid[i][j] can go both grid[i+1][j] and grid[i][j+1] to P, we should choose a path with less start health
     # between grid[i+1][j] and grid[i][j+1] since it require less start health of grid[i][j].
 
-    def calculateMinimumHP_ming(self, dungeon): # USE THIS
+    def calculateMinimumHP(self, dungeon): # USE THIS
+        # dp[j] means minimum initial health required before entering this cell
         m, n = len(dungeon), len(dungeon[0])
-        start = [[0] * n for _ in range(2)]
-
-        start[(m - 1) % 2][n - 1] = max(1, 1 - dungeon[m - 1][n - 1])
-        for j in reversed(range(n - 1)):
-            start[(m - 1) % 2][j] = max(1, start[(m - 1) % 2][j + 1] - dungeon[m - 1][j])
-
-        for i in reversed(range(m - 1)):
-            start[i % 2][n - 1] = max(1, start[(i + 1) % 2][n - 1] - dungeon[i][n - 1])
-            for j in reversed(range(n - 1)):
-                start[i % 2][j] = max(1, min(start[(i + 1) % 2][j], start[i % 2][j + 1]) - dungeon[i][j])
-
-        return start[0][0]
-
-    def calculateMinimumHP_kamyu(self, dungeon): # similar to the above
-        m, n = len(dungeon), len(dungeon[0])
-        DP = float("inf") * n
-        DP[-1] = 1
+        dp = [float("inf")] * n
+        dp[-1] = 1
 
         for i in reversed(range(m)):
-            DP[-1] = max(DP[-1] - dungeon[i][-1], 1)
+            dp[-1] = max(1, dp[-1] - dungeon[i][-1])
             for j in reversed(range(n - 1)):
-                min_HP_on_exit = min(DP[j], DP[j + 1])
-                DP[j] = max(min_HP_on_exit - dungeon[i][j], 1)
+                dp[j] = max(1, min(dp[j], dp[j + 1]) - dungeon[i][j])
 
-        return DP[0]
+        return dp[0]
 
 
 class Solution_wrong:
