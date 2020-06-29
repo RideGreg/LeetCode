@@ -102,7 +102,7 @@
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -290,7 +290,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -423,7 +423,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -461,7 +461,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -515,7 +515,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -534,7 +534,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -561,7 +561,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -645,7 +645,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -730,7 +730,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -878,7 +878,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -921,7 +921,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -964,7 +964,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1003,7 +1003,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1066,7 +1066,7 @@ xxxx| [Collect Coins On The Tree] | [Python](./Python/collect-coins-on-the-tree.
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1091,7 +1091,7 @@ xxx|[Kth Largest Element in a Stream](https://leetcode.com/explore/learn/card/in
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1160,7 +1160,7 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1227,7 +1227,7 @@ xxx|[Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)|[Python]
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1278,7 +1278,7 @@ xxx| [Minimax Sample] | [Python](./Python/minimax.py) | | | Medium | | |
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1453,7 +1453,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1536,7 +1536,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1560,7 +1560,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1573,7 +1573,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1586,7 +1586,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1636,7 +1636,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1656,7 +1656,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1753,7 +1753,7 @@ xxxx| [Max Sum Rectangle in 2d Matrix] | [Python](./Python/max-sum-rectangle-in-
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 
@@ -1779,7 +1779,7 @@ xxx | [Python Method] | [Python](./Python/python-method.py) | | | | |
 
 <br/>
 <div align="right">
-    <b><a href="#algorithms">back to top</a></b>
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
 >>>>>>> 979610af... Update README.md
