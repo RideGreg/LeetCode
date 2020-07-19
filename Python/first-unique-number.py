@@ -34,7 +34,6 @@ class FirstUnique(object): # USE THIS: use OrderedDict to controll order, actual
             return next(iter(self.__unique))
         return -1
     
-
     def add(self, value):
         """
         :type value: int
