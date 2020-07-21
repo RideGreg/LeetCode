@@ -2,7 +2,9 @@
 # Space: O(1)
 
 # 1254 weekly contest 162 11/9/2019
-# Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally connected group of 0s and a closed island is an island totally (all left, top, right, bottom) surrounded by 1s.
+# Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally
+# connected group of 0s and a closed island is an island totally (all left, top, right, bottom)
+# surrounded by 1s.
 #
 # Return the number of closed islands.
 
@@ -25,11 +27,11 @@ class Solution(object):
         stack, m, n, ans = [], len(grid), len(grid[0]), 0
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         # clean land cells connecting to border
-        for r in (0, m - 1):
+        for r in (0, m - 1):  # top and bottom row
             for c in range(n):
                 if grid[r][c] == 0:
                     stack.append((r, c))
-        for c in (0, n - 1):
+        for c in (0, n - 1):  # left and right column
             for r in range(1, m - 1):
                 if grid[r][c] == 0:
                     stack.append((r, c))
@@ -75,10 +77,12 @@ print(Solution().closedIsland([
     [1,0,0,0,0,1,0,1],
     [1,1,1,1,1,1,1,0]]
 )) # 2
+
 print(Solution().closedIsland([
     [0,0,1,0,0],
     [0,1,0,1,0],
     [0,1,1,1,0]])) # 1
+
 print(Solution().closedIsland([
     [1,1,1,1,1,1,1],
     [1,0,0,0,0,0,1],

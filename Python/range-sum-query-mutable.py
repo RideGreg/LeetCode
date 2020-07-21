@@ -29,7 +29,7 @@ except NameError:
 # https://www.geeksforgeeks.org/binary-indexed-tree-or-fenwick-tree-2/
 # input [2,4,5,7,8,9] will be stored as [0,2,6,5,18,8,17]. Root tree nodes is a dummy node.
 #
-# Tree structure: node stores prefix sum. Each node stores a RANGE of prefix sum.
+# Tree structure: each node stores a RANGE of prefix sum.
 # If binary representation of i has k training zeros, node i stores a RANGE of 2^k previous numbers.
 # Parent node Id equals children node removing Last Set Bit.
 # BUT works for sum only, as not every disjoint range can directly get from BITree e.g. range[2-2] is
@@ -72,7 +72,7 @@ class NumArray(object): # USE THIS for sum
         if delta:
             self.__nums[i] = val
             i += 1
-            while i <= len(self.__nums):
+            while i < len(self.BITree):
                 self.BITree[i] += delta
                 i += (i & -i) # add Last Set Bit i.e. recursively visit all larger nodes containing the value of this node
 
@@ -88,7 +88,7 @@ class NumArray(object): # USE THIS for sum
             ret = 0
             while i > 0:
                 ret += self.BITree[i]
-                i -= (i & -i) # deduct Last Set Bit = get parent
+                i -= (i & -i) # deduct Last Set Bit = get parent, or i = i & (i-1)
             return ret
         return sum(j) - sum(i-1)
 

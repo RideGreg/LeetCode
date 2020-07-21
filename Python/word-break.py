@@ -1,4 +1,4 @@
-# Time:  O(n * l^2)
+# Time:  O(n * l^2), slice to get substring s[i-l:i] takes l time
 # Space: O(n)
 
 # 139
@@ -12,7 +12,8 @@
 # Return true because "leetcode" can be segmented as "leet code".
 
 class Solution(object):
-    def wordBreak(self, s, wordDict):  # USE THIS
+    def wordBreak(self, s, wordDict):  # USE THIS: only need to check all s[0:i], no need to
+                                       # check every s[i:j]
         """
         :type s: str
         :type wordDict: Set[str]

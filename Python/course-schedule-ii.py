@@ -45,30 +45,19 @@ class Solution(object):
         :type prerequisites: List[List[int]]
         :rtype: List[int]
         """
-        res, zero_in_degree_queue = [], deque()
-        in_degree, out_degree = defaultdict(set), defaultdict(set)
+        in_degree, graph = defaultdict(int), defaultdict(set)
+        for c, pre in prerequisites:
+            in_degree[c] += 1
+            graph[pre].add(c)
 
-        for i, j in prerequisites:
-            in_degree[i].add(j)
-            out_degree[j].add(i)
-
-        for i in xrange(numCourses):
-            if i not in in_degree:
-                zero_in_degree_queue.append(i)
-
+        # 每次只能选 入度为 0 的课，因为它不依赖别的课
+        ans = []
+        zero_in_degree_queue = deque([i for i in range(numCourses) if i not in in_degree])
         while zero_in_degree_queue:
             prerequisite = zero_in_degree_queue.popleft()
-            res.append(prerequisite)
-
-            if prerequisite in out_degree:
-                for course in out_degree[prerequisite]:
-                    in_degree[course].discard(prerequisite)
-                    if not in_degree[course]:
-                        zero_in_degree_queue.append(course)
-
-                del out_degree[prerequisite]
-
-        if out_degree:
-            return []
-
-        return res
+            ans.append(prerequisite)
+            for course in graph[prerequisite]:
+                in_degree[course] -= 1 # 减小相关课的入度
+                if not in_degree[course]:
+                    zero_in_degree_queue.append(course)
+        return ans if len(ans) == numCourses else []

@@ -1,6 +1,6 @@
-# Time:  O(|V| + |E|)
+# Time:  O(|V| + |E|) 遍历一个图需要访问所有节点和所有临边
 # Space: O(|E|)
-#
+# 207
 # There are a total of n courses you have to take, labeled from 0 to n - 1.
 #
 # Some courses may have prerequisites, for example to take course 0
@@ -31,6 +31,12 @@
 # Topological sort could also be done via BFS.
 #
 
+# 通过 拓扑排序 判断此课程安排图是否是 有向无环图(DAG) 。 拓扑排序原理： 对 DAG 的顶点进行排序，
+# 使得对每一条有向边 (u, v)，均有 u（在排序记录中）比 v 先出现。
+#
+# 通过课程前置条件列表 prerequisites 可以得到课程安排图的 邻接表 adjacency，以降低算法时间复杂度
+
+
 from collections import defaultdict, deque
 
 
@@ -41,33 +47,24 @@ class Solution(object):
         :type prerequisites: List[List[int]]
         :rtype: bool
         """
-        zero_in_degree_queue = deque()
-        in_degree, out_degree = defaultdict(set), defaultdict(set)
+        # 构建邻接表、和入度数组
+        in_degree, graph = defaultdict(int), defaultdict(set)
+        for c, pre in prerequisites:
+            in_degree[c] += 1
+            graph[pre].add(c)
 
-        for i, j in prerequisites:
-            in_degree[i].add(j)
-            out_degree[j].add(i)
-
-        for i in xrange(numCourses):
-            if i not in in_degree:
-                zero_in_degree_queue.append(i)
-
+        # 每次只能选 入度为 0 的课，因为它不依赖别的课
+        zero_in_degree_queue = deque([i for i in range(numCourses) if i not in in_degree])
         while zero_in_degree_queue:
             prerequisite = zero_in_degree_queue.popleft()
-
-            if prerequisite in out_degree:
-                for course in out_degree[prerequisite]:
-                    in_degree[course].discard(prerequisite)
-                    if not in_degree[course]:
-                        zero_in_degree_queue.append(course)
-
-                del out_degree[prerequisite]
-
-        if out_degree:
-            return False
-
-        return True
-
+            numCourses -= 1
+            for course in graph[prerequisite]:
+                in_degree[course] -= 1 # 减小相关课的入度
+                if not in_degree[course]:
+                    zero_in_degree_queue.append(course)
+        return numCourses == 0
 
 if __name__ == "__main__":
-    print Solution().canFinish(1, [])
+    print(Solution().canFinish(1, [])) # True
+    print(Solution().canFinish(2, [[1, 0]])) # True
+    print(Solution().canFinish(2, [[1, 0], [0, 1]])) # False

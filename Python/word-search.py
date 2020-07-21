@@ -1,6 +1,6 @@
 # Time:  O(m * n * l)
 # Space: O(l)
-#
+# 79
 # Given a 2D board and a word, find if the word exists in the grid.
 #
 # The word can be constructed from letters of sequentially adjacent cell,
@@ -25,6 +25,28 @@ class Solution:
     # @param word, a string
     # @return a boolean
     def exist(self, board, word):
+        def dfs(x, y, i):
+            if i == len(word): return True
+
+            # all "if check" merges here. Since we change to '#' for visited cell,
+            # this filters both visited cell and non-match char.
+            if not (0<=x<len(board) and 0<=y<len(board[0]) and board[x][y] == word[i]):
+                return False
+
+            letter = board[x][y]
+            board[x][y] = '#' # mark as visited
+            ans = False
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                if dfs(x+dx, y+dy, i+1):
+                    ans = True
+                    break
+            board[x][y] = letter
+            return ans
+
+        return any(dfs(x, y, 0) for x in range(len(board)) for y in range(len(board[0])))
+
+
+    def exist_kamyu(self, board, word):
         visited = [[False for j in xrange(len(board[0]))] for i in xrange(len(board))]
 
         for i in xrange(len(board)):
@@ -52,10 +74,10 @@ class Solution:
 
 if __name__ == "__main__":
     board = [
-              "ABCE",
-              "SFCS",
-              "ADEE"
+              ["A","B","C","E"],
+              ["S","F","C","S"],
+              ["A","D","E","E"]
             ]
-    print Solution().exist(board, "ABCCED")
-    print Solution().exist(board, "SFCS")
-    print Solution().exist(board, "ABCB")
+    print(Solution().exist(board, "ABCCED")) # True
+    print(Solution().exist(board, "SFCS")) # True
+    print(Solution().exist(board, "ABCB")) # False

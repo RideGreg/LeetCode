@@ -19,6 +19,8 @@
 #   [3]
 # ]
 
+import collections
+
 
 # Definition for a  binary tree node
 class TreeNode(object):
@@ -34,6 +36,23 @@ class Solution(object):
         :type root: TreeNode
         :rtype: List[List[int]]
         """
+        ans = []
+        if not root: return ans
+
+        q = collections.deque([root])
+        while q:
+            level, sz = [], len(q)
+            for _ in range(sz):
+                node = q.popleft()
+                level.append(node.val)
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            ans.append(level)
+        return ans[::-1]
+
+    def levelOrderBottom_kamyu(self, root):
         if root is None:
             return []
 

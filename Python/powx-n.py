@@ -1,7 +1,10 @@
 # Time:  O(logn) = O(1)
 # Space: O(1)
 
+# 50
 # Implement pow(x, n).
+# Note: -100.0 < x < 100.0
+# n is a 32-bit signed integer, within the range [−2^31, 2^31 − 1]
 
 # Iterative solution.
 class Solution(object):
@@ -11,6 +14,7 @@ class Solution(object):
         :type n: int
         :rtype: float
         """
+        if x == 0: return 0.0 # necessary, otherwise ZeroDivisionError: float division by zero. Eg. myPow(0, -5)
         if n < 0:
             return 1.0 / self.myPow(x, -n)
 
@@ -23,7 +27,7 @@ class Solution(object):
         return ans
 
 # Time:  O(logn)
-# Space: O(logn)
+# Space: O(logn), recursion uses stack space
 # Recursive solution.
 class Solution2(object):
     def myPow(self, x, n):
@@ -32,18 +36,21 @@ class Solution2(object):
         :type n: int
         :rtype: float
         """
-        if n < 0 and n != -n:
-            return 1.0 / self.myPow(x, -n)
-        if n == 0:
-            return 1
-        v = self.myPow(x, n / 2)
-        if n % 2 == 0:
-            return v * v
+        def quickPow(x, n):
+            if n == 0:
+                return 1.0
+            v = quickPow(x, n // 2)
+            return v * v if n % 2 == 0 else v * v * x
+
+        if x == 0: return 0.0
+        if n >= 0:
+            return quickPow(x, n)
         else:
-            return v * v * x
+            return 1.0 / quickPow(x, -n)
 
 
 if __name__ == "__main__":
+    print(Solution().myPow(0, -5)) # 0.0
     print(Solution().myPow(2.00000, -2147483648)) # 0.0
     print(Solution().myPow(3, 5)) # 243
     print(Solution().myPow(3, -5)) # 0.00411522633745

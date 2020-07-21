@@ -34,8 +34,9 @@ class Solution(object):
         :rtype: List[int]
         """
         counts = collections.Counter(nums)
-        buckets = [[] for _ in xrange(len(nums)+1)]
-        for i, count in counts.iteritems():
+        sz = max(counts.values())
+        buckets = [[] for _ in xrange(sz+1)]
+        for i, count in counts.items():
             buckets[count].append(i)
 
         result = []
@@ -53,7 +54,7 @@ class Solution(object):
 # if ask top k large nums, it is simply kthElement()
 # now ask top k frequent, must get and sort by frequency, then apply kthElement()
 import random
-class Solution2(object):
+class Solution2(object):  # USE THIS
     def topKFrequent(self, nums, k):
         """
         :type nums: List[int]
@@ -61,32 +62,28 @@ class Solution2(object):
         :rtype: List[int]
         """
         def kthElement(A, k):
-            def partition(l, r, pivot):
-                new_pivot = l
+            def partition(l, r): # O(n) on average
+                pivot = random.randint(l, r)
                 A[pivot], A[r] = A[r], A[pivot]
+
+                ans = l
                 for i in range(l, r):
                     if A[i] < A[r]:
-                        A[i], A[new_pivot] = A[new_pivot], A[i]
-                        new_pivot += 1
+                        A[i], A[ans] = A[ans], A[i]
+                        ans += 1
+                A[ans], A[r] = A[r], A[ans]
+                return ans
 
-                A[new_pivot], A[r] = A[r], A[new_pivot]
-                return new_pivot
-
-            l, r = 0, len(A) - 1
-            while l <= r:
-                pivot = random.randint(l, r)
-                new_pivot = partition(l, r, pivot)
-                if new_pivot == k:
-                    return
-                elif new_pivot > k:
-                    r = new_pivot - 1
-                else:
-                    l = new_pivot + 1
+            l, r = 0, len(A)-1
+            while l < r:
+                new_pivot = partition(l, r)
+                if new_pivot == k: return
+                elif new_pivot > k: r = new_pivot - 1
+                else: l = new_pivot + 1
+            return
 
         counts = collections.Counter(nums)
-        pairs = []
-        for n, count in counts.items():
-            pairs.append((-count, n))
+        pairs = [(-count, n) for n, count in counts.items()]
         kthElement(pairs, k-1)
         return [x[1] for x in pairs[:k]]
 

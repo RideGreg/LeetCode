@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 203
 # Remove all elements from a linked list of integers that have value val.
 #
 # Example
@@ -18,17 +18,15 @@ class Solution:
     # @param {integer} val
     # @return {ListNode}
     def removeElements(self, head, val):
-        dummy = ListNode(float("-inf"))
+        dummy = prev = ListNode(float("-inf"))
         dummy.next = head
-        prev, curr = dummy, dummy.next
 
-        while curr:
-            if curr.val == val:
-                prev.next = curr.next
+        while head:
+            if head.val == val:
+                prev.next = head.next
             else:
-                prev = curr
-
-            curr = curr.next
+                prev = prev.next
+            head = head.next
 
         return dummy.next
 

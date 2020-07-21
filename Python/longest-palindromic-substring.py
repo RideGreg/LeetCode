@@ -22,13 +22,30 @@ class Solution(object):
 
         start, end = 0, 0
         for i in range(len(s)):
-            left1, right1 = expandAroundCenter(i, i)
-            left2, right2 = expandAroundCenter(i, i + 1)
-            if right1 - left1 > end - start:
-                start, end = left1, right1
-            if right2 - left2 > end - start:
-                start, end = left2, right2
+            l, r = expandAroundCenter(i, i)
+            if r-l > end-start:
+                start, end = l, r
+
+            l, r = expandAroundCenter(i, i+1)
+            if r-l > end-start:
+                start, end = l, r
         return s[start: end + 1]
+
+    def longestPalindrome_wrong(self, s): # for input 'cb', return 'cb'
+        def expand(l, r):
+            while l > 0 and r < len(s)-1 and s[l-1] == s[r+1]:
+                l, r = l-1, r+1
+        return l, r   #!! no guarantee input (l, r) is valid!!
+
+        start, end = 0, 0
+        for i in range(len(s)):
+            l, r = expand(i, i)
+            if r-l > end-start:
+                start, end = l, r
+            l, r = expand(i, i+1)
+            if r-l > end-start:
+                start, end = l, r
+        return s[start:end+1]
 
     # Dynamic Programming: time O(n^2) space optimized O(n)
     def longestPalindrome_dp(self, s):
@@ -91,7 +108,7 @@ class Solution(object):
         return s[start : start + P[max_i]]
 
 
-
+print(Solution().longestPalindrome("")) # ''
 print(Solution().longestPalindrome("abb")) # bb
 print(Solution().longestPalindrome("babad")) # aba
 

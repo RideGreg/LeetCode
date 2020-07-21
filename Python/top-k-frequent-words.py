@@ -39,34 +39,33 @@ class Solution(object):
         :type k: int
         :rtype: List[str]
         """
-<<<<<<< HEAD
         def kthElement(A, k):
             import random
-            def partition(l, r, pivot): # O(n) on average
-                new_pivot = l
+            def partition(l, r): # O(n) on average
+                pivot = random.randint(l, r)
                 A[pivot], A[r] = A[r], A[pivot]
+
+                ans = l
                 for i in range(l, r):
                     if A[i] < A[r]:
-                        A[i], A[new_pivot] = A[new_pivot], A[i]
-                        new_pivot += 1
-                A[new_pivot], A[r] = A[r], A[new_pivot]
-                return new_pivot
+                        A[i], A[ans] = A[ans], A[i]
+                        ans += 1
+                A[ans], A[r] = A[r], A[ans]
+                return ans
 
             l, r = 0, len(A)-1
-            while l <= r:
-                pivot = random.randint(l, r)
-                new_pivot = partition(l, r, pivot)
+            while l < r:
+                new_pivot = partition(l, r)
                 if new_pivot == k:
                     return
                 elif new_pivot > k:
                     r = new_pivot - 1
                 else:
                     l = new_pivot + 1
+            return
 
         counts = collections.Counter(words)
-        pairs = []
-        for w, c in counts.items():
-            pairs.append((-c, w))
+        pairs = [(-c, w) for w, c in counts.items()]
         kthElement(pairs, k-1)
         return [x[1] for x in sorted(pairs[:k])]
 
@@ -74,7 +73,15 @@ class Solution(object):
 # Space: O(n)
 # Heap Solution: need to build HeapObj
 class Solution2(object):
-    def topKFrequent(self, words, k):
+    # O(n + klogn) heap contains all words, pop k times
+    def topKFrequent(self, words, k): # VERY GOOD TOO
+        counts = collections.Counter(words)          # O(n)
+        heap = [(-c, w) for w, c in counts.items()]  # O(n)
+        heapq.heapify(heap)                          # O(n)
+        return [heapq.heappop(heap)[1] for _ in range(k)]  # O(klogn)
+
+    # O(nlogk) keep k items in heap, need to write Comparator to pop "alphabetical larger word" from minHeap
+    def topKFrequent2(self, words, k):
         """
         :type words: List[str]
         :type k: int
@@ -96,7 +103,7 @@ class Solution2(object):
 
         counts = collections.Counter(words)
         min_heap = []
-        for word, count in counts.iteritems():
+        for word, count in counts.items():
             heapq.heappush(min_heap, MinHeapObj((count, word)))
             if len(min_heap) == k+1:
                 heapq.heappop(min_heap)
@@ -148,7 +155,7 @@ class Solution3(object):
 
 # time: O(nlogn)
 # space: O(n)
-
+# Full Sort
 from collections import Counter
 
 

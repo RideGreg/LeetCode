@@ -17,6 +17,72 @@
 # To the right of 1 there is 0 smaller element.
 # Return the array [2, 1, 1, 0].
 
+
+# Time:  O(nlogn)
+# Space: O(n)
+# BIT solution. OK for smaller/larger/smaller+eq/larger+eq numbers before/after self.
+# Don't do linear scan to see how many valid numbers already seen, which results in O(n^2).
+#
+# Use a helper data structure BITree to store how many numbers before THIS place were seen. Two key things:
+# 1. Pre-process to find the position of each number in sorted array. 2. each number -> its place -> a node in BITree;
+# after seeing a number at place[i], increment all BITree nodes corresponding PLACES AFTER i by 1.
+# underlying list of BITree [dummy, 0, 0, 0, 0, 0]
+# seeing 4th number -> [dummy, 0, 0, 0, 1, 0]
+# seeing 2nd number -> [dummy, 0, 1, 0, 2, 0]
+# seeing 1st number -> [dummy, 1, 2, 0, 3, 0]
+
+# 树状数组 + 离散化
+# 树状数组可以动态维护序列前缀和。记题目给定的序列为a，我们用桶来表示值域中的每一个数，桶中记录这些数字出现的次数。
+# 假设a={5,5,2,3,6}，那么遍历这个序列得到的桶是这样的：
+# index  ->  1 2 3 4 5 6 7 8 9
+# value  ->  0 1 1 0 2 1 0 0 0
+# value序列第i-1位的前缀和表示「有多少个数比 i小」。动态维护前缀和的问题我们可以用「树状数组」来解决。
+
+# 用离散化优化空间
+# 如果a值域很大，value序列很多位置是0。用离散化的方法减少无效位置出现。将原数组去重后排序，
+# 原数组每个数映射到去重排序后这个数对应位置的下标
+class Solution(object): # USE THIS,
+    def countSmaller(self, nums, compare="smaller", dir="right"):
+        """
+        :type nums: List[int]
+        :type compare: str - this is a param I add to test "smaller" vs "smaller and equal to"
+        :rtype: List[int]
+        """
+        class BIT(object):
+            def __init__(self, n):
+                self.__bit = [0] * (n + 1)
+
+            def add(self, i, val): # always increment 1, so no need to write update()
+                while i < len(self.__bit):
+                    self.__bit[i] += val
+                    i += (i & -i)
+
+            def query(self, i): # query前缀和，相当于range_sum[0..i]
+                ret = 0
+                while i > 0:
+                    ret += self.__bit[i]
+                    i -= (i & -i)
+                return ret
+
+        # Get the place (position in the ascending order) of each unique number.
+        # If asking larger numbers, sort in descending order.
+        sorted_nums = sorted(set(nums))
+        places = {x: i for i, x in enumerate(sorted_nums)}
+        bit = BIT(len(places))
+        ans = [0] * len(nums),
+
+        # Asks "after self", scan from right to left. For "before self", scan from left.
+        iterable = range(len(nums)) if dir == 'left' else reversed(range(len(nums)))
+        for i in iterable:
+            x = nums[i]
+            if compare == "smaller":
+                ans[i] = bit.query(places[x]) # places[x]+1 is self, for all smaller num, query places[x]
+            elif compare == "smaller_eq":
+                ans[i] = bit.query(places[x] + 1)
+
+            bit.add(places[x] + 1, 1) # after visit a num, increment self node and all nodes including it
+        return ans
+
 # Divide and Conquer solution.
 class Solution2(object):
     def countSmaller(self, nums):
@@ -51,60 +117,6 @@ class Solution2(object):
         countAndMergeSort(0, len(num_idxs) - 1)
         return counts
 
-# Time:  O(nlogn)
-# Space: O(n)
-# BIT solution. OK for smaller/larger/smaller+eq/larger+eq numbers before/after self.
-# Don't do linear scan to see how many valid numbers already seen, which results in O(n^2).
-#
-# Use a helper data structure BITree to store what numbers were seen. Two extra things:
-# 1. Pre-process to find the position of each number in sorted array. 2. each number maps to a node in BITree;
-# after seeing a number, increment all BITree nodes (before and include the mapping noce) by 1.
-# underlying list of BITree [dummy, 0, 0, 0, 0, 0]
-# seeing 4th number -> [dummy, 0, 0, 0, 1, 0]
-# seeing 2nd number -> [dummy, 0, 1, 0, 2, 0]
-# seeing 1st number -> [dummy, 1, 2, 0, 3, 0]
-class Solution(object): # USE THIS,
-    def countSmaller(self, nums, compare="smaller", dir="right"):
-        """
-        :type nums: List[int]
-        :type compare: str - this is a param I add to test "smaller" vs "smaller and equal to"
-        :rtype: List[int]
-        """
-        import bisect
-        class BIT(object):
-            def __init__(self, n):
-                self.__bit = [0] * n
-
-            def add(self, i, val):
-                while i < len(self.__bit):
-                    self.__bit[i] += val
-                    i += (i & -i)
-
-            def query(self, i):
-                ret = 0
-                while i > 0:
-                    ret += self.__bit[i]
-                    i -= (i & -i)
-                return ret
-
-        # Get the place (position in the ascending order) of each number.
-        # If asking larger numbers, sort in descending order.
-        sorted_nums, places = sorted(nums), [0] * len(nums)
-        for i, num in enumerate(nums):
-            places[i] = bisect.bisect_left(sorted_nums, num)
-
-        ans, bit= [0] * len(nums), BIT(len(nums) + 1)
-
-        # Asks "after self", scan from right to left. For "before self", scan from left.
-        iterable = range(len(nums)) if dir == 'left' else reversed(range(len(nums)))
-        for i in iterable:
-            if compare == "smaller":
-                ans[i] = bit.query(places[i]) # places[i]+1 is self, for all smaller num, query places[i]
-            elif compare == "smaller_eq":
-                ans[i] = bit.query(places[i] + 1)
-
-            bit.add(places[i] + 1, 1) # after visit a num, increment self node and all nodes including it
-        return ans
 
 # Time:  O(nlogn)
 # Space: O(n)

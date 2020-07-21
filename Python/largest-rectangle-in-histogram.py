@@ -10,12 +10,30 @@
 # return 10.
 #
 
+# 要点是如何确定每个高度值所在矩形的左右边界：左边界为上一个比自己小的数或数列起始段(记为-1)，
+# 大数来，栈里数都保留，因为右边界还可延申
+# 小数来或到达数列末端，栈里大数右边界确定，弹出并计算面积
 class Solution:
     # @param height, a list of integer
     # @return an integer
-    def largestRectangleArea(self, heights):
+    def largestRectangleArea(self, heights):  # USE THIS
+        stk, ans = [-1], 0
+        for i in range(len(heights)):
+            while stk[-1] != -1 and heights[i] <= heights[stk[-1]]:   # 右边界确定
+                last = stk.pop()
+                if heights[i] < heights[last]:  # 相同高度值不重复计算，只计算最后一个
+                    ans = max(ans, heights[last] * (i - 1 - stk[-1]))
+            stk.append(i)
+
+        while stk[-1] != -1:         # KENG：一定要延申到数列末端之外 e.g. [2,4,5]
+            ans = max(ans, heights[stk.pop()] * (len(heights) - 1 - stk[-1]))
+
+        return ans
+
+
+    def largestRectangleArea_kamyu(self, heights):
         incStack, area, i, N = [], 0, 0, len(heights)
-        while i <= N:
+        while i <= N: # KENG：一定要延申到数列末端之外
             # 压栈只在大数进来做。栈里不存相邻的相等数，因为没必要在弹栈时一个一个计算
             if not incStack or (i < N and heights[i] > heights[incStack[-1]]):
                 incStack.append(i)
@@ -27,6 +45,7 @@ class Solution:
         return area
 
 if __name__ == "__main__":
+    print(Solution().largestRectangleArea([2, 4, 5])) # 8
     print(Solution().largestRectangleArea([2, 2, 2])) # 6
     print(Solution().largestRectangleArea([2, 1, 2])) # 3
     print(Solution().largestRectangleArea([2, 4, 1, 5, 6, 2, 3])) # 10

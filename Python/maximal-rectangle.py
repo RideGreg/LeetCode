@@ -1,4 +1,4 @@
-# Time:  O(n^2)
+# Time:  O(m*n)
 # Space: O(n)
 
 # 85
@@ -13,17 +13,18 @@ class Solution(object):
         :rtype: int
         """
         def largestRectangleArea(heights):
-            incStack, area, i, N = [], 0, 0, len(heights)
-            while i <= N:
-                # 压栈只在大数进来做。栈里不存相邻的相等数，因为没必要在弹栈时一个一个计算
-                if not incStack or (i < N and heights[i] > heights[incStack[-1]]):
-                    incStack.append(i)
-                    i += 1
-                else: # 弹栈：每个高度计算一次面积，栈里往回走高度递减
-                    last = incStack.pop()
-                    width = i - 1 - incStack[-1] if incStack else i
-                    area = max(area, heights[last] * width)
-            return area
+            stk, ans = [-1], 0
+            for i in range(len(heights)):
+                while stk[-1] != -1 and heights[i] <= heights[stk[-1]]:  # 右边界确定
+                    last = stk.pop()
+                    if heights[i] < heights[last]:  # 相同高度值不重复计算，只计算最后一个
+                        ans = max(ans, heights[last] * (i - 1 - stk[-1]))
+                stk.append(i)
+
+            while stk[-1] != -1:  # KENG：一定要延申到数列末端之外 e.g. [2,4,5]
+                ans = max(ans, heights[stk.pop()] * (len(heights) - 1 - stk[-1]))
+
+            return ans
 
         if not matrix:
             return 0
@@ -37,15 +38,33 @@ class Solution(object):
 
         return result
 
-# Time:  O(n^2)
-# Space: O(n)
+
 # DP solution.
 class Solution2(object):
-    def maximalRectangle(self, matrix):
+    # Time:  O(m*n^2) Space: O(n)
+    def maximalRectangle(self, A):    # DONT USE: time complexity
         """
         :type matrix: List[List[str]]
         :rtype: int
         """
+        if not A: return 0
+        m, n, ans = len(A), len(A[0]), 0
+        dp = [(0,0)] * (n+1)           # number of consecutive 1s on left and top direction
+
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if A[i-1][j-1] == '1':
+                    dp[j] = (1+dp[j-1][0], 1+dp[j][1])
+                    minHght = float('inf')
+                    for k in range(dp[j][0]):
+                        minHght = min(minHght, dp[j-k][1])
+                        ans = max(ans, (k+1)*minHght)
+                else:
+                    dp[j] = (0, 0)     # need to reset because we reuse the storage
+        return ans
+
+    # Time:  O(n^2) Space: O(n)
+    def maximalRectangle2(self, matrix):  # hard to understand: 3 dp array L, H, R
         if not matrix: return 0
         result = 0
         m, n = len(matrix), len(matrix[0])
@@ -79,4 +98,4 @@ if __name__ == "__main__":
               "11110",
               "11111",
               "00000"]
-    print(Solution().maximalRectangle(matrix)) # 9
+    print(Solution2().maximalRectangle(matrix)) # 9

@@ -19,13 +19,13 @@ class Solution:
     # @param path, a string
     # @return a string
     def simplifyPath(self, path):
-        stack, tokens = [], path.split("/")
-        for token in tokens:
-            if token == "..":
-                if stack:
+        stack = []
+        for token in path.split("/"):
+            if token != '' and token != '.': # just ignore '' and '.'
+                if token != "..":
+                    stack.append(token)
+                elif stack:
                     stack.pop()
-            elif token != "." and token:
-                stack.append(token)
         return "/" + "/".join(stack)
 
     # follow up: Given current directory and change directory path, return final path. E.g.
@@ -46,11 +46,11 @@ class Solution:
 
         stack = []
         for token in (current + "/" + changed).split("/"):
-            if token == "..":
-                if stack:
+            if token != '' and token != '.': # just ignore '' and '.'
+                if token != "..":
+                    stack.append(token)
+                elif stack:
                     stack.pop()
-            elif token and token != ".":
-                stack.append(token)
         return "/" + "/".join(stack)
 
 if __name__ == "__main__":

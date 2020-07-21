@@ -3,6 +3,7 @@
 # Time:  O(n)
 # Space: O(k)
 
+# 239
 # Given an array nums, there is a sliding window of size k
 # which is moving from the very left of the array to the
 # very right. You can only see the k numbers in the window.
@@ -50,13 +51,16 @@ class Solution(object):
         :rtype: List[int]
         """
         result, dq = [], deque()
-        for i in xrange(len(nums)):
-            if dq and dq[0] <= i - k:
-                dq.popleft()
+        for i in range(len(nums)):
+            # mono stack
             while dq and nums[dq[-1]] <= nums[i]:
                 dq.pop()
             dq.append(i)
+
             if i >= k-1:
+                # maintain window size
+                if dq[0] <= i - k:
+                    dq.popleft()
                 result.append(nums[dq[0]])
         return result
 

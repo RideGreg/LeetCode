@@ -21,28 +21,36 @@ class Solution:
         # all elems already scanned. Since it is impossible to discard more majority elements than minority elements,
         # we are safe in discarding the prefix and continuously look for majority elem in the suffix.
         # Eventually, count will not go to 0 and that answer is the same as answer for whole list.
-        count = 0
-        candidate = None
-
+        count, ans = 0, None
         for num in nums:
             if count == 0:
-                candidate = num
-            count += (1 if num == candidate else -1)
+                ans = num
 
-        return candidate
+            if num == ans:
+                count += 1
+            else:
+                count -= 1
+        return ans
 
-
+    # HashMap. Time: O(n), Space: O(n). Scan once by MAINTAIN MAX during scan
     def majorityElement2(self, nums):
-        # HashMap. Time: O(n), Space: O(n)
+        ans, maxCnt = None, 0
+        cnt = collections.defaultdict(int)
+        for x in nums:
+            cnt[x] += 1
+            if cnt[x] > maxCnt:
+                ans, maxCnt= x, cnt[x]
+        return ans
+
+    # HashMap. Time: O(n), Space: O(n)
+    def majorityElement_sacnTwice(self, nums):
         counts = collections.Counter(nums)
         return max(counts.keys(), key=counts.get)
-        ''' # sorting is actually unnecessary
-        return sorted(counts.items(), key=lambda a: a[1], reverse=True)[0][0]
-        '''
 
-    def majorityElement3(self, nums):
-        # similar to solution majorityElement2
-        return collections.Counter(nums).most_common(1)[0][0]
+        # sorting is unnecessary, directly get max
+        # return sorted(counts.items(), key=lambda a: a[1], reverse=True)[0][0]
+
+        # OR: return collections.Counter(nums).most_common(1)[0][0]
 
     def majorityElement_sorting(self, nums):
         # sorting original list, the majority elem always takes floor(n/2) position

@@ -18,7 +18,7 @@ class Solution:
         result = 0
         for _ in range(32):
             result <<= 1    # this cannot be in end of loop, 不能取值然后移位
-            result |= n & 1
+            result |= n & 1 # 注意如果写一行 ans << 1 + (n & 1)不对，<<优先级低，应该(ans << 1) + (n & 1)
             n >>= 1
         return result
 

@@ -45,6 +45,7 @@
 # The range of n is [1, 10000].
 # The range of dresses number in a super washing machine is [0, 1e5].
 
+
 class Solution(object):
     def findMinMoves(self, machines):
         """
@@ -54,8 +55,10 @@ class Solution(object):
         total = sum(machines)
         if total % len(machines): return -1
 
-        result, target, curr = 0, total / len(machines), 0
+        target = total // len(machines)
+        machines = [x - target for x in machines]
+        result, psum = 0, 0
         for n in machines:
-            curr += n - target
-            result = max(result, max(n - target, abs(curr)))
+            psum += n
+            result = max(result, max(n, abs(psum)))
         return result

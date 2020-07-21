@@ -36,8 +36,8 @@
 # Output: [0,0,1,1,1,1,1,0]
 
 
-# Solution: there are at most 256 possible states for the prison, eventually the states repeat into
-# a cycle rather quickly. Keep track of when the states repeat to find the period t of this cycle,
+# Solution: there are at most 2^6=64 possible states for the prison (first/last item is 0), eventually the states
+# repeat into a cycle rather quickly. Keep track of when the states repeat to find the period t of this cycle,
 # and skip days in multiples of t.
 class Solution(object):
     def prisonAfterNDays(self, cells, N):
@@ -46,50 +46,28 @@ class Solution(object):
         :type N: int
         :rtype: List[int]
         """
-        def nextday(cells):
-            return [0] + [int(cells[i - 1] == cells[i + 1]) for i in xrange(1, 7)] + [0]
-
         seen = {}
         while N:
             c = tuple(cells)
             if c in seen:
                 N %= seen[c] - N
-            seen[c] = N
+                if N == 0: break
+            else:
+                seen[c] = N
 
-            if N:
-                N -= 1
-                cells = nextday(c)
-
-        return cells
-
-    def prisonAfterNDays_kamyu(self, cells, N):
-        N -= max(N-1, 0) // 14 * 14  # 14 is got from Solution2
-        for i in xrange(N):
-            cells = [0] + [cells[i-1] ^ cells[i+1] ^ 1 for i in xrange(1, 7)] + [0]
+            N -= 1
+            cells = [int(0<i<7 and cells[i-1]==cells[i+1]) for i in range(8)]
         return cells
 
 
-# Time:  O(1)
-# Space: O(1)
-class Solution2(object):
-    def prisonAfterNDays(self, cells, N):
-        """
-        :type cells: List[int]
-        :type N: int
-        :rtype: List[int]
-        """
-        cells = tuple(cells)
-        lookup = {}
-        while N:
-            lookup[cells] = N
-            N -= 1
-            cells = tuple([0] + [cells[i - 1] ^ cells[i + 1] ^ 1 for i in xrange(1, 7)] + [0])
-            if cells in lookup:
-                assert(lookup[cells] - N in (1, 7, 14))
-                N %= lookup[cells] - N
-                break
+    def prisonAfterNDays_lee215(self, cells, N):
+        # Brute force finds the cycle can only be (1,7,14). More proof at
+        # https://math.stackexchange.com/questions/3311568/why-does-this-pattern-repeat-after-14-cycles-instead-of-256-can-you-give-a-proo
+        N -= (max(N-1, 0) // 14) * 14  # 14 is got from Solution2
+        for i in range(N):
+            cells = [0] + [1 - cells[i-1] ^ cells[i+1] for i in range(1, 7)] + [0]
+        return cells
 
-        while N:
-            N -= 1
-            cells = tuple([0] + [cells[i - 1] ^ cells[i + 1] ^ 1 for i in xrange(1, 7)] + [0])
-        return list(cells)
+
+print(Solution().prisonAfterNDays([0,1,0,1,1,0,0,1], 7)) # [0,0,1,1,0,0,0,0]
+print(Solution().prisonAfterNDays([1,0,0,1,0,0,1,0], 1000000000)) # [0,0,1,1,1,1,1,0]

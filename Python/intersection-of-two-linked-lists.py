@@ -31,31 +31,54 @@ class ListNode:
 class Solution:
     # @param two ListNodes
     # @return the intersected ListNode
-    def getIntersectionNode(self, headA, headB):
-        curA, curB = headA, headB
-        begin, tailA, tailB = None, None, None
 
-        # a->c->b->c
-        # b->c->a->c
+    # Brute Force: T:O(mn) S:O(1) for each node in A, scan B to check if there is a same node
+    # Hash Table: T:O(m+n) S:O(m) store each node of A in hash table, then scan B.
+    #  Two Pointers: T:O(m+n) S:O(1)
+    def getIntersectionNode(self, headA, headB): # USE THIS
+        curA, curB = headA, headB
+        finishA = finishB = False
+        ans = None
+
+        # a->c->e -> b->e
+        # b->e -> a->c->e
         while curA and curB:
             if curA == curB:
-                begin = curA
-                break
+                return curA
 
             if curA.next:
                 curA = curA.next
-            elif tailA is None:
-                tailA = curA
+            elif not finishA:
+                finishA = True
                 curA = headB
             else:
                 break
 
             if curB.next:
                 curB = curB.next
-            elif tailB is None:
-                tailB = curB
+            elif not finishB:
+                finishB = True
                 curB = headA
             else:
                 break
 
-        return begin
+        return ans
+
+
+d = ListNode(5)
+d.next = ListNode(10)
+
+a = ListNode(1)
+a.next = ListNode(2)
+a.next.next = d
+
+c = ListNode(100)
+c.next = d
+print(Solution().getIntersectionNode(a, c).val) # 5
+
+aa = ListNode(11)
+aa.next = ListNode(22)
+cc = ListNode(111)
+print(Solution().getIntersectionNode(aa, cc)) # None
+
+print(Solution().getIntersectionNode(a, None)) # None

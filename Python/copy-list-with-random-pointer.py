@@ -48,22 +48,22 @@ class Solution2:
     # @param head, a RandomListNode
     # @return a RandomListNode
     def copyRandomList(self, head):  # USE THIS: two steps, maintain mapping
-        dummy = pre = RandomListNode(-1)
+        dummy = nhead = RandomListNode(-1)
         mapping = {}
 
         # copy a normal list without random pointer
-        cur = head
-        while cur:
-            node = RandomListNode(cur.val)
-            mapping[cur] = node
-            pre.next = node
-            pre, cur = pre.next, cur.next
+        tmp = head
+        while head:
+            node = RandomListNode(head.val)
+            mapping[head] = node
+            nhead.next = node
+            nhead, head = nhead.next, head.next
 
-        cur = head
-        while cur:
-            if cur.random:
-                mapping[cur].random = mapping[cur.random]
-            cur = cur.next
+        head = tmp
+        while head:
+            if head.random:
+                mapping[head].random = mapping[head.random]
+            head = head.next
         return dummy.next
 
 # time: O(n)
