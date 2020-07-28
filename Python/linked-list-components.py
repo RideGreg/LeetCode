@@ -41,7 +41,7 @@ class ListNode(object):
         self.next = None
 
 class Solution(object):
-    def numComponents(self, head, G):
+    def numComponents(self, head, G): # USE THIS
         """
         :type head: ListNode
         :type G: List[int]
@@ -60,7 +60,7 @@ class Solution(object):
 
 
     # Compress into groups.
-    def numComponents_ming(self, head, G): # USE THIS
+    def numComponents_ming(self, head, G): # cannot handle duplicate 1->2->1, [1]
         gset = set(G)
         ans = len(G)
         while head and head.next:
@@ -69,7 +69,7 @@ class Solution(object):
             head = head.next
         return ans
 
-
+    # similar to solution 1, actually 1 pointer is sufficient
     # Set + Two Pointers: two pointers (pre, head) traverse linked list, while pre not in G and head in G, increment counters.
     def numComponents_bookshadow(self, head, G):
         gs = set(G)
@@ -86,7 +86,7 @@ class Solution(object):
     class UnionFind(object):
         def __init__(self, cnt, n):
             self.count = cnt
-            self.id = range(n)
+            self.id = list(range(n))
 
         def union(self, x, y):
             xRoot, yRoot = map(self.find, (x, y))

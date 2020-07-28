@@ -49,7 +49,7 @@ class Solution(object):
     # 如果下一个位置为-1，表示长字符串再没有该字符了，返回false即可。
     # Time:  O(n*26), n is the length of long string t
     # Space: O(n*26)
-    def isSubsequence_streamInput(self, s: str, t: str) -> bool:
+    def isSubsequence(self, s: str, t: str) -> bool:
         t = ' ' + t     # 长字符串t前要插入一个空位
         # dp表示每个位置上26个字符下一次出现在t中的位置, 不再出现用-1表示
         dp = [[0] * 26 for _ in range(len(t))]
@@ -68,3 +68,12 @@ class Solution(object):
         return True
 
 print(Solution().isSubsequence('abc', 'adbgdc')) # True
+# dp = [
+##    a  b c d  e  f g  h
+#   [ 1, 3,6,2,-1,-1,4,-1...]
+#   [-1, 3,6,2,-1,-1,4,-1...]
+#   [-1, 3,6,5,-1,-1,4,-1...]
+#   [-1,-1,6,5,-1,-1,4,-1...]
+#   [-1,-1,6,5,-1,-1,-1,-1...]
+#   [-1,-1,6,-1,-1,-1,-1,-1...]
+#   [-1,-1,-1,-1,-1,-1,-1,-1...]

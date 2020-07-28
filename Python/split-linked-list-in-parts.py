@@ -39,20 +39,41 @@
 # - k will be an integer in the range [1, 50].
 #
 # Definition for singly-linked list.
-# class ListNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+    def __repr__(self):
+        return "{}->{}".format(self.val, self.next)
 
 class Solution(object):
-    def splitListToParts(self, root, k):
+    def splitListToParts(self, root, k): # USE THIS: append at the beginning
         """
         :type root: ListNode
         :type k: int
         :rtype: List[ListNode]
         """
-        n = 0
-        curr = root
+        cur, size = root, 0
+        while cur:
+            size += 1
+            cur = cur.next
+        width, remainder = divmod(size, k)
+
+        pre = ListNode(None)
+        pre.next = root
+        ans = [None] * k
+        for i in range(k):
+            if not pre: break
+
+            ans[i] = pre.next
+            pre.next, pre = None, ans[i]
+            for _ in range(width - 1 + int(i < remainder)):
+                if pre:
+                    pre = pre.next
+        return ans
+
+    def splitListToParts_kamyu(self, root, k): # remember and append at the end
+        n, curr = 0, root
         while curr:
             curr = curr.next
             n += 1
@@ -69,3 +90,14 @@ class Solution(object):
                 curr.next, curr = None, curr.next
             result.append(head)
         return result
+
+root = ListNode(1)
+root.next = ListNode(2)
+root.next.next = ListNode(3)
+print(Solution().splitListToParts(root, 5)) # [1,2,3,None, None]
+
+dummy = cur = ListNode(None)
+for i in range(1, 11):
+    cur.next = ListNode(i)
+    cur = cur.next
+print(Solution().splitListToParts(dummy.next, 3)) # [[1, 2, 3, 4], [5, 6, 7], [8, 9, 10]]

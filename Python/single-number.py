@@ -7,7 +7,7 @@
 # Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
 #
 
-import operator
+import functools, operator
 
 
 class Solution:
@@ -16,7 +16,11 @@ class Solution:
     :rtype: int
     """
     def singleNumber(self, A):
-        return reduce(operator.xor, A)
+        return functools.reduce(operator.xor, A)
+
+    # Space O(n), need set to store items
+    def singleNumber2(self, A):
+        return sum(set(A)) * 2 - sum(A)
 
 if __name__ == '__main__':
-    print Solution().singleNumber([1, 1, 2, 2, 3])
+    print(Solution().singleNumber([1, 1, 2, 2, 3]))

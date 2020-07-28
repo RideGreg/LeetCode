@@ -1,4 +1,4 @@
-# Time:  O(nlogs), s is the sum of nums
+# Time:  O(nlog(s-maxn)), s is the sum of nums, s-maxn is the range for binary search
 # Space: O(1)
 
 # 410
@@ -25,6 +25,7 @@
 
 # Minimize the largest subarray sum.
 class Solution(object):
+    # "使……最大值尽可能小"是二分搜索题目常见的问法
     def splitArray(self, nums, m):
         """
         :type nums: List[int]
@@ -41,17 +42,36 @@ class Solution(object):
                 curr_sum += num
             return True
 
-
+        import math
         left, right = max(nums), sum(nums)
-        left = max(left, int(math.ceil(right/m))) #optimization, search range low end is max(largest item, subarray average)
-        while left <= right:
-            mid = left + (right - left) / 2
+        left = max(left, (right + m-1)//m) # alternative to get ceil
+        #left = max(left, math.ceil(right/m)) #optimization, search range low end is max(largest item, subarray average)
+        while left < right:
+            mid = left + (right - left) // 2
 
             if canSplit(nums, m, mid):
                 right = mid
             else:
                 left = mid + 1
         return left
+
+    # "将数组分割为 m段，求…"是动态规划题目常见的问法
+    # Time O(n^2*m) Space(m*n)
+    def splitArray_dp(self, nums, m):
+        n = len(nums)
+        dp = [[10 ** 18] * (m + 1) for _ in range(n + 1)]
+        psum = [0]
+        for elem in nums:
+            psum.append(psum[-1] + elem)
+
+        dp[0][0] = 0
+        for i in range(1, n + 1):
+            for j in range(1, min(i, m) + 1):
+                for k in range(i):
+                    dp[i][j] = min(dp[i][j], max(dp[k][j - 1], psum[i] - psum[k]))
+
+        return dp[n][m]
+
 
 
 # Time:  O(nlogs), s is the sum of nums
@@ -116,3 +136,5 @@ class SolutionFindMaxMin2(object):
             else:
                 left = mid + 1
         return left - 1
+
+print(Solution().splitArray([7,2,5,10,8], 2)) # 18

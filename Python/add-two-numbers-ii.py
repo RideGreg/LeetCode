@@ -27,6 +27,8 @@ class ListNode(object):
     def __init__(self, x):
         self.val = x
         self.next = None
+    def __repr__(self):
+        return "{}->{}".format(self.val, self.next)
 
 class Solution(object):
     def addTwoNumbers(self, l1, l2):
@@ -55,6 +57,17 @@ class Solution(object):
             cur.next = head
             head = cur
         return head
+
+    def addTwoNumbers_reverseTwice(self, l1, l2):
+        def reverse(l):
+            prev = None
+            while l:
+                l.next, prev, l = prev, l, l.next
+            return prev
+
+        l1r, l2r = reverse(l1), reverse(l2)
+        l3r = self.addTwoNumbers(l1r, l2r)
+        return reverse(l3r)
 
 l1 = ListNode(7)
 l1.next = ListNode(2)

@@ -1,7 +1,18 @@
+# Time: O(2^n * n): worst case, # of paths is 2^n, each path takes up to O(n).
+# Space: O(2^n * n): store all paths in worst case.
+# Example of worst case [[1,2,3,4,5], [2,3,4,5], [3,4,5], [4,5], [5]]. Each of set(1,2,3,4)
+# can be used or not to form a path. O(2^(n-2)). [xxxx]...[vvvv]
+#   0->1->2->3->4->5
+#   |->|->|->|->|->|
+#      |->|->|->|->|
+#   ......
+#
+# kamyu's analysis not good:
 # Time:  O(p + r * n), p is the count of all the possible paths in graph (all paths are traversed),
 #                      r is the count of the result (r results (each is up to n nodes) need to copy into return value).
 # Space: O(n)
 
+# 797
 # Given a directed, acyclic graph of N nodes.
 # Find all possible paths from node 0 to node N-1, and return them
 # in any order.

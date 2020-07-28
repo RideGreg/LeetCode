@@ -10,6 +10,7 @@
 # You may assume no duplicate exists in the array.
 #
 
+# 考虑区间最右边的数x，最小值右侧的元素都<= x，最小值左侧的元素都>= x。利用此性质二分查找。
 class Solution(object):
     def findMin(self, nums):  # hard to understand!!!
         left, right = 0, len(nums)
@@ -38,9 +39,9 @@ class Solution2(object):
 
             # should compare to right, because: 1. left and mid may be same. 2. we check whether mid->right is
             # mono-increasing. If right half is monotonic, then min must be left half increasing slope.
-            if nums[mid] < nums[right]:
+            if nums[mid] < nums[right]: # mid在最小值右侧
                 right = mid
-            else:  # right half is not monotonic, then min must be at the gap in right half.
+            else:   # mid在最小值左侧。或者考虑right half is not monotonic, then min must be at the gap in right half.
                 left = mid + 1
 
         return nums[left]    #doesn't matter return left or right, because left equals to right

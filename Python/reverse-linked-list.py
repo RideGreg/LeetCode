@@ -27,9 +27,9 @@ class Solution:
     # @param {ListNode} head
     # @return {ListNode}
     def reverseList(self, head): # USE THIS: no extra space
-        prev, cur = None, head
-        while cur:
-            cur.next, prev, cur = prev, cur, cur.next
+        prev = None
+        while head:
+            head.next, prev, head = prev, head, head.next
         return prev
 
     # Time:  O(n)

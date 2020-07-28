@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(1)
-#
+# 260
 # Given an array of numbers nums, in which exactly two
 # elements appear only once and all the other elements
 # appear exactly twice. Find the two elements that appear only once.
@@ -21,39 +21,24 @@ import collections
 class Solution:
     # @param {integer[]} nums
     # @return {integer[]}
-    def singleNumber(self, nums):
+    def singleNumber(self, nums): # USE THIS
+        # bit difference of the two nums appearing only once
         x_xor_y = reduce(operator.xor, nums)
-        # the number from first non-zero lowbit. e.g. 6(0110) & -6(1010) = 2(0010)
+
+        # rightmost 1, it must in x (or y) and must not in y (or x). e.g. 6(0110) & -6(1010) = 2(0010)
         bit =  x_xor_y & -x_xor_y
-        a = b = 0
-        for i in nums:
-            if i & bit: a^=i      # a diff with b, then a and b must diff on position bit
-            else:       b^=i
-        return [a, b]
-
-
-class Solution2:
-    # @param {integer[]} nums
-    # @return {integer[]}
-    def singleNumber(self, nums):
-        x_xor_y = 0
-        for i in nums:
-            x_xor_y ^= i
-
-        bit = x_xor_y & ~(x_xor_y - 1)
 
         x = 0
         for i in nums:
-            if i & bit:
-                x ^= i
+            if i & bit: x ^= i
+        return [x, x ^ x_xor_y] # x ^ (x ^ y) = y
+        ''' OR do more xor computation
+        x = y = 0
+        for i in nums:
+            if i & bit: x^=i      # get number with the rightmost '1' bit
+            else:       y^=i      # get number w/o the rightmost '1' bit
+        return [x, y]
+        '''
 
-        return [x, x ^ x_xor_y]
-
-
-class Solution3(object):
-    def singleNumber(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: List[int]
-        """
+    def singleNumber2(self, nums): # space O(n)
         return [x[0] for x in sorted(collections.Counter(nums).items(), key=lambda i: i[1], reverse=False)[:2]]

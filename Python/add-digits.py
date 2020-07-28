@@ -1,6 +1,6 @@
 # Time:  O(1)
 # Space: O(1)
-#
+# 258
 # Given a non-negative integer num, repeatedly add
 # all its digits until the result has only one digit.
 #
@@ -18,6 +18,8 @@
 # A naive implementation of the above process is trivial.
 # Could you come up with other methods?
 
+
+# https://en.wikipedia.org/wiki/Digital_root
 
 class Solution(object):
     """

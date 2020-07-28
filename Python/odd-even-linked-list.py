@@ -26,6 +26,10 @@ class ListNode(object):
         self.val = x
         self.next = None
 
+# 直觉: 奇节点放在一个链表里，偶节点放在另一个链表里，然后连接。
+# 一个 LinkedList 需要一个头指针和一个尾指针来支持双端操作。我们用变量 head 和 odd(迭代) 保存奇链表的头和尾指针。
+# evenHead 和 even(迭代) 保存偶链表的头和尾指针。
+
 class Solution(object):
     def oddEvenList(self, head):
         """

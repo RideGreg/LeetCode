@@ -1,6 +1,6 @@
 # Time:  O(logn) ~ O(n)
 # Space: O(1)
-#
+# 154
 # Follow up for "Find Minimum in Rotated Sorted Array":
 # What if duplicates are allowed?
 #
@@ -15,20 +15,21 @@
 #
 
 class Solution(object):
-    def findMin(self, nums):
+    def findMin(self, nums): # USE THIS
         """
         :type nums: List[int]
         :rtype: int
         """
         left, right = 0, len(nums) - 1
-        while left < right:
+        while left < right and nums[left] >= nums[right]:  #prune: check whether search space already monotonic:
+                    # 注意不能是要求 nums[left] > nums[right]。因为left和right相等时仍然需要二分检查，比如 3 3 3 1 1 3 3 3
             mid = left + (right - left) / 2
 
-            if nums[mid] == nums[right]:
+            if nums[mid] == nums[right]: #由于重复元素的存在，无法确定mid在最小值左或右，不能扔掉任一边。缩小右边界因为最小值一定还在
                 right -= 1
-            elif nums[mid] < nums[right]:
+            elif nums[mid] < nums[right]: # mid在最小值右侧
                 right = mid
-            else:
+            else: # mid在最小值左侧
                 left = mid + 1
 
         return nums[left]

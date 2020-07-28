@@ -1,6 +1,6 @@
 # Time:  O(logn) = O(1)
 # Space: O(1)
-#
+# 29
 # Divide two integers without using multiplication, division and mod operator.
 # Return the quotient after dividing dividend by divisor.
 #
@@ -12,7 +12,11 @@
 # range: [−2^31,  2^31 − 1]. For the purpose of this problem, assume that your function returns 2^31 − 1
 # when the division result overflows.
 
-## SOL: for a / b: rewrite a = (c0*2^0 + c1 * 2^1 + c2 * 2^2... + cn * 2^n) * b
+
+## 要求不用乘，除和模操作完成除法操作，所以我们考虑使用减法。
+## 不断地减掉除数，直到为0为止。使用倍增的思想优化, 可以将减法的次数优化到对数时间复杂度.
+## SOL: for a // b: rewrite a//b = c0*2^0 + c1 * 2^1 + c2 * 2^2... + cn * 2^n, cofficient cn 为对应2^n需要减的次数。
+## 因为 2^1, 2^2, 2^3是离散的，所以cn可能大于1.
 ## use shift instead of multiplication when double the factor.
 class Solution:
     def divide(self, dividend, divisor): # USE THIS: in first pass, deduct factors (from small to large) as many as possible

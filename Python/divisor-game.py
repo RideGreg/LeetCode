@@ -63,3 +63,10 @@ class Solution2(object):
 
         cache = {}
         return memoization(N)
+
+    # DP: many unnecessary computation. Time O(n^2) Space O(n)
+    def divisorGame_dp(self, N):
+        dp = [False] * (N+1)
+        for n in range(2, N+1):
+            dp[n] = any(dp[n-x] is False for x in range(1, n//2+1) if n % x == 0)
+        return dp[N]
