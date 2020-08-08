@@ -24,7 +24,7 @@
 * [Linked List](https://github.com/RideGreg/LeetCode#linked-list)
 * [Stack](https://github.com/RideGreg/LeetCode#stack)
 * [Queue](https://github.com/RideGreg/LeetCode#queue)
-* [Heap](https://github.com/RideGreg/LeetCode#heap)
+* [Binary Heap](https://github.com/RideGreg/LeetCode#binary-heap)
 * [Tree](https://github.com/RideGreg/LeetCode#tree)
 * [Hash Table](https://github.com/RideGreg/LeetCode#hash-table)
 * [Math](https://github.com/RideGreg/LeetCode#math)
@@ -551,7 +551,7 @@ xxxx| [Point Where Maximum Intervals Overlap] | [Python](./Python/find-the-point
 </div>
 <br/>
 
-## Heap
+## Binary Heap
 |  #  | Title           |  Solution       |  Time           | Space           | Difficulty    | Tag          | Note| 
 |-----|---------------- | --------------- | --------------- | --------------- | ------------- |--------------|-----|
 0264| [Ugly Number II](https://leetcode.com/problems/ugly-number-ii/) | [C++](./C++/ugly-number-ii.cpp)  [Python](./Python/ugly-number-ii.py)  | _O(n)_ | _O(n)_ | Medium         | Review, CTCI, LintCode | Heap, DP |
