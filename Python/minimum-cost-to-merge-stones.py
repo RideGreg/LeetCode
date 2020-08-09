@@ -1,4 +1,5 @@
-# Time:  O(n^3/K)
+
+# Time:  O(n^3 / k)
 # Space: O(n^2)
 
 # 1000
