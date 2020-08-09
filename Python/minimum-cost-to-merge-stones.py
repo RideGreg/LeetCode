@@ -1,5 +1,5 @@
 # Time:  O(n^3/K)
-# Space: O(K*n^2)
+# Space: O(n^2)
 
 # 1000
 # There are N piles of stones arranged in a row.  The i-th pile has stones[i] stones.
@@ -10,6 +10,7 @@
 # Find the minimum cost to merge all piles of stones into one pile.  If it is impossible, return -1.
 
 # top-down dp + memoization
+
 class Solution(object):
     # Seem that most of games, especially stone games, are solved by dp?
     # 2D dp
@@ -105,12 +106,6 @@ class Solution(object):
             lookup[i, j, k] = result
             return result
         
-        if (len(stones)-1) % (K-1):
-            return -1
-        lookup = {}
-        prefix = [0]
-        for x in stones:
-            prefix.append(prefix[-1]+x)
         result = dp(K, 0, len(stones)-1, 1)
         return result if result != float("inf") else -1
 
@@ -147,6 +142,23 @@ class Solution(object):
         self.ans = float('inf')
         dfs(stones, 0, K)
         return -1 if self.ans == float('inf') else self.ans
+
+
+    def mergeStones_kamyu(self, stones, K):
+        if (len(stones)-1) % (K-1):
+            return -1
+        prefix = [0]
+        for x in stones:
+            prefix.append(prefix[-1]+x)
+        dp = [[0]*len(stones) for _ in xrange(len(stones))]
+        for l in xrange(K-1, len(stones)):
+            for i in xrange(len(stones)-l):
+                dp[i][i+l] = float("inf")
+                for j in xrange(i, i+l, K-1):
+                    dp[i][i+l] = min(dp[i][i+l], dp[i][j]+dp[j+1][i+l])
+                if l % (K-1) == 0:
+                    dp[i][i+l] += prefix[i+l+1] - prefix[i]
+        return dp[0][len(stones)-1]
 
 
 print(Solution().mergeStones([3,2,4,1], 2)) # 20. [3,2,4,1] -> [5,4,1] -> [5,5] -> [10]
