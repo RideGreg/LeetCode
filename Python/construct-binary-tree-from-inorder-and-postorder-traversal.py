@@ -19,19 +19,21 @@ class Solution:
     # @param postorder, a list of integers
     # @return a tree node
     def buildTree_ming(self, inorder, postorder): # USE THIS
-        def re(ib, ie, pe): # use inorder data is sufficient to build tree; no pb is needed, pe is used to divide inorder data
-            if ib > ie:
-                return None
-            im = lookup[postorder[pe]]  # performance boost, better than inorder.index(postorder[pe])
-            node = TreeNode(postorder[pe])
-            node.left = re(ib, im-1, pe-(ie-im+1))
-            node.right = re(im+1, ie, pe-1)
+        def build(pb, ib, leng):  # use two start pointers and a length is pretty than using mix of start/end pointers
+            if leng <= 0: return None
+
+            v = postorder[pb + leng - 1]
+            idx = lookup[v]
+            leftlen = idx - ib
+
+            node = TreeNode(v)
+            node.left = build(pb, ib, leftlen)
+            node.right = build(pb + leftlen, ib + leftlen + 1, leng - 1 - leftlen)
             return node
 
-        lookup = {}
-        for i, n in enumerate(inorder):
-            lookup[n] = i
-        return re(0, len(inorder)-1, len(postorder)-1)
+        lookup = {v: k for k, v in enumerate(inorder)}
+        return build(0, 0, len(postorder))
+
 
     def buildTree(self, inorder, postorder):
         lookup = {}

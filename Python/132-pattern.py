@@ -1,10 +1,6 @@
 # Time:  O(n)
 # Space: O(n)
-# stack (max stays in stack, second to max is a var)
-# 维护一个栈和一个变量third，其中third就是第三个数字，栈里的数字都是大于third的,
-# 最大数字沉栈底. 如果有更大的数进来，就把小的数弹出栈（这时弹出的third值比以前的third值更大，
-# 所以替换third形成更优的second > third的组合），再把这更大的数入栈
-
+# 456
 # Given a sequence of n integers a1, a2, ..., an,
 # a 132 pattern is a subsequence ai, aj, ak such that i < j < k and
 # ai < ak < aj. Design an algorithm that takes a list of n numbers as
@@ -30,6 +26,12 @@
 # Output: True#
 
 # Explanation: There are three 132 patterns in the sequence: [-1, 3, 2], [-1, 3, 0] and [-1, 2, 0].
+
+
+
+# 单调栈
+# stack (max stays in stack, second to max is a var)
+# The solution can be used for 132, 312 (right->left) and 231, 213 pattern (left->right).
 
 try:
     xrange          # Python 2

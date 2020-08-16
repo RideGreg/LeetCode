@@ -39,25 +39,29 @@ class Solution(object):
                         break
         return "".join(result)
 
-    # no need to store positions of (. The ( we delete are all from the behind.
+    # delete extra ( from right side, delete extra ) from left side
+    # need new list to store 'ans'
     def minRemoveToMakeValid_ming(self, s: str) -> str:
-        stk = [] # store the position of (
-        ans = [] # store valid chars
-        for c in s:
+        lrem_cnt, rrem = 0, set()
+        for i, c in enumerate(s):
             if c == '(':
-                stk.append(len(ans))
-                ans.append(c)
+                lrem_cnt += 1
             elif c == ')':
-                if stk:       # only keep ) with mapping ( before it
-                    stk.pop() # remove a (
-                    ans.append(c)
-            else:
+                if lrem_cnt == 0:
+                    rrem.add(i)      # ) without previous ( has to be deleted
+                else:
+                    lrem_cnt -= 1
+
+        ans = []
+        for i, c in enumerate(s[::-1]):   # delete extra ( from right side
+            if c == '(' and lrem_cnt > 0:
+                lrem_cnt -= 1
+            elif len(s)-1-i not in rrem:
                 ans.append(c)
-        for p in stk[::-1]:   # delete ( without mapping ( behind it
-            ans.pop(p)
-        return ''.join(ans)
+        return ''.join(ans[::-1])
 
 
+print(Solution().minRemoveToMakeValid("())()(((")) # "()()"
 print(Solution().minRemoveToMakeValid("lee(t(c)o)de)")) # "lee(t(c)o)de"
 print(Solution().minRemoveToMakeValid("a)b(c)d")) # "ab(c)d"
 print(Solution().minRemoveToMakeValid("))((")) # ""

@@ -23,18 +23,16 @@ class Solution(object):
         :type target: float
         :rtype: int
         """
-        delta, ans = float('inf'), None
+        ans = float('inf')
         while root:
-            cur = abs(root.val - target)
-            if cur < delta:
-                delta, ans = cur, root.val
-            if target == root.val:
-                break
-            elif target < root.val:
-                root = root.left
-            else:
-                root = root.right
+            if abs(root.val - target) < abs(ans - target):
+                ans = root.val
+
+            if target == root.val: break
+            elif target < root.val: root = root.left
+            else: root = root.right
         return ans
+
 
 r = TreeNode(4)
 r.left, r.right = TreeNode(2), TreeNode(5)

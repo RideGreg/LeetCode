@@ -31,7 +31,7 @@
 # - The value of each color in image[i][j] and newColor will be an integer in [0, 65535].
 
 class Solution(object):
-    def floodFill(self, image, sr, sc, newColor):
+    def floodFill(self, image, sr, sc, newColor): # USE THIS
         """
         :type image: List[List[int]]
         :type sr: int
@@ -39,6 +39,23 @@ class Solution(object):
         :type newColor: int
         :rtype: List[List[int]]
         """
+        clr = image[sr][sc]
+        if clr == newColor:
+            return image
+
+        m, n = len(image), len(image[0])
+        stk = [(sr, sc)]
+        image[sr][sc] = newColor
+        while stk:
+            r, c = stk.pop()
+            for nr, nc in [(r-1, c), (r+1, c), (r, c-1), (r, c+1)]:
+                if 0<=nr<m and 0<=nc<n and image[nr][nc] == clr:
+                    stk.append((nr, nc))
+                    image[nr][nc] = newColor
+        return image
+
+
+    def floodFill_recur(self, image, sr, sc, newColor):
         directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
         def dfs(image, r, c, newColor, color):

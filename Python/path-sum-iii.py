@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 437
 # You are given a binary tree in which each node contains an integer value.
 #
 # Find the number of paths that sum to a given value.
@@ -29,38 +30,35 @@
 # 3. -3 -> 11
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 import collections
 
 
 class Solution(object):
-    def pathSum(self, root, sum):
+    def pathSum(self, root, sum): # USE THIS: ok to use a version using global var instead of return value
         """
         :type root: TreeNode
         :type sum: int
         :rtype: int
         """
-        def pathSumHelper(root, curr, sum, lookup):
-            if root is None:
+        def dfs(node, curr):
+            if node is None:
                 return 0
-            curr += root.val
-            result = lookup[curr-sum] if curr-sum in lookup else 0
+            curr += node.val
+            result = lookup[curr-sum]
             lookup[curr] += 1
-            result += pathSumHelper(root.left, curr, sum, lookup) + \
-                      pathSumHelper(root.right, curr, sum, lookup)
+            result += dfs(node.left, curr) + dfs(node.right, curr)
             lookup[curr] -= 1
-            if lookup[curr] == 0:
-                del lookup[curr]
             return result
 
         lookup = collections.defaultdict(int)
         lookup[0] = 1
-        return pathSumHelper(root, 0, sum, lookup)
+        return dfs(root, 0)
 
 
 # Time:  O(n^2)
@@ -76,7 +74,7 @@ class Solution2(object):
             if root is None:
                 return 0
 
-            curr = prev + root.val;
+            curr = prev + root.val
             return int(curr == sum) + \
                    pathSumHelper(root.left, curr, sum) + \
                    pathSumHelper(root.right, curr, sum)
@@ -87,3 +85,16 @@ class Solution2(object):
         return pathSumHelper(root, 0, sum) + \
                self.pathSum(root.left, sum) + \
                self.pathSum(root.right, sum)
+
+it = iter([10,5,3,3,None,None,-2,None,None,2,None,1,None,None,-3,None,11,None,None])
+def build():
+    v = next(it)
+    if v is None:
+        return None
+    node = TreeNode(v)
+    node.left = build()
+    node.right = build()
+    return node
+
+root = build()
+print(Solution().pathSum(root, 8)) # 3

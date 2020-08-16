@@ -1,6 +1,6 @@
 # Time:  O(n^m) = O(3^4)
 # Space: O(n * m) = O(3 * 4)
-#
+# 93
 # Given a string containing only digits, restore it by returning all possible valid IP address combinations.
 #
 # For example:
@@ -12,7 +12,27 @@
 class Solution:
     # @param s, a string
     # @return a list of strings
-    def restoreIpAddresses(self, s):
+    def restoreIpAddresses(self, s):  # USE THIS: maintain array then join is better than maintian a str
+        def dfs(start, cur, parts):
+            if start == len(s) or parts == 4:
+                if start == len(s) and parts == 4:
+                    ans.append('.'.join(cur))
+                return
+
+            for i in range(start, len(s)):
+                p = s[start:i+1]
+                if int(p) > 255 or (s[start] == '0' and i > start):
+                    return
+                cur.append(p)
+                dfs(i+1, cur, parts+1)
+                cur.pop()
+
+        ans = []
+        dfs(0, [], 0)
+        return ans
+
+
+    def restoreIpAddresses_kamyu(self, s):
         result = []
         self.restoreIpAddressesRecur(result, s, 0, "", 0)
         return result

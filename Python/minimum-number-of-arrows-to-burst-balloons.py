@@ -25,11 +25,36 @@
 # and another arrow at x = 11 (bursting the other two balloons).
 
 class Solution(object):
-    def findMinArrowShots(self, points):
+    def findMinArrowShots(self, points): # USE THIS: sort by end
         """
         :type points: List[List[int]]
         :rtype: int
         """
+        if not points: return 0
+        points.sort(key=lambda x: x[1])
+        arrow = 1
+        end = points[0][1]
+        for x, y in points:
+            if x > end:
+                arrow += 1
+                end = y
+        return arrow
+
+
+    def findMinArrowShots2(self, points): # sort by start
+        if not points: return 0
+        points.sort()
+        ans, end = 1, points[0][1]
+        for x, y in points[1:]:
+            if x > end:
+                ans += 1  # need a new arrow
+                end = y
+            else:
+                end = min(end, y)  # keep smaller interval
+        return ans
+
+
+    def findMinArrowShots_kamyu(self, points):
         if not points:
             return 0
 

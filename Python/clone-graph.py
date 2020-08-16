@@ -25,26 +25,60 @@
 #          \_/
 #
 # Definition for a undirected graph node
-class UndirectedGraphNode:
-    def __init__(self, x):
-        self.label = x
-        self.neighbors = []
+class Node:
+    def __init__(self, x = 0, nei = []):
+        self.val = x
+        self.neighbors = list(nei)
 
+
+# 图的深拷贝即构建一张与原图结构，值均一样的图，但是其中的节点不再是原来图节点的引用，所以邻节点list不是简单复制，而是重建。
+# 本题就是遍历整张图，对每个节点进行拷贝。
+# 为避免在深拷贝时陷入死循环，需要用一种数据结构记录已经被克隆过的节点。
+
+# DFS or BFS to iterate all nodes, use a dict to manage the src-dest mapping and nodes already visited.
+# For each SRC node: init its clone DEST node (set up 'val'), add mapping to dict; add SRC to stack/queue.
+# For each SRC node in stack/queue: set its DEST's neighbors (the DEST may be new or created before).
 class Solution:
     # @param node, a undirected graph node
     # @return a undirected graph node
     def cloneGraph(self, node):
         if node is None:
             return None
-        cloned_node = UndirectedGraphNode(node.label)
-        cloned, queue = {node:cloned_node}, [node]
+        mapping = {}
+        mapping[node] = Node(node.val)
+        stack = [node]
 
-        while queue:
-            current = queue.pop()
+        while stack:
+            current = stack.pop()
             for neighbor in current.neighbors:
-                if neighbor not in cloned:
-                    queue.append(neighbor)
-                    cloned_neighbor = UndirectedGraphNode(neighbor.label)
-                    cloned[neighbor] = cloned_neighbor
-                cloned[current].neighbors.append(cloned[neighbor])
-        return cloned[node]
+                if neighbor not in mapping:
+                    stack.append(neighbor)
+                    mapping[neighbor] = Node(neighbor.val)
+
+                mapping[current].neighbors.append(mapping[neighbor])
+        return mapping[node]
+
+# 1-2
+# | |
+# 4-3
+n1 = Node(1)
+n2 = Node(2)
+n3 = Node(3)
+n4 = Node(4)
+n1.neighbors.extend([n2, n4])
+n2.neighbors.extend([n1, n3])
+n3.neighbors.extend([n2, n4])
+n4.neighbors.extend([n1, n3])
+ans = Solution().cloneGraph(n1)
+
+#   1
+#  / \
+# 0--2--
+#    |_|
+n0 = Node(0)
+n1 = Node(1)
+n2 = Node(2)
+n0.neighbors.extend([n1, n2])
+n1.neighbors.extend([n0, n2])
+n2.neighbors.extend([n0, n1, n2])
+ans = Solution().cloneGraph(n0)

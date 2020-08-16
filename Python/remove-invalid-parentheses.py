@@ -1,6 +1,6 @@
 # Time:  O(C(n, c)), try out all possible substrings with the minimum c deletion.
 # Space: O(c), the depth is at most c, and it costs n at each depth
-#
+# 301
 # Remove the minimum number of invalid parentheses in order to
 # make the input string valid. Return all possible results.
 #
@@ -22,16 +22,16 @@ class Solution(object):
         """
         # Calculate the minimum left and right parantheses to remove
         def findMinRemove(s):
-            left_removed, right_removed = 0, 0
+            left_remove = right_remove = 0
             for c in s:
                 if c == '(':
-                    left_removed += 1
+                    left_remove += 1
                 elif c == ')':
-                    if not left_removed:
-                        right_removed += 1
+                    if not left_remove:
+                        right_remove += 1
                     else:
-                        left_removed -= 1
-            return (left_removed, right_removed)
+                        left_remove -= 1
+            return (left_remove, right_remove)
 
         # Check whether s is valid or not.
         def isValid(s):
@@ -45,29 +45,36 @@ class Solution(object):
                     return False
             return sum == 0
 
-        def removeInvalidParenthesesHelper(start, left_removed, right_removed):
-            if left_removed == 0 and right_removed == 0:
-                tmp = ""
-                for i, c in enumerate(s):
-                    if i not in removed:
-                        tmp += c
-                if isValid(tmp):
+        # start is current index, left_remove/right_remove track status
+        def dfs(start, left_remove, right_remove):
+            if left_remove == right_remove == 0:
+                tmp = [c for i, c in enumerate(s) if i not in removed]
+                tmp = ''.join(tmp)
+                if isValid(tmp):    # KENG!! possibly deletion is not in correct place ")()" => ")("
                     res.append(tmp)
                 return
 
-            for i in xrange(start, len(s)):
-                if right_removed == 0 and left_removed > 0 and s[i] == '(':
-                    if i == start or s[i] != s[i - 1]:  # Skip duplicated.
-                        removed[i] = True
-                        removeInvalidParenthesesHelper(i + 1, left_removed - 1, right_removed)
-                        del removed[i]
-                elif right_removed > 0 and s[i] == ')':
-                    if i == start or s[i] != s[i - 1]:  # Skip duplicated.
-                        removed[i] = True
-                        removeInvalidParenthesesHelper(i + 1, left_removed, right_removed - 1);
-                        del removed[i]
+            for i in range(start, len(s)):
+                if i == start or s[i] != s[i - 1]:  # Skip duplicated, because it produces a same result.
+                                                    # NOTE: not i == 0!!!
+                    # Trimming: only remove ')' when right_remove==0, otherwise if right_remove > 0,
+                    # there always')' later to match this ')'
+                    if right_remove == 0 and left_remove > 0 and s[i] == '(':
+                        removed.add(i)
+                        dfs(i + 1, left_remove - 1, right_remove)
+                        removed.discard(i)
+                    elif right_remove > 0 and s[i] == ')':
+                        removed.add(i)
+                        dfs(i + 1, left_remove, right_remove - 1)
+                        removed.discard(i)
 
-        res, removed = [], {}
-        (left_removed, right_removed) = findMinRemove(s)
-        removeInvalidParenthesesHelper(0, left_removed, right_removed)
+        res, removed = [], set() # set is faster to query than list
+        (left_remove, right_remove) = findMinRemove(s)
+        dfs(0, left_remove, right_remove)
         return res
+
+print(Solution().removeInvalidParentheses("))")) # [""]
+print(Solution().removeInvalidParentheses("())(")) # ["()"]
+print(Solution().removeInvalidParentheses("(a)(b))()")) # ["(a)(b)()", "(a(b))()"]
+print(Solution().removeInvalidParentheses(")()")) # ["()"]
+print(Solution().removeInvalidParentheses(")(")) # [""]

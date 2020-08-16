@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 274
 # Given an array of citations (each citation is a non-negative integer)
 # of a researcher, write a function to compute the researcher's h-index.
 #
@@ -18,6 +19,12 @@
 # Note: If there are several possible values for h, the maximum one is taken as the h-index.
 #
 
+
+# h-index不会超过max(citations)最大引用数，也不会超过len(citations)文章篇数。从这两方面下手可得到不同解法。
+# counting sort相当于构造一个bounded Counter，binary search里构造了一个unbounded Counter.
+
+import collections
+
 # Counting sort.
 class Solution(object):
     def hIndex(self, citations):
@@ -25,7 +32,7 @@ class Solution(object):
         :type citations: List[int]
         :rtype: int
         """
-        n = len(citations);
+        n = len(citations)
         count = [0] * (n + 1)
         for x in citations:
             # Put all x >= n in the same bucket.
@@ -35,14 +42,22 @@ class Solution(object):
                 count[x] += 1
 
         h = 0
-        for i in reversed(xrange(0, n + 1)):
+        for i in reversed(range(0, n + 1)):
             h += count[i]
             if h >= i:
                 return i
-        return h
 
 # Time:  O(nlogn)
 # Space: O(1)
+#
+# Build a histogram of citations ordered in decreasing order for each paper,
+# find the crossing point of the decreasing citation curve and maximal square box.
+# |
+# |-----
+# |     \
+# |      -----
+# |---        \
+# |__|__________\_____
 class Solution2(object):
     def hIndex(self, citations):
         """
@@ -58,13 +73,26 @@ class Solution2(object):
                 break
         return h
 
-# Time:  O(nlogn)
+# Time:  O(nlogm), m is max(citations)
 # Space: O(n)
-class Solution3(object):
+# binary search
+class Solution3:
     def hIndex(self, citations):
-        """
-        :type citations: List[int]
-        :rtype: int
-        """
-        return sum(x >= i + 1 for i, x in enumerate(sorted(citations, reverse=True)))
+        def valid(m):
+            acc = 0
+            for k,v in cnt.items():
+                if k >= m:
+                    acc += v
+            return acc >= m
 
+        cnt = collections.Counter(citations)
+        l, r = 0, max(citations)
+        while l < r:
+            m = (l+r+1) // 2
+            if valid(m):
+                l = m
+            else:
+                r = m - 1
+        return l
+
+print(Solution().hIndex([3,0,6,1,5])) # 3

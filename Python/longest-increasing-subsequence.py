@@ -39,7 +39,9 @@ class Solution(object):
         import bisect
         LIS_tail = []
         for n in nums:
-            pos = bisect.bisect_left(LIS_tail, n) # Find the first pos which satisfies seq[pos] >= target
+            pos = bisect.bisect_left(LIS_tail, n) # Find the first pos satisfying seq[pos] >= target. bisect_right is wrong for [2,2] -> 2
+                                                  # because we ask strict increasing subseq, bisect_right appending same value at the end is wrong.
+                                                  # bisect works on empty array.
             if pos == len(LIS_tail):
                 LIS_tail.append(n)
             else:

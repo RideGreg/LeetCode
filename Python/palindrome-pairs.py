@@ -1,4 +1,5 @@
 # Time:  O(n * k^2), n is the number of the words, k is the max length of the words.
+#                    for each word, iterate all prefix/suffix O(k), check if the prefix/suffix is palindrome O(k)
 # Space: O(n * k)
 
 # Given a list of unique words. Find all pairs of indices (i, j)
@@ -16,35 +17,38 @@
 
 import collections
 
-
+# 暴力法，枚举每一对字符串的组合，暴力判断它们是否构成回文串。时间复杂度 O(n^2 * m)
+# 枚举前缀和后缀:
+# 枚举字符串的每一个前缀和后缀，看其是否为回文串。如果是，查询其剩余部分的翻转是否在输入中出现过。
+# 判断是否出现过，有两种实现方法：
+# 1 哈希表 2 字典树：将待查询串的子串逆序地在字典树上进行遍历，判断是否存在。
 class Solution(object):
-    def palindromePairs(self, words):
+    def palindromePairs(self, words):  # USE THIS
         """
         :type words: List[str]
         :rtype: List[List[int]]
         """
-        res = []
-        lookup = {}
-        for i, word in enumerate(words):
-            lookup[word] = i
+        res = set()
+        lookup = {word: i for i, word in enumerate(words)}
 
-        for i in xrange(len(words)):
-            for j in xrange(len(words[i]) + 1):
-                prefix = words[i][j:]
-                suffix = words[i][:j]
-                if prefix == prefix[::-1] and \
-                   suffix[::-1] in lookup and lookup[suffix[::-1]] != i:
-                    res.append([i, lookup[suffix[::-1]]])
-                if j > 0 and suffix == suffix[::-1] and \
-                   prefix[::-1] in lookup and lookup[prefix[::-1]] != i:
-                    res.append([lookup[prefix[::-1]], i])
-        return res
+        for i, word in enumerate(words):
+            for j in range(len(word) + 1):
+                prefix, suffix = word[:j], word[j:]
+                if prefix == prefix[::-1] and suffix[::-1] in lookup:
+                    x = lookup[suffix[::-1]]
+                    if x != i:
+                        res.add((x, i))
+                if suffix == suffix[::-1] and prefix[::-1] in lookup:
+                    x = lookup[prefix[::-1]]
+                    if x != i:
+                        res.add((i, x))
+        return sorted(map(list, res))
 
 # Time:  O(n * k^2), n is the number of the words, k is the max length of the words.
 # Space: O(n * k^2)
 # Manacher solution.
-class Solution_TLE(object):
-    def palindromePairs(self, words):
+class Solution2(object):
+    def palindromePairs(self, words):  # contest level algorithm
         """
         :type words: List[str]
         :rtype: List[List[int]]
@@ -110,7 +114,7 @@ class TrieNode:
 
     def find(self, s, idx, res):
         cur = self
-        for i in reversed(xrange(len(s))):
+        for i in reversed(range(len(s))):
             if s[i] in cur.leaves:
                 cur = cur.leaves[s[i]]
                 if cur.word_idx not in (-1, idx) and \
@@ -136,10 +140,14 @@ class Solution_MLE(object):
         """
         res = []
         trie = TrieNode()
-        for i in xrange(len(words)):
+        for i in range(len(words)):
             trie.insert(words[i], i)
 
-        for i in xrange(len(words)):
+        for i in range(len(words)):
             trie.find(words[i], i, res)
 
         return res
+
+print(Solution().palindromePairs(['abb', 'a', 'ba', 'bba', 'cccbba', 'bb', 'b', 'bbac']))
+#                                   0     1     2     3      4        5     6     7
+# [[0, 1], [0, 2], [0, 3], [0, 4], [1, 2], [1, 3], [2, 6], [3, 0], [3, 5], [5, 0], [5, 6], [6, 5], [7, 0]]

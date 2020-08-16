@@ -1,5 +1,5 @@
 # Time:  O(n)
-# Space: O(h), h is height of binary tree
+# Space: O(1)
 
 # 114
 # Given a binary tree, flatten it to a linked list in-place.
@@ -35,10 +35,44 @@ class TreeNode:
         self.val = x
         self.left = None
         self.right = None
+    def __repr__(self): # print right child only
+        return '{}->{}'.format(self.val, self.right)
 
-class Solution:
+
+# 寻找前驱节点 similar to Morris Algo
+# 对于当前节点，如果其左子节点不为空，则在其左子树中找到最右边的节点，作为前驱节点，将当前节点的右子节点赋给前驱节点的右子节点，
+# 然后将当前节点的左子节点改为当前节点的右子节点，并将当前节点的左子节点设为空。继续处理链表中的下一个节点，直到所有节点都处理结束。
+class Solution:  # USE THIS
     # @param root, a tree node
     # @return nothing, do it in place
+    def flatten(self, root):
+        while root:
+            if root.left:      # if left subtree is not empty, fold into right subtree. Repeat folding.
+                pre = root.left
+                while pre.right:
+                    pre = pre.right
+
+                pre.right = root.right
+                root.right = root.left
+                root.left = None
+            root = root.right
+
+# modified postOrder (right->left->parent), maintain the 'tail' var (always update tail as current processed node)
+# preOrder NOT work for this problem, because when changing cur.right as cur.left, we lost the right subtree!
+class Solution2: # also very good Time O(n) Space O(h)
+    def flatten(self, root):
+        def postOrder(node):
+            if node:
+                postOrder(node.right)
+                postOrder(node.left)
+                node.right = self.tail
+                node.left = None
+                self.tail = node
+
+        self.tail = None
+        postOrder(root)
+
+class Solution3: # same to solution 2 but not use global var (passing param instead, not pretty, don't use)
     def flatten(self, root):
         self.flattenRecu(root, None)
 
@@ -52,23 +86,6 @@ class Solution:
         else:
             return list_head
 
-# modified postOrder (right->left->parent), maintain the 'tail' var (always update tail as current processed node)
-class Solution2: # USE THIS
-    # @param root, a tree node
-    # @return nothing, do it in place
-    def flatten(self, root):
-        def postOrder(node):
-            if node:
-                postOrder(node.right)
-                postOrder(node.left)
-                node.right = self.tail
-                node.left = None
-                self.tail = node
-
-        self.tail = None
-        postOrder(root)
-
-
 if __name__ == "__main__":
     root = TreeNode(1)
     root.left = TreeNode(2)
@@ -76,10 +93,6 @@ if __name__ == "__main__":
     root.left.right = TreeNode(4)
     root.right = TreeNode(5)
     root.right.right = TreeNode(6)
-    result = Solution().flatten(root)
-    print result.val
-    print result.right.val
-    print result.right.right.val
-    print result.right.right.right.val
-    print result.right.right.right.right.val
-    print result.right.right.right.right.right.val
+
+    Solution().flatten(root)
+    print(root) # 1->2->3->4->5->6->None

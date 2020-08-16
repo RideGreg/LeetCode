@@ -10,7 +10,8 @@
 
 
 # stack with 2 optimizations
-
+# Have to use stack to remember order of parentheses,
+# The method using counters of opening/closing parentheses doesn't work due to different parentheses types
 class Solution:
     # @return a boolean
     def isValid(self, s):

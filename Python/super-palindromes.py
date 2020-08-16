@@ -54,7 +54,7 @@ class Solution(object):
         result = 0
 
         # count odd length
-        for k in xrange(limit):
+        for k in range(limit):
             s = str(k)
             t = s + s[-2::-1]
             v = int(t)**2
@@ -65,7 +65,7 @@ class Solution(object):
                 result += 1
 
         # count even length
-        for k in xrange(limit):
+        for k in range(limit):
             s = str(k)
             t = s + s[::-1]
             v = int(t)**2
@@ -76,3 +76,6 @@ class Solution(object):
                 result += 1
 
         return result
+
+print(Solution().superpalindromesInRange("4", "1000")) # 4
+print(Solution().superpalindromesInRange("1", "2")) # 1

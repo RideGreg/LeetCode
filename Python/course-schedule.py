@@ -54,13 +54,14 @@ class Solution(object):
             graph[pre].add(c)
 
         # 每次只能选 入度为 0 的课，因为它不依赖别的课
+        # ok to use a stack/DFS instead of queue/BFS
         zero_in_degree_queue = deque([i for i in range(numCourses) if i not in in_degree])
         while zero_in_degree_queue:
             prerequisite = zero_in_degree_queue.popleft()
             numCourses -= 1
             for course in graph[prerequisite]:
                 in_degree[course] -= 1 # 减小相关课的入度
-                if not in_degree[course]:
+                if in_degree[course] == 0:
                     zero_in_degree_queue.append(course)
         return numCourses == 0
 

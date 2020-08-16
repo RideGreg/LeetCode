@@ -16,7 +16,7 @@ import collections
 
 
 class Solution(object):
-    def orangesRotting(self, grid):
+    def orangesRotting(self, grid): # USE THIS: a little more spaces to store time on each queue entry, but solid w/o bugs
         """
         :type grid: List[List[int]]
         :rtype: int
@@ -24,24 +24,49 @@ class Solution(object):
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         R, C = len(grid), len(grid[0])
 
-        count = 0
+        fresh = 0
         q = collections.deque()
         for r, row in enumerate(grid):
             for c, val in enumerate(row):
                 if val == 2:
                     q.append((r, c, 0))
                 elif val == 1:
-                    count += 1
+                    fresh += 1
 
-        result = 0
+        time = 0
         while q:
-            r, c, result = q.popleft()
+            r, c, time = q.popleft()
             for d in directions:
                 nr, nc = r+d[0], c+d[1]
                 if 0 <= nr < R and 0 <= nc < C and grid[nr][nc] == 1:
-                    count -= 1
+                    fresh -= 1
                     grid[nr][nc] = 2
-                    q.append((nr, nc, result+1))
-        return result if count == 0 else -1
+                    q.append((nr, nc, time+1))
+        return time if fresh == 0 else -1
+
+
+    def orangesRotting(self, grid): # easy to have a bug
+        m, n = len(grid), len(grid[0])
+        q, fresh = deque(), 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    fresh += 1
+                elif grid[i][j] == 2:
+                    q.append((i, j))
+                    
+        time = 0
+        while q:
+            sz = len(q)
+            for _ in range(sz):
+                i, j = q.popleft()
+                for ni, nj in ((i-1, j), (i+1, j), (i, j-1), (i, j+1)):
+                    if 0<=ni<m and 0<=nj<n and grid[ni][nj] == 1:
+                        fresh -= 1
+                        grid[ni][nj] = 2
+                        q.append((ni, nj))
+            if q:         # it is a bug if missing this 'if'
+                time += 1
+        return -1 if fresh > 0 else time
 
 print(Solution().orangesRotting([[2,1,1],[1,1,0],[0,1,1]])) # 4

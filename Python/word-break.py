@@ -19,15 +19,15 @@ class Solution(object):
         :type wordDict: Set[str]
         :rtype: bool
         """
-        n = len(s)
-        dset = set(wordDict)
-        maxLen = max(map(len, dset)) if dset else 0
+        if not wordDict: return []
+        n, dset = len(s), set(wordDict)
+        maxLen = max(len(w) for w in dset)
 
         dp = [False] * (n+1)
         dp[0] = True
-        for i in range(1, n+1):
-            dp[i] = any(dp[i-l] and s[i-l:i] in dset \
-                        for l in range(1, min(i, maxLen)+1))
+        for j in range(1, n + 1):
+            dp[j] = any(dp[i] and s[i:j] in dset \
+                        for i in xrange(max(0, j - maxlen), j))
         return dp[n]
 
 

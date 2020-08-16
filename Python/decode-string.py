@@ -29,8 +29,7 @@ class Solution(object):
             if c == '[':
                 stack.append(curString)
                 stack.append(curNum)
-                curString = ''
-                curNum = 0
+                curString, curNum = '', 0
             elif c == ']':
                 num = stack.pop()
                 prevString = stack.pop()

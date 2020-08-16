@@ -15,7 +15,34 @@
 #
 
 class Solution(object):
-    def wordBreak_memorization(self, s, wordDict): # USE THIS
+    def wordBreak_backtrack(self, s, wordDict): # USE THIS: may slower than wordBreak_memorization 
+                                                # but easy to remember
+        def dfs(start, cur):
+            if start == len(s):
+                ans.append(' '.join(cur))
+                return
+            for i in xrange(start + 1, len(s) + 1):
+                if s[start:i] in dset:
+                    cur.append(s[start:i])
+                    dfs(i, cur)
+                    cur.pop()
+
+        # check doable O(n^2) to avoid TLE. See word-break.py
+        if not wordDict: return []
+        n, dset = len(s), set(wordDict)
+        maxlen = max(len(w) for w in dset)
+        dp = [False] * (n + 1)
+        dp[0] = True
+        for j in range(1, n + 1):
+            dp[j] = any(dp[i] and s[i:j] in dset \
+                        for i in xrange(max(0, j - maxlen), j))
+
+        ans = []
+        if dp[n]:
+            dfs(0, [])
+        return ans
+
+    def wordBreak_memorization(self, s, wordDict):
         def dfs(s):
             ans = []
             if s in dset:
@@ -31,37 +58,19 @@ class Solution(object):
             tokenDict[s] = ans
             return ans
 
+        # check doable O(n^2) to avoid TLE. See word-break.py
+        if not wordDict: return []
         n, dset = len(s), set(wordDict)
-        maxlen = max(len(w) for w in dset) if dset else 0
+        maxlen = max(len(w) for w in dset)
         dp = [False] * (n + 1)
         dp[0] = True
-        for j in xrange(1, n + 1):
+        for j in range(1, n + 1):
             dp[j] = any(dp[i] and s[i:j] in dset \
                         for i in xrange(max(0, j - maxlen), j))
 
         tokenDict = {}
         return dfs(s) if dp[n] else []
 
-    def wordBreak_backtrack(self, s, wordDict):
-        def dfs(start, cur):
-            if start == len(s):
-                ans.append(' '.join(cur))
-                return
-            for i in xrange(start + 1, len(s) + 1):
-                if s[start:i] in dset:
-                    dfs(i, cur + [s[start:i]])
-
-        n, dset = len(s), set(wordDict)
-        maxlen = max(len(w) for w in dset) if dset else 0
-        dp = [False] * (n + 1)
-        dp[0] = True
-        for j in xrange(1, n + 1):
-            dp[j] = any(dp[i] and s[i:j] in dset \
-                        for i in xrange(max(0, j - maxlen), j))
-        ans = []
-        if dp[n]:
-            dfs(0, [])
-        return ans
 
 class Solution2(object):
     def wordBreak(self, s, wordDict):
@@ -96,7 +105,7 @@ class Solution2(object):
             return
         for i in xrange(start, len(s)):
             if valid[start][i]:
-                path += [s[start:i+1]]
+                path.append(s[start:i+1])
                 self.wordBreakHelper(s, valid, i + 1, path, result)
                 path.pop()
 

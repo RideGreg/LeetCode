@@ -21,14 +21,17 @@ class Solution:
     def firstMissingPositive(self, A):
         for i in range(len(A)):
             # 如果1<=此数<=len(A),持续把它换到应属位置上去。假设数值为A[i]，应去位置A[i]-1，现在位置i。
-            # 注意不能比较index while 1 <= A[i] <= len(A) and i != A[i]-1: 位置虽不同但数值相同，陷入死循环。 Eg. [1,1]
+            # KENG 1: 注意不能比较index while 1 <= A[i] <= len(A) and A[i] != i+1: 位置虽不同但数值相同，陷入死循环。 Eg. [1,1]
             while 1 <= A[i] <= len(A) and A[i] != A[A[i]-1]:
-                A[A[i] - 1], A[i] = A[i], A[A[i] - 1]
+                x = A[i] - 1
+                A[i], A[x] = A[x], A[i]
+                # A[A[i] - 1], A[i] = A[i], A[A[i] - 1]  # this works, but better to avoid confusion
+                # A[i], A[A[i] - 1] = A[A[i] - 1], A[i]  # KENG 2: not work, A[i] already updated
 
         for i, x in enumerate(A):
             if x != i + 1:
                 return i + 1
-        return len(A) + 1
+        return len(A) + 1     # KENG 3: dont forget this
 
 
     def firstMissingPositive_similar(self, A): # similar but while iterate on the outside loop
@@ -46,13 +49,13 @@ class Solution:
         return len(A) + 1
 
 if __name__ == "__main__":
+    print(Solution().firstMissingPositive([3,4,-1,1])) # 2
     print(Solution().firstMissingPositive([1,1])) # 2
     print(Solution().firstMissingPositive([4,1,2,6])) # 3
     print(Solution().firstMissingPositive([1,8,0])) # 2
     print(Solution().firstMissingPositive([0,8,1])) # 2
     print(Solution().firstMissingPositive([2,1,0])) # 3
     print(Solution().firstMissingPositive([1,2,0])) # 3
-    print(Solution().firstMissingPositive([3,4,-1,1])) # 2
     print(Solution().firstMissingPositive([])) # 1
     print(Solution().firstMissingPositive([0])) # 1
     print(Solution().firstMissingPositive([1])) # 2

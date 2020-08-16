@@ -37,33 +37,29 @@ class Solution(object):
             return
 
         q = collections.deque()
+        m, n = len(board), len(board[0])
+        for i in range(m):
+            for j in [0, n-1]:
+                if board[i][j] == 'O':
+                    board[i][j] = 'V'
+                    q.append((i, j))
 
-        for i in xrange(len(board)):
-            if board[i][0] == 'O':
-                board[i][0] = 'V'
-                q.append((i, 0))
-            if board[i][len(board[0])-1] == 'O':
-                board[i][len(board[0])-1] = 'V'
-                q.append((i, len(board[0])-1))
-
-        for j in xrange(1, len(board[0])-1):
-            if board[0][j] == 'O':
-                board[0][j] = 'V'
-                q.append((0, j))
-            if board[len(board)-1][j] == 'O':
-                board[len(board)-1][j] = 'V'
-                q.append((len(board)-1, j))
+        for j in range(1, n-1):
+            for i in [0, m-1]:
+                if board[i][j] == 'O':
+                    board[i][j] = 'V'
+                    q.append((i, j))
 
         while q:
             i, j = q.popleft()
             for x, y in [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]:
-                if 0 <= x < len(board) and 0 <= y < len(board[0]) and \
+                if 0 <= x < m and 0 <= y < len(boardn and \
                    board[x][y] == 'O':
                     board[x][y] = 'V'
                     q.append((x, y))
 
-        for i in xrange(len(board)):
-            for j in xrange(len(board[0])):
+        for i in range(m):
+            for j in range(n):
                 if board[i][j] != 'V':
                     board[i][j] = 'X'
                 else:

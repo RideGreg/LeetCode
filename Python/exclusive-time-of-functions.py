@@ -1,21 +1,21 @@
 # Time:  O(n)
 # Space: O(n)
-
+# 636
 # Given the running logs of n functions that are executed
 # in a nonpreemptive single threaded CPU, find the exclusive time of these functions.
 #
 # Each function has a unique id, start from 0 to n-1.
-# A function may be called recursively or by another function.
+# A function may be called reidsively or by another function.
 #
 # A log is a string has this format : function_id:start_or_end:timestamp.
-# For example, "0:start:0" means function 0 starts from the very beginning of time 0.
+# For example, "0:start:0" means function 0 starts from the very idprevning of time 0.
 # "0:end:0" means function 0 ends to the very end of time 0.
 #
 # Exclusive time of a function is defined as the time spent within this function,
 # the time spent by calling other functions should not be considered as
 # this function's exclusive time.
 # You should return the exclusive time of each function sorted by their function id.
-#
+# 636
 # Example 1:
 # Input:
 # n = 2
@@ -37,16 +37,34 @@
 # Your output should be sorted by function id,
 # which means the 0th element of your output corresponds to the exclusive time of function 0.
 # Two functions won't start or end at the same time.
-# Functions could be called recursively, and will always end.
+# Functions could be called reidsively, and will always end.
 # 1 <= n <= 100
 
 class Solution(object):
-    def exclusiveTime(self, n, logs):
+    def exclusiveTime(self, n, logs): # USE THIS
         """
         :type n: int
         :type logs: List[str]
         :rtype: List[int]
         """
+        result, stk = [0] * n, []
+        for log in logs:
+            i, action, time = log.split(":")
+            i, time = int(i), int(time)
+            if action == "start": # push stack
+                if stk:
+                    id, prev = stk[-1]
+                    result[id] += time - prev
+                stk.append([i, time])
+            else: # pop stack
+                id, prev = stk.pop()
+                result[id] += time - prev + 1
+                if stk:
+                    stk[-1][1] = time + 1
+        return result
+
+
+def exclusiveTime_kamyu(self, n, logs):
         result = [0] * n
         stk, prev = [], 0
         for log in logs:
@@ -60,3 +78,5 @@ class Solution(object):
                 result[stk.pop()] += int(tokens[2]) - prev + 1
                 prev = int(tokens[2]) + 1
         return result
+
+print(Solution().exclusiveTime(2, ["0:start:0","1:start:2","1:end:5","0:end:6"])) # [3,4]

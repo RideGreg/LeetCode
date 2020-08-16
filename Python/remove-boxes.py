@@ -1,5 +1,5 @@
-# Time:  O(n^3) ~ O(n^4)
-# Space: O(n^3)
+# Time:  O(n^3) ~ O(n^4)，最坏情况下每个f(l,r,k) 被计算一次，每次状态转移需要 O(n)的时间复杂度。
+# Space: O(n^3)，三维dp数组空间
 
 # 546
 # Given several boxes with different colors represented by different positive numbers.
@@ -25,13 +25,14 @@
 
 # DP: 首先把连续相同颜色的盒子进行合并，得到数组color以及数组length，分别表示合并后盒子的颜色和长度。
 #
-# dp[l][r][k]表示第l到第r个合并后的盒子，连同其后颜色为color[r]的长度k一并消去所能得到的最大得分。
+# dp[l][r][k]表示第l到第r个(both included)合并后的盒子，连同其后颜色为color[r]的k个盒子一并消去所能得到的最大得分。
 #
 # 状态转移方程：
-# 1. 相邻盒子不会同色，移除最后一个盒子进行递归计算
+# 1. 相邻盒子不会同色，移除最后一个盒子进行递归计算。注意后面尾随的k个盒子颜色也是color[r]，合并计算
 # dp[l][r][k] = dp[l][r - 1][0] + (length[r] + k) ** 2
 # 2. 不相邻盒子可能与最后一个盒子同色，先移除中间所有盒子
-# dp[l][r][k] = max(dp[l][r][k], dp[l][i][length[r] + k] + dp[i + 1][r - 1][0])  其中 i ∈[l, r - 1]
+# if color[i] == color[r]:
+#     dp[l][r][k] = max(dp[l][r][k], dp[l][i][length[r] + k] + dp[i + 1][r - 1][0])  其中 i ∈[l, r - 1]
 
 class Solution(object):
     def removeBoxes(self, boxes):
@@ -42,14 +43,17 @@ class Solution(object):
         def dfs(l, r, k):
             if l > r: return 0
             if not dp[l][r][k]:
-                # 因为已经事先合并，相邻盒子不会同色，移除最后一个盒子进行递归计算
-                points = dfs(l, r - 1, 0) + (length[r] + k) ** 2
+                if l == r: # simple case
+                    dp[l][r][k] = (length[r] + k) ** 2
+                else:
+                    # 因为已经事先合并，相邻盒子不会同色，移除最后一个盒子进行递归计算
+                    points = dfs(l, r - 1, 0) + (length[r] + k) ** 2
 
-                # 检查不相邻盒子有否与最后一个盒子同色，就先移除中间所有盒子
-                for i in range(l, r):
-                    if color[i] == color[r]:
-                        points = max(points, dfs(l, i, length[r] + k) + dfs(i + 1, r - 1, 0))
-                dp[l][r][k] = points
+                    # 检查不相邻盒子有否与最后一个盒子同色，就先移除中间所有盒子
+                    for i in range(l, r):
+                        if color[i] == color[r]:
+                            points = max(points, dfs(l, i, length[r] + k) + dfs(i + 1, r - 1, 0))
+                    dp[l][r][k] = points
             return dp[l][r][k]
 
         color, length = [], []

@@ -18,8 +18,9 @@ class TreeNode(object):
         self.left = None
         self.right = None
 
-# USE THIS, very clean
-class BSTIterator_bookshadow(object):
+
+# 把所有节点按中序遍历放入栈需要O(n) space。我们使用自定义的栈，只存O(h)节点，按需要暂停和重启中序遍历。
+class BSTIterator_bookshadow(object):   # USE THIS, very clean
     def __init__(self, root):
         self.stack = []
         self.pushLeft(root)

@@ -31,6 +31,23 @@ class Solution:
                 numerals.append(int(operators[token](x, y)))
         return numerals.pop()
 
+    def evalRPN(self, tokens):
+        ans, stk = 0, []
+        for token in tokens:
+            if token.lstrip('-').isdigit():  # neg sign not work in isdigit/isnumeric
+                stk.append(int(token))
+            else:
+                op2, op1 = stk.pop(), stk.pop()
+                if token == '+':
+                    stk.append(op1 + op2)
+                elif token == '-':
+                    stk.append(op1 - op2)
+                elif token == '*':
+                    stk.append(op1 * op2)
+                elif token == '/':
+                    stk.append(int(op1/op2))
+        return stk[0]
+
 if __name__ == "__main__":
     print(Solution().evalRPN(["2", "1", "+", "3", "*"])) # 9
     print(Solution().evalRPN(["4", "13", "5", "/", "+"])) # 6

@@ -7,6 +7,7 @@
 # You may assume that duplicates do not exist in the tree.
 #
 
+from typing import List
 # Definition for a  binary tree node
 class TreeNode:
     def __init__(self, x):
@@ -18,7 +19,7 @@ class Solution:
     # @param preorder, a list of integers
     # @param inorder, a list of integers
     # @return a tree node
-    def buildTree_ming(self, preorder, inorder): #USE THIS
+    def buildTree(self, preorder, inorder): #USE THIS
         def build(preleft, inleft, length):
             if length <= 0: return None
             idx = lookup[preorder[preleft]]
@@ -31,7 +32,7 @@ class Solution:
         return build(0, 0, len(preorder))
 
 
-    def buildTree(self, preorder, inorder):
+    def buildTree_kamyu(self, preorder, inorder):
         lookup = {}
         for i, num in enumerate(inorder):
             lookup[num] = i
@@ -46,6 +47,18 @@ class Solution:
         node.right = self.buildTreeRecu(lookup, preorder, inorder, pre_start + 1 + i - in_start, i + 1, in_end)
         return node
 
+    # Follow up: get postorder from preorder and inorder (no need to construct tree)
+    def getPostOrder(self, preorder, inorder):
+        def build(preleft: int, inleft: int, length: int) -> List[int]:
+            if length <= 0: return []
+            idx = lookup[preorder[preleft]]
+            l1 = idx - inleft
+            return build(preleft+1, inleft, l1) \
+                   + build(preleft+l1+1, idx+1, length-(l1+1)) \
+                   + [preorder[preleft]]
+
+        lookup = {n: i for i, n in enumerate(inorder)}
+        return build(0, 0, len(preorder))
 
 # time: O(n)
 # space: O(n)
@@ -76,6 +89,6 @@ if __name__ ==  "__main__":
     preorder = [1, 2, 3]
     inorder = [2, 1, 3]
     result = Solution().buildTree(preorder, inorder)
-    print(result.val)
-    print(result.left.val)
-    print(result.right.val)
+    print(result.val, result.left.val, result.right.val) # 1,2,3
+
+    print(Solution().getPostOrder([1, 2,4, 3,5,6,7], [4,2, 1, 6,5,7,3])) # [4,2, 6,7,5,3, 1]

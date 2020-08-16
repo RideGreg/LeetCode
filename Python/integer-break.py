@@ -1,6 +1,7 @@
 # Time:  O(logn), pow is O(logn).
 # Space: O(1)
 
+# 343
 # Given a positive integer n, break it into the sum of
 # at least two positive integers and maximize the product
 # of those integers. Return the maximum product you can get.
@@ -58,20 +59,53 @@ class Solution(object):
         return res
 
 
+
 # Time:  O(n)
 # Space: O(1)
 # DP solution.
+from functools import lru_cache
 class Solution2(object):
-    def integerBreak(self, n):
+    # integerBreak(n) = max(integerBreak(n - 2) * 2, integerBreak(n - 3) * 3)
+    # Proof: assume break n into 7 + ..., see solution 1 we know we SHOULD further break 7 into 2 + ...
+    # or 3 + ... for max. So the final is always like 2 + ... or 3 + ...
+    def integerBreak(self, n):  # USE THIS: cache version
         """
         :type n: int
         :rtype: int
         """
-        if n < 4:
-            return n - 1
+        @lru_cache(None)
+        def dp(m):
+            if m < 4: return m-1
+            # both "no more break" and "break further"
+            return max(x * max(m-x, dp(m-x)) for x in (2, 3))
 
-        # integerBreak(n) = max(integerBreak(n - 2) * 2, integerBreak(n - 3) * 3)
-        res = [0, 1, 2, 3]
-        for i in xrange(4, n + 1):
+        return dp(n)
+
+    def integerBreak(self, n: int) -> int:
+        if n < 4: return n - 1
+
+        res = [0, 1, 2, 3] # this is not answer for n = 1,2,3. This is actually max(x, res[x])
+        for i in range(4, n + 1):
             res[i % 4] = max(res[(i - 2) % 4] * 2, res[(i - 3) % 4] * 3)
         return res[n % 4]
+
+
+    # normal DP: Time O(n^2) Space O(n)
+    # don't consider break into (1, n-1) which is wasted 1*...
+    # DP is max(x * max(m-x, dp[m-x])) where m-x is no more break, dp[m-x] is break further.
+    def integerBreak2(self, n: int) -> int:
+        dp = [0,0,1,2]
+        for m in range(4, n+1):
+            dp.append(max(x * max(m-x, dp[m-x]) for x in range(2, m-1)))
+        return dp[n]
+
+    # cache version
+    def integerBreak3(self, n: int) -> int:
+        @lru_cache(None)
+        def dp(m):
+            if m < 4: return m-1
+            return max(x * max(m-x, dp(m-x)) for x in range(2, m-1))
+
+        return dp(n)
+
+print(Solution2().integerBreak(10)) # 36

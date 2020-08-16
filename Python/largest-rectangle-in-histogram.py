@@ -17,17 +17,14 @@ class Solution:
     # @param height, a list of integer
     # @return an integer
     def largestRectangleArea(self, heights):  # USE THIS
+        heights.append(0)   # KENG：一定要延申到数列末端之外 e.g. [2,4,5]
         stk, ans = [-1], 0
-        for i in range(len(heights)):
-            while stk[-1] != -1 and heights[i] <= heights[stk[-1]]:   # 右边界确定
+        for i, h in enumerate(heights):
+            while len(stk) > 1 and h <= heights[stk[-1]]: # 右边界确定。相同高度值也弹出，只保留最后一个
                 last = stk.pop()
-                if heights[i] < heights[last]:  # 相同高度值不重复计算，只计算最后一个
-                    ans = max(ans, heights[last] * (i - 1 - stk[-1]))
+                width =  i - 1 - stk[-1]
+                ans = max(ans, heights[last] * width)
             stk.append(i)
-
-        while stk[-1] != -1:         # KENG：一定要延申到数列末端之外 e.g. [2,4,5]
-            ans = max(ans, heights[stk.pop()] * (len(heights) - 1 - stk[-1]))
-
         return ans
 
 

@@ -23,8 +23,8 @@ except NameError:
 
 class Solution(object):
     # only relay on the balance of past two days
-    # buy0, buy1: balance if own stock in previous day and current day
-    # sell0, sell1: balance if not own stock in previous day and current day
+    # holdpre, hold: balance if own stock in previous day and current day
+    # cashpre, cash: balance if not own stock in previous day and current day
     def maxProfit(self, prices):
         """
         :type prices: List[int]
@@ -33,14 +33,14 @@ class Solution(object):
         if len(prices) < 2:
             return 0
 
-        buy0 = -prices[0]
-        buy1 = max(-prices[0], -prices[1])
-        sell0 = 0
-        sell1 = max(0, prices[1]-prices[0])
+        holdpre = -prices[0]
+        hold = max(-prices[0], -prices[1])
+        cashpre = 0
+        cash = max(0, prices[1]-prices[0])
 
         for p in prices[2:]:
-            buy0, sell0, buy1, sell1 = buy1, sell1, max(buy1, sell0-p), max(sell1, buy1+p)
-        return sell1
+            holdpre, cashpre, hold, cash = hold, cash, max(hold, cashpre-p), max(cash, hold+p)
+        return max(cash, hold)
 
     # or more clear with a rotating array
     # notOwn[i]表示在第i天不持有股票所能获得的最大累计收益

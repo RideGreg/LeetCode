@@ -9,12 +9,42 @@
 # Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
 #
 
-class Solution(object): # double scan, maintain counter
-    def longestValidParentheses(self, s): # USE THIS: double scan
+class Solution(object):
+    # double scan, maintain counter
+    # has to do double scan. Bug if just do one scan while update ans for close <= open "(()(()"
+    def longestValidParentheses(self, s): # USE THIS: double scan, better than stack
         """
         :type s: str
         :rtype: int
         """
+        ans = 0
+        # forward scan
+        open = close = 0
+        for c in s:
+            if c == '(':
+                open += 1
+            else:
+                close += 1
+                if close == open:
+                    ans = max(ans, 2 * open)
+                elif close > open:
+                    open = close = 0
+
+        # backward scan
+        open = close = 0
+        for c in reversed(s):
+            if c == ')':
+                close += 1
+            else:
+                open += 1
+                if open == close:
+                    ans = max(ans, 2 * open)
+                elif open > close:
+                    open = close = 0
+        return ans
+
+
+    def longestValidParentheses_doubleScan2(self, s): # prefer not to use fancy code
         def length(start, openChar, reverse):
             it = range(len(s))
             if reverse: it = reversed(it)
@@ -33,47 +63,20 @@ class Solution(object): # double scan, maintain counter
         return max(length(-1, '(', False), length(len(s), ')', True))
 
 
-    def longestValidParentheses_doubleScan2(self, s):
-        ans = 0
-        # forward scan
-        open = close = 0
-        for c in s:
-            if c == '(':
-                open += 1
-            else:
-                close += 1
-                if close == open:
-                    ans = max(ans, 2 * open)
-                elif close > open:
-                    open = close = 0
-
-        # backward scan
-        open = close = 0
-        for c in reversed(s):
-            if c == '(':
-                open += 1
-                if close == open:
-                    ans = max(ans, 2 * open)
-                elif open > close:
-                    open = close = 0
-            else:
-                close += 1
-        return ans
-
 # Time:  O(n)
-# Space: O(n), store the indices of opening char
+# Space: O(n), store left boundary, then followed by the indices of opening chars
 class Solution2: # stack
     def longestValidParentheses(self, s):
-        ans, stack = 0, [-1]
+        ans, stack = 0, [-1]  # default left boundary
         for i in range(len(s)):
             if s[i] == '(':
                 stack.append(i)
             else:
-                stack.pop() # pop a '('
+                stack.pop() # pop a '(' for matching or the beginning left boundary
                 if stack:
-                    ans = max(ans, i - stack[-1])
+                    ans = max(ans, i - stack[-1]) # has left boundary, parentheses matched
                 else:
-                    stack.append(i)
+                    stack.append(i)   # no left boundary means too many ')', update left boundary
         return ans
 
 # solution 3: O(n^2) DP also works

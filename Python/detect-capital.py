@@ -1,6 +1,7 @@
 # Time:  O(l)
 # Space: O(1)
 
+# 520
 # We define the usage of capitals in a word to be right when one of the following cases holds:
 #
 # All letters in this word are capitals, like "USA".
@@ -22,3 +23,7 @@ class Solution(object):
         :rtype: bool
         """
         return word.isupper() or word.islower() or word.istitle()
+        '''
+        return len(word) == 1 or word.isupper() or word[1:].islower()
+        # note ''.isupper() -> False, ''.islower() -> False
+        '''

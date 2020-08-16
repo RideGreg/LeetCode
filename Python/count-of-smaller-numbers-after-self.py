@@ -53,11 +53,13 @@ class Solution(object): # USE THIS,
                 self.__bit = [0] * (n + 1)
 
             def add(self, i, val): # always increment 1, so no need to write update()
+                i += 1
                 while i < len(self.__bit):
                     self.__bit[i] += val
                     i += (i & -i)
 
             def query(self, i): # query前缀和，相当于range_sum[0..i]
+                i += 1
                 ret = 0
                 while i > 0:
                     ret += self.__bit[i]
@@ -69,18 +71,18 @@ class Solution(object): # USE THIS,
         sorted_nums = sorted(set(nums))
         places = {x: i for i, x in enumerate(sorted_nums)}
         bit = BIT(len(places))
-        ans = [0] * len(nums),
+        ans = [0] * len(nums)
 
         # Asks "after self", scan from right to left. For "before self", scan from left.
         iterable = range(len(nums)) if dir == 'left' else reversed(range(len(nums)))
         for i in iterable:
             x = nums[i]
             if compare == "smaller":
-                ans[i] = bit.query(places[x]) # places[x]+1 is self, for all smaller num, query places[x]
+                ans[i] = bit.query(places[x] - 1) # places[x] is self, for all smaller num, query places[x]-1
             elif compare == "smaller_eq":
-                ans[i] = bit.query(places[x] + 1)
+                ans[i] = bit.query(places[x])
 
-            bit.add(places[x] + 1, 1) # after visit a num, increment self node and all nodes including it
+            bit.add(places[x], 1) # after visit a num, increment self node and all nodes including it
         return ans
 
 # Divide and Conquer solution.
@@ -115,6 +117,35 @@ class Solution2(object):
         for i, num in enumerate(nums):
             num_idxs.append((num, i))
         countAndMergeSort(0, len(num_idxs) - 1)
+        return counts
+
+    def countSmaller_wrong_merge(self, nums): # this implementation has bug, need to find out!!
+        def countAndMergeSort(start, end):
+            if start >= end:  return 0
+
+            mid = start + (end - start) // 2
+            countAndMergeSort(start, mid)
+            countAndMergeSort(mid + 1, end)
+            # first pass count reverse paris
+            r = mid + 1
+            for i in range(start, mid + 1):
+                while r <= end and nums[r] < nums[i]:
+                    r += 1
+                counts[i] += r - (mid + 1)
+            # second pass do merge
+            r = mid + 1
+            tmp = []
+            for i in range(start, mid + 1):
+                # Merge the two sorted arrays into tmp.
+                while r <= end and nums[r] < nums[i]:
+                    tmp.append(nums[r])
+                    r += 1
+                tmp.append(nums[i])
+            # Copy tmp back to num_idxs
+            nums[start:start+len(tmp)] = tmp
+
+        counts = [0] * len(nums)
+        countAndMergeSort(0, len(nums) - 1)
         return counts
 
 
@@ -185,6 +216,7 @@ class Solution3(object):
             return 0
 
 print(Solution().countSmaller([5,2,6,1])) # [2,1,1,0]
+print(Solution().countSmaller([1,1,6,2,5,2,0,2])) # [1,1,5,1,3,1,0,0]
 print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller")) # [1,1,5,1,3,1,0,0]
 print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller_eq")) # [2,1,5,3,3,2,0,0]
 print(Solution().countSmaller([1,1,6,2,5,2,0,2], "smaller", "left")) # [0,0,2,2,3,2,0,3]

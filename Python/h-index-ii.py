@@ -10,6 +10,7 @@
 #
 
 class Solution(object):
+    # binary search space uses [0, len(citations)], don't use [0, max(citations)] which may be huge.
     def hIndex(self, citations):
         """
         :type citations: List[int]
@@ -24,5 +25,16 @@ class Solution(object):
             else:
                 l = m + 1
         return N - l
+
+
+    # linear scan: Time O(n), Space O(1)
+    # find the first idx where citations >= # of papers, all idx after also have
+    # citations >= # of papers.
+    def hIndex2(self, citations):
+        n = len(citations)
+        for idx, c in enumerate(citations):
+            if c >= n - idx:
+                return n - idx
+        return 0
 
 print(Solution().hIndex([0,1,3,5,6])) # 3

@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 696
 # Give a string s, count the number of non-empty (contiguous) substrings
 # that have the same number of 0's and 1's, and all the 0's and all the 1's
 # in these substrings are grouped consecutively.
@@ -31,54 +32,32 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
+        s += '#' # add the last alternating char
         result = 0
         prev, curr = 0, 1 #for the first char case
-        for i in xrange(1, len(s)):
-            #each time alternating, add #of candidates from substring ending with last char
+        for i in range(1, len(s)):
+            #each time alternating, add # of eligible substrings
             if s[i-1] != s[i]:
                 result += min(prev, curr)
                 prev, curr = curr, 1
             else:
                 curr += 1
-        result += min(prev, curr)
         return result
 
-    # return a list of counts of groups of 0 or 1
+    # Time O(n) Space O(n)
     def countBinarySubstrings2(self, s):
-        result = []
-        curr = 1
-        for i in xrange(1, len(s)):
-            if s[i] == s[i-1]:
-                curr += 1
-            else:
-                result.append(curr)
-                curr = 1
-        result.append(curr)
-        return result
+        # build an array of continuous digits until this index
+        cnt = [1]
+        for i in range(1, len(s)):
+            cnt.append(cnt[-1] + 1 if s[i] == s[i-1] else 1)
+        # iterate the array to check if eligible substring exists at this index
+        ans = 0
+        for i, v in enumerate(cnt):
+            if i >= v and cnt[i-v] >= v:
+                ans += 1
+        return ans
 
-    # Time O(n^2)
-    def countBinarySubstrings3(self, s):
-        res = 0
-        for i in xrange(len(s) - 1):
-            num0, num1 = 0, 0
-            if s[i] == '0':
-                num0 += 1
-            else:
-                num1 += 1
-            j = i + 1
-            while j < len(s):
-                if num0 and num1 and s[j] != s[j-1]: #aba pattern
-                    break
-                if s[j] == '0':
-                    num0 += 1
-                else:
-                    num1 += 1
-                if num0 == num1: #for all substrings starting w/ s[i], zero or one result
-                    res += 1
-                    break
-                j += 1
-        return res
 
-print Solution().countBinarySubstrings2('00110')
-print Solution().countBinarySubstrings2('00110011')
-print Solution().countBinarySubstrings2('10101')
+print(Solution().countBinarySubstrings('00110')) # 3
+print(Solution().countBinarySubstrings('00110011')) # 6
+print(Solution().countBinarySubstrings('10101')) # 4

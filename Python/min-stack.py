@@ -21,7 +21,8 @@ class MinStack:
             self.stack.append(0)
             self.min = x
         else:
-            self.stack.append(x - self.min) #只存与min的差值部分，如果差值为负（新数更小），要更新min
+            self.stack.append(x - self.min) #只存与"上一个min"的差值部分，如果差值为负（新数更小），要更新min
+                                            #这是为了能recover"上一个min"。stack里可能有正数，零，负数。
             if x < self.min:
                 self.min = x
 
@@ -29,7 +30,7 @@ class MinStack:
     def pop(self):
         x = self.stack.pop()
         if x < 0:
-            self.min = self.min - x
+            self.min = self.min - x        # recover"上一个min"
 
     # @return an integer
     def top(self):
