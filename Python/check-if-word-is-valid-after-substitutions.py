@@ -30,6 +30,14 @@ class Solution(object):
                 stack.append(i)
         return not stack
 
+
+    # Time is not good, scan S multiple times
+    def isValid2(self, S):
+        while 'abc' in S:
+            S = S.replace('abc', '')
+        return not S
+
+
     # TLE: Time O(n^2) Every time you replace "abc", you are creating a new string.
     # You may creat n possible string. For each string, you do a find and replace which is O(n).
     def isValid_TLE(self, S):  # TLE: if abc at the end of S, repeat scan most front part of S without vain
@@ -40,13 +48,6 @@ class Solution(object):
                 return self.isValid(S[:i]+S[i+3:])
         return False
 
-    def isValid_wrong(self, S): # fail for 'aabbcc'
-        count = [0, 0, 0]
-        for i in S:
-            count[ord(i) - ord('a')] += 1
-            if not count[0] >= count[1] >= count[2]:
-                return False
-        return count[0] == count[1] == count[2]
 
 print(Solution().isValid("abcabcababcc")) # True
 print(Solution().isValid("abccba")) # True

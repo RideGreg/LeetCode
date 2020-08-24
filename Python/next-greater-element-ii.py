@@ -16,38 +16,32 @@
 # The second 1's next greater number needs to search circularly, which is also 2.
 # Note: The length of given array won't exceed 10000.
 
+
+# 单调递减栈
 class Solution(object):
-    def nextGreaterElements_kamyu(self, nums): # hard to understand: reverse loop, keep greater in stack
-        """
-        :type nums: List[int]
-        :rtype: List[int]
-        """
-        result, stk = [0] * len(nums), []
-        for i in reversed(range(2*len(nums))):
-            while stk and stk[-1] <= nums[i % len(nums)]:
-                stk.pop()
-            result[i % len(nums)] = stk[-1] if stk else -1
-            stk.append(nums[i % len(nums)])
-        return result
-
-    def nextGreaterElements(self, nums): # USE THIS: easy to understand
-        L = len(nums)
-        stk, ans = [], [-1]*L
-        for i in range(len(nums)*2):
-            while stk and nums[i%L] > nums[stk[-1]]:
-                ans[stk.pop()] = nums[i%L]
-            if i < L:
+    def nextGreaterElements(self, nums): # USE THIS: easy to understand, 300ms
+        n = len(nums)
+        stk, ans = [], [-1]*n
+        for i in range(n*2):
+            while stk and nums[stk[-1]] < nums[i%n]:
+                ans[stk.pop()] = nums[i%n]
+            if i < n:   # if don't check this, get 'list index out of range' on line 39
                 stk.append(i)
-
         return ans
 
-    # actually we can just traverse index 0->L twice, no need 0->2*L and module
-    def nextGreaterElements(self, nums):
-        L = len(nums)
-        stk, ans = [], [-1]*L
-        for i in list(range(len(nums)))*2:
-            while stk and nums[i] > nums[stk[-1]]:
-                ans[stk.pop()] = nums[i]
-            stk.append(i)
-
+    # Time O(n^2) 8000ms
+    def nextGreaterElements_bruteFroce(self, nums):
+        ans = []
+        for i, x in enumerate(nums):
+            for k in range(1, len(nums)):
+                y = (i+k) % len(nums)
+                if nums[y] > x:
+                    ans.append(nums[y])
+                    break
+            else:
+                ans.append(-1)
         return ans
+
+print(Solution().nextGreaterElements([3,2,1,0])) # [-1,3,3,3]
+print(Solution().nextGreaterElements([0,1,2,3])) # [1,2,3,-1]
+print(Solution().nextGreaterElements([1,2,1,0])) # [2,-1,2,1]

@@ -1,4 +1,4 @@
-# Time:  O(2^n)
+# Time:  O(2^n) 每个数字最多有两种选择
 # Space: O(2^n)
 
 # 967
@@ -13,33 +13,42 @@
 # 0 <= K <= 9
 
 class Solution(object):
-    def numsSameConsecDiff(self, N, K):
+    def numsSameConsecDiff(self, N, K): # USE THIS: BFS, kamyu
         """
         :type N: int
         :type K: int
         :rtype: List[int]
         """
-        def dfs(cur, N, K):
-            if len(str(cur)) == N:
-                ans.append(cur)
+        curr = list(range(10))
+        for _ in range(N-1):
+            curr = [x*10 + y
+                    for x in curr for y in set([x%10 + K, x%10 - K]) 
+                    if x > 0 and 0 <= y < 10]
+        return curr
+
+
+    def numsSameConsecDiff_dfs(self, N, K):
+        def dfs(sz, num):
+            if sz == N:
+                ans.append(num)
                 return
 
-            last = cur % 10
-            for d in set([last + K, last - K]):
-                if 0 <= d <= 9:
-                    dfs(cur * 10 + d, N, K)
+            if sz == 0:
+                cand = range(1, 10)
+            else:
+                d = num % 10
+                cand = set([d+K, d-K])  # NOTE! remove dup for K=0
+            for v in cand:
+                if 0<=v<10:
+                    dfs(sz+1, num*10+v)
+                
 
         ans = []
-        for i in xrange([0, 1][N > 1], 10):
-            dfs(i, N, K)
+        dfs(0, 0)
+        if N == 1: ans.append(0)
         return ans
 
-    def numsSameConsecDiff_kamyu(self, N, K):
-        curr = range(10)
-        for i in xrange(N-1):
-            curr = [x*10 + y for x in curr for y in set([x%10 + K, x%10 - K]) 
-                    if x and 0 <= y < 10]
-        return curr
+
 
 print(Solution().numsSameConsecDiff(3, 7)) # [181,292,707,818,929]
 print(Solution().numsSameConsecDiff(2, 1)) # [10,12,21,23,32,34,43,45,54,56,65,67,76,78,87,89,98]

@@ -4,6 +4,7 @@
 #                    l is the average length of word
 # Space: O(n)
 
+# 824
 # A sentence S is given, composed of words separated by spaces.
 # Each word consists of lowercase and uppercase letters only.
 #
@@ -50,9 +51,9 @@ class Solution(object):
         :rtype: str
         """
         def convert(S):
-            vowel = set('aeiouAEIOU')
-            for i, word in enumerate(S.split(), 1):
+            vowel = set('aeiouAEIOU')               # use set for membership test
+            for i, word in enumerate(S.split(), 1): # starting index
                 if word[0] not in vowel:
-                    word = word[1:] + word[:1]
-                yield word + 'ma' + 'a'*i
+                    word = word[1:] + word[:1]      # share common code
+                yield word + 'ma' + 'a'*i           # generator
         return " ".join(convert(S))

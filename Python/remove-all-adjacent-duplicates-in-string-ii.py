@@ -21,40 +21,14 @@ class Solution(object):
         """
         stk = []
         for c in s:
-            if not stk or stk[-1][0] != c:
-                stk.append([c, 1])
-            else:
+            if stk and stk[-1][0] == c:
                 stk[-1][1] += 1
                 if stk[-1][1] == k:
                     stk.pop()
-        return "".join(c*k for c, k in stk)
-        ''' OR
-        ans = []
-        for c,ct in stack:
-            ans.extend([c] * ct)
-        return "".join(ans)        
-        '''
-
-    # maintain repeated count for last element, need recount after pop
-    # not good as the above to maintain repeated count for every element
-    def removeDuplicates_ming(self, s, k):
-        result, cnt = [], 0
-        for c in s:
-            if cnt == k-1 and c == result[-1]:
-                result = result[:-(k-1)]
-                if result:
-                    cnt = 1
-                    while cnt+1 <= len(result) and result[-cnt-1] == result[-cnt]:
-                        cnt += 1
-                else:
-                    cnt = 0
             else:
-                if result and result[-1] == c:
-                    cnt += 1
-                else:
-                    cnt = 1
-                result.append(c)
-        return "".join(result)
+                stk.append([c, 1])
+        return "".join(c*k for c, k in stk)
+
 
 print(Solution().removeDuplicates("abcd", 2)) # "abcd"
 print(Solution().removeDuplicates("deeedbbcccbdaa", 3)) # "aa"

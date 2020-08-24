@@ -20,7 +20,7 @@ class TreeNode(object):
 class Solution(object): # USE THIS, but not easy to think
     # @param root, a tree node
     # @return a boolean
-    def isBalanced(self, root):
+    def isBalanced(self, root): # USE THIS
         def getHeight(root):
             if root is None:
                 return 0
@@ -32,7 +32,7 @@ class Solution(object): # USE THIS, but not easy to think
             return max(left_height, right_height) + 1
         return (getHeight(root) >= 0)
 
-    def isBalanced_outputTwo(self, root): # USE THIS
+    def isBalanced_outputTwo(self, root):
         def getHeight(root):
             if not root: return (True, 0)
             leftOk, leftH = getHeight(root.left)
@@ -57,18 +57,3 @@ class Solution(object): # USE THIS, but not easy to think
         return self.ans
 
 
-# Not good, two functions re-run the same iteration
-class Solution_ming(object):
-    def isBalanced(self, root):
-        """
-        :type root: TreeNode
-        :rtype: bool
-        """
-        if not root: return True
-        leftD, rightD = self.getDepth(root.left), self.getDepth(root.right)
-        return abs(leftD - rightD) <= 1 and self.isBalanced(root.left) and self.isBalanced(root.right)
-
-    def getDepth(self, node):
-        if not node:
-            return 0
-        return max(self.getDepth(node.left), self.getDepth(node.right)) + 1

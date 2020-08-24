@@ -50,6 +50,27 @@ class Solution(object):
         dfs(root, [])
         return ans
 
+    # follow up: instead of returning parent folders, now return leaf folders and how many paths included in each leaf-folder path.
+    def removeSubfolders_followup(self, folder):
+        def dfs(cur, path, cnt):
+            if cur.is_string:
+                cnt += 1
+            if not cur.leaves:
+                ans.append(('/' + '/'.join(path), cnt))
+                return
+            for dir, nxt in cur.leaves.items():
+                dfs(nxt, path + [dir], cnt)
+
+        root = TrieNode()
+        for f in folder:
+            cur = root
+            for dir in f.split('/')[1:]:
+                cur = cur.leaves[dir]
+            cur.is_string = True
+
+        ans = []
+        dfs(root, [], 0)
+        return ans
 
     def removeSubfolders_kamyu(self, folder):
         def dfs(curr, path, result):
@@ -77,3 +98,7 @@ class Solution(object):
 print(Solution().removeSubfolders(["/a/b","/a","/c/d","/c/d/e","/c/f"])) # ["/a","/c/d","/c/f"]
 print(Solution().removeSubfolders(["/a/b/c","/a/b/ca","/a/b/d"])) # ["/a/b/c","/a/b/ca","/a/b/d"]
 print(Solution().removeSubfolders(["/a/b/c","/a","/a/b/d"])) # ["/a"]
+
+print(Solution().removeSubfolders_followup(["/a/b","/a","/c/d","/c/d/e","/c/f"])) # [("/a/b",2), ("/c/d/e",2), ("/c/f",1)]
+print(Solution().removeSubfolders_followup(["/a/b/c","/a/b/ca","/a/b/d"])) # [("/a/b/c",1), ("/a/b/ca",1), ("/a/b/d",1)]
+print(Solution().removeSubfolders_followup(["/a/b/c","/a","/a/b/d"])) # [("/a/b/c",2), ("/a/b/d",2)]

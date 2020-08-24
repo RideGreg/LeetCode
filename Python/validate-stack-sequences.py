@@ -22,28 +22,14 @@ class Solution(object):
         :rtype: bool
         """
         j = 0
-        s = []
-        for v in pushed:
-            s.append(v)
-            while s and s[-1] == popped[j]:
-                s.pop()
-                j += 1
-        return j == len(popped)
-
-    def validateStackSequences_ming(self, pushed, popped):
-        n, i, j = len(pushed), 0, 0
         stk = []
-        while i < n or j < n:
-            if stk and stk[-1] == popped[j]: # greedily pop
+        for v in pushed:
+            stk.append(v)
+            while stk and stk[-1] == popped[j]:
                 stk.pop()
                 j += 1
-            else:
-                if i < n:
-                    stk.append(pushed[i])
-                    i += 1
-                else:
-                    break
-        return not stk and i == n and j == n
+        return j == len(popped) # ideally should be all popped
+
 
 print(Solution().validateStackSequences([1,2,3,4,5], [4,5,3,2,1])) # True
 print(Solution().validateStackSequences([1,2,3,4,5], [4,3,5,1,2])) # False

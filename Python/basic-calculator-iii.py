@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
+# 772
 # Implement a basic calculator to evaluate a simple expression string.
 #
 # The expression string may contain open ( and closing parentheses ),
@@ -69,4 +70,4 @@ class Solution(object):
         elif op == '*':
             operands.append(left * right)
         elif op == '/':
-            operands.append(left / right)
+            operands.append(int(left / right))

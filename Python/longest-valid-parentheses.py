@@ -11,7 +11,9 @@
 
 class Solution(object):
     # double scan, maintain counter
-    # has to do double scan. Bug if just do one scan while update ans for close <= open "(()(()"
+    # has to do double scan. Bug if just do one scan:
+    # - if update ans only when close==open: get wrong ans 0 for "(()"
+    # - if update ans = 2*close when close<=open: get wrong ans 4 for "(()(()"
     def longestValidParentheses(self, s): # USE THIS: double scan, better than stack
         """
         :type s: str

@@ -23,9 +23,36 @@ class TreeNode(object):
         self.left = None
         self.right = None
 
+class Solution:
+    # build tree1 from left to right, check tree2 from right to left, so no need to 
+    # maintain the index in leaves sequence.
+    def leafSimilar(self, root1: TreeNode, root2: TreeNode) -> bool: # USE THIS
+        def build(root):
+            if root:
+                if not root.left and not root.right:
+                    leaves.append(root.val)
+                else:
+                    build(root.left)
+                    build(root.right)
 
-class Solution(object):
-    def leafSimilar(self, root1, root2):
+        def check(root):
+            if root:
+                if not root.left and not root.right:
+                    if not leaves or root.val != leaves[-1]:
+                        return False
+                    leaves.pop()
+                else:
+                    if not check(root.right) or not check(root.left):
+                        return False
+            return True
+
+        leaves = []
+        build(root1)
+        return check(root2)
+
+
+class Solution2(object):
+    def leafSimilar(self, root1, root2): # have to produce both full leaves sequence
         def getLeaf(root, seq):
             if not root: return seq
             if not root.left and not root.right:

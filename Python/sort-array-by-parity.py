@@ -19,20 +19,31 @@
 # - 0 <= A[i] <= 5000
 
 class Solution(object):
-    # good: fill the slots
-    def sortArrayByParity(self, A):
+    # Two pointers: fast pointer to overwrite slow pointer
+    def sortArrayByParity(self, A): # USE THIS
         """
         :type A: List[int]
         :rtype: List[int]
         """
         i = 0
-        for j in xrange(len(A)):
+        for j in range(len(A)):
             if A[j] % 2 == 0:
                 A[i], A[j] = A[j], A[i]
                 i += 1
         return A
 
-    def sortArrayByParity_LeetCodeOfficial(self, A):
+    # Two pointers start/end, need several while
+    def sortArrayByParity_ming(self, A): # USE THIS
+        l, r = 0, len(A) - 1
+        while l < r:
+            while l < r and A[l] % 2 == 0:
+                l += 1
+            while l < r and A[r] % 2:
+                r -= 1
+            A[l], A[r] = A[r], A[l]  # no need to increment/decrement index here, next while loop will do
+        return A
+
+    def sortArrayByParity_LeetCodeOfficial(self, A): # not straitforward, usually we don't do switch before increment
         i, j = 0, len(A) - 1
         while i < j:
             if A[i] % 2 == 1 and A[j] % 2 == 0:
@@ -43,16 +54,4 @@ class Solution(object):
 
         return A
 
-    # not good: too many while
-    def sortArrayByParity_ming(self, A):
-        l, r = 0, len(A)-1
-        while l<r:
-            while l<r and A[l]%2==0:
-                l += 1
-            while l<r and A[r]%2:
-                r -= 1
-            if l<r:
-                A[l], A[r] = A[r], A[l]
-                l += 1
-                r -= 1
-        return A
+print(Solution().sortArrayByParity([3,1,2,4])) # [4,2,1,3]

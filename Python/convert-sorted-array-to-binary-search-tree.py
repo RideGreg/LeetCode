@@ -11,7 +11,7 @@ class TreeNode:
         self.left = None
         self.right = None
 
-# USE THIS: build by in-order. cleaner code to use left/rigth index.
+# USE THIS: build by pre-order. cleaner code to use left/rigth index.
 class Solution(object):
     def sortedArrayToBST(self, nums):
         def build(l, r):
@@ -33,7 +33,7 @@ class Solution(object):
         root.right = self.sortedArrayToBST(nums[mid+1:])
         return root
 
-# For reference only: use Iterator and build tree in pre-order.
+# For reference only: use Iterator and build tree by in-order.
 # Time:  O(n)
 # Space: O(logn)
 class Solution2(object):

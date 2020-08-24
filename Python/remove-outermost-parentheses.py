@@ -16,9 +16,8 @@
 # decomposition of S.
 
 class Solution(object):
-    # count the number of opened parenthesis.
-    # Add every char to the result, unless the first left parenthesis,
-    # and the last right parenthesis.
+    # Count Dpeth:
+    # Add every char to the result, except the first ( and last ).
     def removeOuterParentheses(self, S):
         """
         :type S: str
@@ -27,21 +26,22 @@ class Solution(object):
         deep = 1   # EXTENDABLE to remove 2 or 3 ... layers of outer parentheses
         res, opened = [], 0
         for c in S:
-            if c == '(' and opened >= deep:
-                res.append(c)
-            if c == ')' and opened > deep:
-                res.append(c)
             opened += 1 if c == '(' else -1
+            if (c == '(' and opened > deep) \
+                or（c == ')' and opened >= deep）:
+                res.append(c)
         return "".join(res)
 
-    # add primitive as a chunk, but hard to know how many layers the substring has.
+ 
+    # Two pointers
+    # add primitive as a chunk, cannot handle removing more than 1 layer of outer parentheses.
     def removeOuterParentheses_ming(self, S: str) -> str:
-        s, opened, ans = 1, 0, []
+        s, opened, ans = 0, 0, []
         for e in range(len(S)):
             opened += 1 if S[e]=='(' else -1
             if opened == 0:
-                ans.append(S[s:e])
-                s = e+2
+                ans.append(S[s+1:e])
+                s = e+1
         return ''.join(ans)
 
 print(Solution().removeOuterParentheses("(()())(())")) # "()()()"

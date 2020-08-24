@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 856
 # Given a balanced parentheses string S,
 # compute the score of the string based on the following rule:
 #
@@ -38,15 +39,15 @@ except NameError:
 '''
 Count Cores: USE THIS
 Intuition
-The final sum will be a sum of powers of 2, as every core (a substring (), with score 1) will have
+The final sum will be a sum of powers of 2, as every core (a substring (), with score 1=2**0) will have
 it's score multiplied by 2 for each exterior set of parentheses that contains that core. The answer
 is the sum of these multiplied core values (powers of 2).
 
 Algorithm
-Keep track of the balance of the string (# of ( minus # of ) ). For every core ("()"),
-the answer is 1 << balance, as balance is the number of exterior set of parentheses that contains this core.
-e.g. (()(())) contains 2 cores: first core then multiply 2^1, second core then multiply 2^2.
-It equals to (())+((())).
+Keep track of the DEPTH of the string (# of ( minus # of ) ). For every core ("()"),
+the answer is 1 << depth, as depth is the number of exterior set of parentheses surrounding this core.
+e.g. (()(())) equals to (())+((())); it contains 2 cores: first core then multiply 2^1, 
+second core then multiply 2^2.
 '''
 class Solution(object):
     def scoreOfParentheses(self, S):
@@ -60,10 +61,9 @@ class Solution(object):
                 depth += 1
             else:
                 depth -= 1
-                if S[i-1] == '(':
+                if S[i-1] == '(': # find a core
                     result += 2**depth
         return result
-
 
 # Time:  O(n)
 # Space: O(h) size of stack
@@ -86,7 +86,23 @@ For example, when counting (()(())), our stack will look like this:
 [6] after )
 '''
 class Solution2(object):
-    def scoreOfParentheses(self, S):
+    def scoreOfParentheses(self, S: str) -> int: # Ming's stack
+        stk = []
+        for c in S:
+            if c == '(':
+                stk.append(c)
+            else:
+                # see ): pop stack, if (, push 1; if int, accumulate then multiplied by 2
+                n = 0
+                while stk[-1] != '(':
+                    n += stk.pop()
+                stk.pop()
+                v = 2 * n if n > 0 else 1
+                stk.append(v)
+        return sum(stk)
+
+    # another stack implementation
+    def scoreOfParentheses2(self, S):
         stack = [0]
         for c in S:
             if c == '(':
@@ -134,7 +150,7 @@ class Solution3(object):
 
         return F(0, len(S))
 
-print Solution().scoreOfParentheses("()") #1
-print Solution().scoreOfParentheses("(())") #2
-print Solution().scoreOfParentheses("()()") #2
-print Solution().scoreOfParentheses("(()(()))") #6
+print(Solution().scoreOfParentheses("()")) #1
+print(Solution().scoreOfParentheses("(())")) #2
+print(Solution().scoreOfParentheses("()()")) #2
+print(Solution().scoreOfParentheses("(()(()))")) #6

@@ -2,6 +2,7 @@
 #        pick: O(logn)
 # Space: O(n)
 
+# 497
 # Given a list of non-overlapping axis-aligned rectangles rects,
 # write a function pick which randomly and uniformily picks
 # an integer point in the space covered by the rectangles.
@@ -49,8 +50,8 @@ class Solution(object):
         :type rects: List[List[int]]
         """
         self.__rects = list(rects)
-        self.__prefix_sum = map(lambda x : (x[2]-x[0]+1)*(x[3]-x[1]+1), rects)
-        for i in xrange(1, len(self.__prefix_sum)):
+        self.__prefix_sum = [(x[2]-x[0]+1)*(x[3]-x[1]+1) for x in rects] # number of points in each rect
+        for i in range(1, len(self.__prefix_sum)):
             self.__prefix_sum[i] += self.__prefix_sum[i-1]
 
     def pick(self):
@@ -58,13 +59,15 @@ class Solution(object):
         :rtype: List[int]
         """
         target = random.randint(0, self.__prefix_sum[-1]-1)
-        left = bisect.bisect_right(self.__prefix_sum, target)
-        rect = self.__rects[left]
-        width, height = rect[2]-rect[0]+1, rect[3]-rect[1]+1
-        base = self.__prefix_sum[left]-width*height
-        return [rect[0]+(target-base)%width, rect[1]+(target-base)//width]
+        i = bisect.bisect_right(self.__prefix_sum, target)
+        rect = self.__rects[i]
+        width = rect[3]-rect[1]+1
+        base = self.__prefix_sum[i-1] if i > 0 else 0
+        dx, dy = divmod(target - base, width)
+        return [rect[0]+dx, rect[1]+dy]
 
 
 # Your Solution object will be instantiated and called as such:
-# obj = Solution(rects)
-# param_1 = obj.pick()
+obj = Solution([[1,3,4,4]])
+for _ in range(5):
+    print(obj.pick())

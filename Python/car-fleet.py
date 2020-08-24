@@ -1,6 +1,7 @@
-# Time:  O(nlogn)
+# Time:  O(nlogn) sorting
 # Space: O(n)
 
+# 853
 # N cars are going to the same destination along a one lane road.
 # The destination is target miles away.
 #
@@ -50,10 +51,13 @@ class Solution(object):
         :type speed: List[int]
         :rtype: int
         """
-        times = [float(target-p)/s for p, s in sorted(zip(position, speed))]
-        result, curr = 0, 0
+        cars = sorted(zip(position, speed))
+        times = [(target-p)/s for p, s in cars]
+        result, last = 0, 0
         for t in reversed(times):
-            if t > curr:
+            if t > last:
                 result += 1
-                curr = t
+                last = t
         return result
+
+print(Solution(12, [10,8,0,5,3], [2,4,1,1,3])) # 3

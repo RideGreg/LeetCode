@@ -52,21 +52,21 @@ class Solution(object):
         if s == s[::-1]: # optimized from O(n^2)->O(n)
             return s
 
-        n, ri, rj = len(s), 0, 0
-        dp = [[False] * n for _ in range(2)]
+        n, ans = len(s), 0
+        start = end = 0
+        dp = [False] * n
         for i in reversed(range(n)):
-            dp[i % 2][i] = True
-            for j in range(i + 1, n):
-                if s[i] == s[j] and (j == i + 1 or dp[(i + 1) % 2][j - 1] is True):
-                    dp[i % 2][j] = True
-                    if j - i > rj - ri:
-                        ri, rj = i, j
-                else:
-                    # overwrite to False since we reuse the row. If a nxn matrix w/o
-                    # space optimization, no need to set to False
-                    dp[i % 2][j] = False
+            for j in reversed(range(i, n)):
+                # overwrite to False since we reuse the row. If a nxn matrix w/o
+                # space optimization, no need to set to False
+                dp[j] = False
 
-        return s[ri:rj + 1]
+                if s[j] == s[i] and (j <= i + 1 or dp[j-1] == True):
+                    dp[j] = True
+                    if j - i > end - start:
+                        start, end = i, j        
+        return s[start : end+1]
+
 
     # Manacher's Algorithm O(n)
     # http://leetcode.com/2011/11/longest-palindromic-substring-part-ii.html

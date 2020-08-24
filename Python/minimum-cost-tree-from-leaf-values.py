@@ -26,10 +26,14 @@
 #  /  \               / \
 # 6    2             2   4
 
+
+# 解法：最上面一层一定是最大的两个数在相乘；越是底部的叶子节点，被用来做乘法的次数越多。如果想让 mct 值最小，值较小的叶子节点
+# 要尽量放到底部，值较大的叶子节点尽量放靠上部分。所以需要不断找出一个极小值。乘以它左边和右边两数中较小的一个。
+# 通过维护一个单调递减栈可以找到各极小值，
 class Solution(object):
     # we decompose a hard problem into reasonable easy one:
-    # Just find the next greater element in the array, on the left and on the right.
-    # Refer to the problem 503. Next Greater Element II
+    # find a local min, remove it, add the product of this local min with the lesser of its left and right
+    # greater neighbors. Use a decreasing mono stack to find local mins, refer to LC 503. Next Greater Element II
     def mctFromLeafValues(self, arr):
         """
         :type arr: List[int]
@@ -39,26 +43,24 @@ class Solution(object):
         stk = [float("inf")]
         for x in arr:
             while stk[-1] <= x:
-                result += stk.pop() * min(stk[-1], x)
+                result += stk.pop() * min(stk[-1], x) # stk.pop() local min, stk[-1] is next greater on the left,
+                                                      # x is next greater or equal on the right
             stk.append(x)
-        while len(stk) > 2:
+        while len(stk) > 2:                # each time go up to reach a parent node
             result += stk.pop() * stk[-1]
         return result
 
-    # Time O(N^2) Space O(N)
+    # Time O(N^2) Space O(N) Remove the elements form the smallest to bigger，Similar idea to solution 1.
+    #
     # When we build a node in the tree with two children numbers a and b.
-    # the smaller one won't be used it anymore, and the bigger one may be used to calculate a ancestor's value.
+    # the smaller one won't be used it anymore, and the bigger one may be used to calculate an ancestor's value.
     #
     # The problem can translated as following:
     # Given an array A, for each pair of neighbors a and b,
     # we can remove the smaller one min(a,b) and the cost is a * b.
     # What is the minimum cost to remove the whole array until only one left?
     #
-    # To remove a number a, it needs a cost a * b, where b >= a.
-    # So a has to be removed by a bigger number.
-    # We want minimize this cost, so we need to minimize b.
-    #
-    # We can remove the element form the smallest to bigger, and.b will be the min of the left neighbor and the right neighbor.
+    # We can remove the element form the smallest to bigger, and b will be the min of the left and the right neighbor.
     # The cost to remove a is a * min(left, right).
     def mctFromLeafValues2(self, arr):
         ans = 0
@@ -84,4 +86,5 @@ class Solution(object):
         return dp[0][-1]
 
 
+print(Solution().mctFromLeafValues([5, 3, 3, 1])) # 27
 print(Solution().mctFromLeafValues([6, 2, 4])) # 32

@@ -29,41 +29,59 @@ class Solution:
         def compress():
             left, right = operands.pop(), operands.pop()
             op = operators.pop()
-            if op == '+':
-                v = left + right
-            elif op == '-':
-                v = left - right
-            elif op == '*':
-                v = left * right
-            elif op == '/':
-                v = left // right
+            if op == '+': v = left + right
+            elif op == '-': v = left - right
+            elif op == '*': v = left * right
+            elif op == '/': v = left // right
             operands.append(v)
 
         if s.lstrip()[0] == '-':     # edge case: start with '-'
             s = '0' + s
+        s = '#'+s
 
         operands, operators = [], []
-        operand = ""
+        curNum = ""
+        for c in reversed(s):
+            if c.isdigit():
+                curNum += c
+            else:
+                if curNum != '':
+                    operands.append(int(curNum[::-1]))
+                    curNum = ''
+
+                if c in ')*/':
+                    operators.append(c)
+                elif c in '+-':
+                    while operators and operators[-1] in '*/':
+                        compress()
+                    operators.append(c)
+                elif c == '(':
+                    while operators[-1] != ')':
+                        compress()
+                    operators.pop()
+
+        '''
         for i in reversed(xrange(len(s))):
-            if s[i].isdigit():
-                operand += s[i]
-                if i == 0 or not s[i-1].isdigit():
-                    operands.append(int(operand[::-1]))
-                    operand = ""
-            elif s[i] in '*/)':
-                operators.append(s[i])
-            elif s[i] in '+-':
+            c = s[i]
+            if c.isdigit():
+                curNum += c
+                if i == 0 or not s[i-1].isdigit(): # not good checking every time
+                    operands.append(int(curNum[::-1]))
+                    curNum = ""
+            elif c in '*/)':
+                operators.append(c)
+            elif c in '+-':
                 while operators and operators[-1] in '*/':
                     compress()
-                operators.append(s[i])
-            elif s[i] == '(':
+                operators.append(c)
+            elif c == '(':
                 while operators[-1] != ')':
                     compress()
                 operators.pop()
+        '''
 
         while operators:
             compress()
-
         return operands[-1]
 
 print(Solution().calculate("3 + 2 * 2")) # 7

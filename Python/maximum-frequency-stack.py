@@ -43,13 +43,18 @@
 
 import collections
 
-# Very good: store maxFreq, so don't re-count on every pop. Store a dict by 'freq' key
-# to fast retrieve value. Store count (no need to store each id/pos) for each x value.
+# Very good: 1. Multiple stacks: maintain a mapping from 'freq' key to STACK of values, the stack remembers insertion order.
+# for example, push 5,7,5,7,4,5, we store
+#   freq 1 : [5,7,4]
+#   freq 2 : [5,7]
+#   freq 3 : [5]
+# 2. Also store maxFreq, so don't re-count on every pop.
+# 3. Obviously maintain another mapping of value to freq which is basic for this problem.
 class FreqStack(object):
 
     def __init__(self):
         self.__freq = collections.Counter()
-        self.__group = collections.defaultdict(list)
+        self.__group = collections.defaultdict(list) # list is treated as a stack to remember insertion order.
         self.__maxfreq = 0
 
     def push(self, x):
@@ -59,9 +64,8 @@ class FreqStack(object):
         """
         self.__freq[x] += 1
         f = self.__freq[x]
-        if f > self.__maxfreq:
-            self.__maxfreq = f
-        self.__group[f].append(x)
+        self.__maxfreq = max(self.__maxfreq, f)
+        self.__group[f].append(x) # don't remove it from f-1 stack, otherwise in pop we need to insert back to f-1 stack
 
     def pop(self):
         """
@@ -69,11 +73,9 @@ class FreqStack(object):
         """
         x = self.__group[self.__maxfreq].pop() # list pop by index
         if not self.__group[self.__maxfreq]:
-            self.__group.pop(self.__maxfreq) # dict pop by key
+            # self.__group.pop(self.__maxfreq) # no need to cleanup, maintain maxfreq is enough
             self.__maxfreq -= 1
         self.__freq[x] -= 1
-        #if not self.__freq[x]: # not need to cleanup
-        #    self.__freq.pop(x)
         return x
 
 # Time bad: if not maintain maxFreq, then TLE due to calculate maxFreq every pop.

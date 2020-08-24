@@ -1,5 +1,5 @@
 # Time:  O(m * n)
-# Space: O(m + n)
+# Space: O(m + n) ? or O(m*n) put (up to) all elements in the queue
 
 # 529
 # Let's play the minesweeper game (Wikipedia, online game)!
@@ -73,19 +73,20 @@ class Solution(object):
             row, col = q.popleft()
             if board[row][col] == 'M':
                 board[row][col] = 'X'
+                break
             else:
-                count, nei = 0, []
-                for i in range(-1, 2):
+                count, nei = 0, []      # remember empty neighbors to avoid the second iteration
+                for i in range(-1, 2):  # much conciser than listing 8 new points
                     for j in range(-1, 2):
                         r, c = row + i, col + j
                         if (i != 0 or j != 0) and 0 <= r < len(board) and 0 <= c < len(board[r]):
-                            if board[r][c] == 'M' or board[r][c] == 'X':
+                            if board[r][c] in 'MX':
                                 count += 1
                             elif board[r][c] == 'E' and count == 0:
                                 nei.append((r, c))
 
                 if count:
-                    board[row][col] = chr(count + ord('0'))
+                    board[row][col] = str(count)
                 else:
                     board[row][col] = 'B'
                     for r, c in nei:
@@ -94,46 +95,6 @@ class Solution(object):
 
         return board
 
-# Recursive
-# Time:  O(m * n)
-# Space: O(m * n)
-class Solution2(object):
-    def updateBoard(self, board, click):
-        """
-        :type board: List[List[str]]
-        :type click: List[int]
-        :rtype: List[List[str]]
-        """
-        row, col = click[0], click[1]
-        if board[row][col] == 'M':
-            board[row][col] = 'X'
-        else:
-            count = 0
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    if i == 0 and j == 0:
-                        continue
-                    r, c = row + i, col + j
-                    if not (0 <= r < len(board)) or not (0 <= c < len(board[r])):
-                        continue
-                    if board[r][c] == 'M' or board[r][c] == 'X':
-                        count += 1
-
-            if count:
-                board[row][col] = chr(count + ord('0'))
-            else:
-                board[row][col] = 'B'
-                for i in range(-1, 2):
-                    for j in range(-1, 2):
-                        if i == 0 and j == 0:
-                            continue
-                        r, c = row + i, col + j
-                        if not (0 <= r < len(board)) or not (0 <= c < len(board[r])):
-                            continue
-                        if board[r][c] == 'E':
-                            self.updateBoard(board, (r, c))
-
-        return board
 
 print(Solution().updateBoard([
     ['E', 'E', 'E', 'E', 'E'],

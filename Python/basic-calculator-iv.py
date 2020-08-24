@@ -6,6 +6,7 @@
 #        to_list:  O(d * tlogt)
 # Space: O(e + d * t), e is the number of evalvars
 
+# 770
 # Given an expression such as expression = "e + 8 - a + 5" and
 # an evaluation map such as {"e": 1}
 # (given in terms of evalvars = ["e"] and evalints = [1]),
@@ -164,7 +165,7 @@ class Solution(object):
                 return Poly()
             operands, operators = [], []
             operand = ""
-            for i in reversed(xrange(len(s))):
+            for i in reversed(range(len(s))):
                 if s[i].isalnum():
                     operand += s[i]
                     if i == 0 or not s[i-1].isalnum():
@@ -184,5 +185,23 @@ class Solution(object):
                 compute(operands, operators)
             return operands[-1]
 
-        lookup = dict(itertools.izip(evalvars, evalints))
-        return parse(expression).eval(lookup).to_list()
+        lookup = dict(zip(evalvars, evalints))
+        s = parse(expression)
+        print(s)
+        return s.eval(lookup).to_list()
+
+print(Solution().basicCalculatorIV("e + 8 - a + 5", ["e"], [1])) # ["-1*a","14"]
+# parse -> Poly({():13, ('e',):1, ('a',):-1})
+print(Solution().basicCalculatorIV("e - 8 + temperature - pressure", ["e", "temperature"], [1, 12]))
+# ["-1*pressure","5"] where parse -> Poly({('e',): 1, ('temperature',): 1, ('pressure',): -1, (): -8})
+print(Solution().basicCalculatorIV("(e + 8) * (e - 8)", [], [])) # ["1*e*e","-64"]
+# parse -> Poly({('e', 'e'): 1, ('e',): 0, (): -64})
+print(Solution().basicCalculatorIV("7 - 7", [], [])) # [] where parse -> Poly({(): 0})
+print(Solution().basicCalculatorIV("a * b * c + b * a * c * 4", [], [])) # ["5*a*b*c"]
+# parse -> Poly({('a', 'b', 'c'): 5})
+print(Solution().basicCalculatorIV("((a - b) * (b - c) + (c - a)) * ((a - b) + (b - c) * (c - a))", [], []))
+# ["-1*a*a*b*b","2*a*a*b*c","-1*a*a*c*c","1*a*b*b*b","-1*a*b*b*c","-1*a*b*c*c","1*a*c*c*c","-1*b*b*b*c","2*b*b*c*c","-1*b*c*c*c",
+# "2*a*a*b","-2*a*a*c","-2*a*b*b","2*a*c*c","1*b*b*b","-1*b*b*c","1*b*c*c","-1*c*c*c",
+# "-1*a*a","1*a*b","1*a*c","-1*b*c"]
+
+# parse -> very long...
