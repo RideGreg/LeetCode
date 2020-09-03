@@ -17,6 +17,8 @@
 # If there are multiple such windows, you are guaranteed that
 # there will always be only one unique minimum window in S.
 
+import collections
+
 class Solution(object):
     def minWindow(self, s: str, t: str) -> str:
         """
@@ -42,6 +44,23 @@ class Solution(object):
                 if minWid > r - l + 1:
                     minStart, minWid = l, r - l + 1
         return s[minStart:minStart + minWid] if minWid != float('inf') else ''
+
+
+    def minWindow2(self, s: str, t: str) -> str:
+        count, remain = collections.Counter(t), len(t)
+        i = left = right = 0 
+        for j, c in enumerate(s, 1):
+            remain -= count[c] > 0
+            count[c] -= 1
+            if remain:
+                continue
+            while i < j and count[s[i]] < 0:
+                count[s[i]] += 1
+                i += 1
+            if not right or j-i < right-left:
+                left, right = i, j
+        return s[left:right]
+
 
 
     def minWindow_kamyu(self, s, t):
