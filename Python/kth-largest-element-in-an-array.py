@@ -1,4 +1,5 @@
 # Time:  O(n) ~ O(n^2)
+#        O(n) on average, using Median of Medians could achieve O(n) (Intro Select)
 # Space: O(logn), use stack space for recursive call
 
 # 215
