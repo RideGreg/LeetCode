@@ -11,7 +11,7 @@
 # In this case, 6 units of rain water (blue section) are being trapped.
 #
 
-class Solution:
+class Solution(object):
     # @param A, a list of integers
     # @return an integer
     def trap(self, A):  # USE THIS
@@ -74,7 +74,7 @@ class Solution2(object):
 #     - 往答案中累加积水量 ans+=distance×bounded_height
 #   - 将当前索引下标入栈, 将current 移动到下个位置
 #
-class Solution3:
+class Solution3(object):
     # @param A, a list of integers
     # @return an integer
     def trap(self, A):  # THIS stack solution also worth to remember
@@ -106,6 +106,27 @@ class Solution3:
             stack.append([i, A[i]])
 
         return result
+
+
+# newly added by kamyu
+class Solution4(object):
+    def trap(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        result, left, right, level = 0, 0, len(height)-1, 0
+        while left < right:
+            if height[left] < height[right]:
+                lower = height[left]
+                left += 1
+            else:
+                lower = height[right]
+                right -= 1
+            level = max(level, lower)
+            result += level-lower
+        return result
+
 
 
 if __name__ == "__main__":
