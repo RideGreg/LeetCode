@@ -37,15 +37,16 @@
 # 通过课程前置条件列表 prerequisites 可以得到课程安排图的 邻接表 adjacency，以降低算法时间复杂度
 
 
-from collections import defaultdict, deque
+import collections
 
 
+# bfs solution
 class Solution(object):
-    def canFinish(self, numCourses, prerequisites):
+    def findOrder(self, numCourses, prerequisites):
         """
         :type numCourses: int
         :type prerequisites: List[List[int]]
-        :rtype: bool
+        :rtype: List[int]
         """
         # 构建邻接表、和入度数组
         in_degree, graph = defaultdict(int), defaultdict(set)
@@ -64,6 +65,56 @@ class Solution(object):
                 if in_degree[course] == 0:
                     zero_in_degree_queue.append(course)
         return numCourses == 0
+
+
+    def findOrder_bfs2(self, numCourses, prerequisites):
+        in_degree = collections.defaultdict(set)
+        out_degree = collections.defaultdict(set)
+        for i, j in prerequisites:
+            in_degree[i].add(j)
+            out_degree[j].add(i)
+        q = collections.deque([i for i in xrange(numCourses) if i not in in_degree])
+        result = []
+        while q:
+            node = q.popleft()
+            result.append(node)
+            for i in out_degree[node]:
+                in_degree[i].remove(node)
+                if not in_degree[i]:
+                    q.append(i)
+                    del in_degree[i]
+            del out_degree[node]
+        return result if not in_degree and not out_degree else []
+
+
+# Time:  O(|V| + |E|)
+# Space: O(|E|)
+# dfs solution
+class Solution2(object):
+    def findOrder(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: List[int]
+        """
+        in_degree = collections.defaultdict(set)
+        out_degree = collections.defaultdict(set)
+        for i, j in prerequisites:
+            in_degree[i].add(j)
+            out_degree[j].add(i)
+        stk = [i for i in xrange(numCourses) if i not in in_degree]
+        result = []
+        while stk:
+            node = stk.pop()
+            result.append(node)
+            for i in out_degree[node]:
+                in_degree[i].remove(node)
+                if not in_degree[i]:
+                    stk.append(i)
+                    del in_degree[i]
+            del out_degree[node]
+        return result if not in_degree and not out_degree else []
+
 
 if __name__ == "__main__":
     print(Solution().canFinish(1, [])) # True
