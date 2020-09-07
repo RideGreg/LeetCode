@@ -131,6 +131,8 @@ class UnionFind(object):
         return True
 
     def query_set(self, x, y):
+        if x not in self.set or y not in self.set:
+            return -1.0
         (xp, xr), (yp, yr) =  map(self.find_set, (x, y))
         return xr/yr if xp == yp else -1.0
 
@@ -146,11 +148,7 @@ class Solution_kamyu(object):
         union_find = UnionFind()
         for (a, b), k in itertools.izip(equations, values):
             union_find.union_set(a, b, k)
-        return [union_find.query_set(a, b)
-                if a in union_find.set and
-                   b in union_find.set
-                else -1.0 
-                for a, b in queries]
+        return [union_find.query_set(a, b) for a, b in queries]
 
 
 # Time:  O(e + q * n), at most O(n^3 + q)
