@@ -17,18 +17,30 @@
 # Note: The length of path between two nodes is represented by the number of edges between them.
 
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
 
 class Solution(object):
-    def diameterOfBinaryTree(self, root):
+    def diameterOfBinaryTree(self, root):  # USE THIS
         """
         :type root: TreeNode
         :rtype: int
         """
+        def dfs(root):
+            if not root: 
+                return 0, 0
+            left_d, left = dfs(root.left)
+            right_d, right = dfs(root.right)
+            return max(left_d, right_d, left+right), 1+max(left, right)
+ 
+        return dfs(root)[0]
+
+
+    def diameterOfBinaryTree2(self, root):
         def depth(root, diameter):
             if not root: return 0, diameter
             left, diameter = depth(root.left, diameter)
@@ -36,6 +48,7 @@ class Solution(object):
             return 1 + max(left, right), max(diameter, left + right)
             
         return depth(root, 0)[1]
+
 
 # leverage the classical way to calculate tree depth
 class Solution2(object):
@@ -50,3 +63,28 @@ class Solution2(object):
 
         depth(root)
         return self.ans
+
+
+class Solution3(object):
+    def diameterOfBinaryTree(self, root):
+        def iter_dfs(node):
+            result = 0
+            max_depth = [0]
+            stk = [(1, [node, max_depth])]
+            while stk:
+                step, params = stk.pop()
+                if step == 1:
+                    node, ret = params
+                    if not node:
+                        continue
+                    ret1, ret2 = [0], [0]
+                    stk.append((2, [node, ret1, ret2, ret]))
+                    stk.append((1, [node.right, ret2]))
+                    stk.append((1, [node.left, ret1]))
+                elif step == 2:
+                    node, ret1, ret2, ret = params
+                    result = max(result, ret1[0]+ret2[0])
+                    ret[0] = 1+max(ret1[0], ret2[0])
+            return result
+        
+        return iter_dfs(root)
