@@ -1,6 +1,7 @@
 # Time:  O(4^n)
 # Space: O(n)
-#
+
+# 17
 # Given a digit string, return all possible letter combinations that the number could represent.
 #
 # A mapping of digit to letters (just like on the telephone buttons) is given below.
@@ -41,17 +42,19 @@ class Solution:
 
     # itenative
     def letterCombinations2(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
         if not digits:
             return []
 
-        lookup, result = ["", "", "abc", "def", "ghi", "jkl", "mno", \
-                          "pqrs", "tuv", "wxyz"], [""]
-
+        result = [""]
+        lookup = ["", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"]
         for digit in reversed(digits):
             choices = lookup[int(digit)]
             m, n = len(choices), len(result)
             result += [result[i % n] for i in range(n, m * n)]
-
             for i in range(m * n):
                 result[i] = choices[i // n] + result[i]
 
