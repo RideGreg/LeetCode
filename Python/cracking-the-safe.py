@@ -58,7 +58,7 @@ class Solution2(object):
         :rtype: str
         """
         total = k**n
-        k_pow_n_1 = total//k
+        M = total//k
         unique_rolling_hash, base = 0, 1
         for i in xrange(n-1):
             unique_rolling_hash += (k-1)*base
@@ -71,7 +71,7 @@ class Solution2(object):
                 if new_unique_rolling_hash not in lookup:
                     lookup.add(new_unique_rolling_hash)
                     result.append(str(i))
-                    unique_rolling_hash = new_unique_rolling_hash%k_pow_n_1
+                    unique_rolling_hash = new_unique_rolling_hash%M
                     break
         return "".join(result)
 
@@ -85,14 +85,14 @@ class Solution3(object):
         :type k: int
         :rtype: str
         """
-        k_pow_n_1 = k**(n-1)
+        M = k**(n-1)
         def dfs(k, unique_rolling_hash, lookup, result):
             for i in xrange(k):
                 new_unique_rolling_hash = unique_rolling_hash*k + i
                 if new_unique_rolling_hash not in lookup:
                     lookup.add(new_unique_rolling_hash)
                     result.append(str(i))
-                    dfs(k, new_unique_rolling_hash%k_pow_n_1, lookup, result)
+                    dfs(k, new_unique_rolling_hash%M, lookup, result)
                     break
 
         unique_rolling_hash, base = 0, 1
