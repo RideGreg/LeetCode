@@ -37,6 +37,26 @@ class Solution:
     def catalan_upperbound(self, n):
         return 4**n // (n**1.5 * math.pi**0.5)
 
+# iterative solution
+class Solution2(object):
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        result = []
+        stk = [("", n, n)]
+        while stk:
+            curr, left, right = stk.pop()
+            if left == 0 and right == 0:
+                result.append(curr)
+            if left > 0:
+                stk.append((curr+"(", left-1, right))
+            if left < right:
+                stk.append((curr+")", left, right-1))
+        return result
+
+
 if __name__ == "__main__":
     print(Solution().generateParenthesis(3)) # ["((()))","(()())","(())()","()(())","()()()"]
 
