@@ -50,10 +50,10 @@ class Solution2(object):
             curr, left, right = stk.pop()
             if left == 0 and right == 0:
                 result.append(curr)
-            if left > 0:
-                stk.append((curr+"(", left-1, right))
             if left < right:
                 stk.append((curr+")", left, right-1))
+            if left > 0:
+                stk.append((curr+"(", left-1, right))
         return result
 
 
