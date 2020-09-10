@@ -13,14 +13,15 @@
 #
 
 import collections
-import string
 
 
-class Solution:
-    # @param {string} s
-    # @param {string} t
-    # @return {boolean}
+class Solution(object):
     def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
         if len(s) != len(t):
             return False
         count = collections.defaultdict(int)
@@ -33,21 +34,26 @@ class Solution:
         return True
 
 
+# Time:  O(n)
+# Space: O(1)
+class Solution2(object):
+    def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        return collections.Counter(s) == collections.Counter(t)
+
+
 # Time:  O(nlogn)
 # Space: O(n)
-class Solution2:
-    # @param {string} s
-    # @param {string} t
-    # @return {boolean}
+class Solution3(object):
     def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
         return sorted(s) == sorted(t)
 
-
-# Time:  O(n)
-# Space: O(n)
-class Solution3(object):
-    # @param {string} s
-    # @param {string} t
-    # @return {boolean}
-    def isAnagram(self, s, t):
-        return collections.Counter(s) == collections.Counter(t)
