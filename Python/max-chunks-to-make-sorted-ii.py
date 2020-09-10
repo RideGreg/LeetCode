@@ -1,4 +1,4 @@
-# Time:  O(nlogn)
+# Time:  O(n)
 # Space: O(n)
 
 # This question is the same as "Max Chunks to Make Sorted"
@@ -31,7 +31,28 @@
 # - arr will have length in range [1, 2000].
 # - arr[i] will be an integer in range [0, 10**8].
 
+# mono stack solution
 class Solution(object):
+    def maxChunksToSorted(self, arr):
+        """
+        :type arr: List[int]
+        :rtype: int
+        """
+        result, increasing_stk = 0, []
+        for num in arr:
+            if not increasing_stk or increasing_stk[-1] <= num:
+                increasing_stk.append(num)
+                continue
+            max_num = increasing_stk.pop()
+            while increasing_stk and increasing_stk[-1] > num:
+                increasing_stk.pop()
+            increasing_stk.append(max_num)
+        return len(increasing_stk
+
+
+# Time:  O(nlogn)
+# Space: O(n)
+class Solution2(object):
     def maxChunksToSorted(self, arr):
         """
         :type arr: List[int]
