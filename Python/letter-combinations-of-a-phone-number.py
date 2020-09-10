@@ -49,6 +49,27 @@ class Solution:
         if not digits:
             return []
 
+        lookup = ["", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"]
+        total = 1
+        for digit in digits:
+            total *= len(lookup[int(digit)])
+        result = []
+        for i in xrange(total):
+            curr = [""]
+            for digit in reversed(digits):
+                choices = lookup[int(digit)]
+                curr.append(choices[i%len(choices)])
+                i //= len(choices)
+            curr.reverse()
+            result.append("".join(curr))
+        return result
+
+
+    # another itenative
+    def letterCombinations3(self, digits):
+        if not digits:
+            return []
+
         result = [""]
         lookup = ["", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"]
         for digit in reversed(digits):
