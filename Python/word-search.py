@@ -1,5 +1,9 @@
 # Time:  O(m * n * l)
 # Space: O(l)
+# Alternative analyssi:
+# Time:  O(m * n * 4 * 3^(h - 1)) ~= O(m * n * 3^h), h is the height of trie
+# Space: O(t), t is the number of nodes in trie
+
 # 79
 # Given a 2D board and a word, find if the word exists in the grid.
 #
@@ -19,6 +23,7 @@
 # word = "SEE", -> returns true,
 # word = "ABCB", -> returns false.
 #
+
 
 class Solution:
     # @param board, a list of lists of 1 length string
