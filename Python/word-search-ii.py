@@ -2,6 +2,10 @@
 #     travel l steps, each step has 3 neighbors except the first step which has 4 directions.
 # Space: O(N), 字典中的字母总数。In worst case if there is no prefix overlap, trie has same # of nodes
 #              as all characters from all words.
+#
+# alternative analysis:
+# Time:  O(m * n * 4 * 3^(h - 1)) ~= O(m * n * 3^h), h is the height of trie
+# Space: O(t), t is the number of nodes in trie
 
 # 212
 # Given a 2D board and a list of words from the dictionary, find all words in the board.
