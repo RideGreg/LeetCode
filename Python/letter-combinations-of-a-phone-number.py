@@ -55,7 +55,7 @@ class Solution:
             total *= len(lookup[int(digit)])
         result = []
         for i in xrange(total):
-            base, curr = total, [""]
+            base, curr = total, []
             for digit in digits:
                 choices = lookup[int(digit)]
                 base //= len(choices)
