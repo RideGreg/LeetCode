@@ -141,7 +141,7 @@ class Solution1(object):
 
 # Time:  O(n^2)
 # Space: O(n)
-class Solution2(object):
+class Solution3(object):
     def findSecretWord(self, wordlist, master):
         """
         :type wordlist: List[Str]
@@ -174,6 +174,27 @@ class Solution2(object):
             if matches == len(wordlist[0]): return
 
             possible = [j for j in possible if H[guess][j] == matches]
+
+
+# new solution w/ better time complexity??
+# Time:  O(n)
+# Space: O(n)
+class Solution_kamyu(object):
+    def findSecretWord(self, wordlist, master):
+        """
+        :type wordlist: List[Str]
+        :type master: Master
+        :rtype: None
+        """
+        possible = range(len(wordlist))
+        n = 0
+        while n < 6:
+            count = [collections.Counter(w[i] for w in wordlist) for i in xrange(6)]
+            guess = max(possible, key=lambda x: sum(count[i][c] for i, c in enumerate(wordlist[x])))
+            n = master.guess(wordlist[guess])
+            possible = [j for j in possible if sum(a == b for a, b in itertools.izip(wordlist[guess], wordlist[j])) == n]
+
+
 
 wordlist = ["acckzz","ccbazz","eiowzz","abcczz"]
 master = Master(wordlist, wordlist[0])
