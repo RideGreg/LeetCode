@@ -87,7 +87,7 @@ class Solution(object):
             # 0Cx = 1 is not considered because floor 0 is not included f(x) (max # of floors can distinguished)
 
             # f(n, K): the max number of floors could be solved by n moves and K eggs
-            # we want to binary search to find min of n, s.t. f(n, K) >= N
+            # we want to do binary search to find min of n, s.t. f(n, K) >= N
             # => f(n, K) = f(n-1, K)+1 + // [1            , f(n-1, K)+1            ] is solvable by one move with one break
             #              f(n-1, K-1)   // [f(n-1, K)+1+1, f(n-1, K)+1+f(n-1, K-1)] is then solvable by remaining moves and eggs
             # => (1) f(n, K)   = f(n-1, K)  +1+f(n-1, K-1)
