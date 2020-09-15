@@ -85,6 +85,18 @@ class Solution(object):
             # Thus, the range size of F that all cominations can cover is the sum of C(n, k), k = 1..K
             # start from 1Cx = x, then 2Cx = x(x-1)/2, ... to kCx = x(x-1)..(x-k+1)/k!
             # 0Cx = 1 is not considered because floor 0 is not included f(x) (max # of floors can distinguished)
+
+            # f(n, K): the max number of floors could be solved by n moves and K eggs
+            # we want to binary search to find min of n, s.t. f(n, K) >= N
+            # => f(n, K) = f(n-1, K)+1 + // [1            , f(n-1, K)+1            ] is solvable by one move with one break
+            #              f(n-1, K-1)   // [f(n-1, K)+1+1, f(n-1, K)+1+f(n-1, K-1)] is then solvable by remaining moves and eggs
+            # => (1) f(n, K)   = f(n-1, K)  +1+f(n-1, K-1)
+            #    (2) f(n, K-1) = f(n-1, K-1)+1+f(n-1, K-2)
+            # let g(n, K) = f(n, K)-f(n, K-1), (1)-(2)
+            # => g(n, K) = g(n-1, K)+g(n-1, K-1), it is binomial coefficient
+            # => g(n, K) = C(n, K) = f(n, K)-f(n, K-1)
+            # => f(n, K) = C(n, K)+f(n, K-1) = C(n, K) + C(n, K-1) + ... + C(n, 1) + f(n, 0) = sum(C(n, k) for k in [1, K])
+            # => check sum(C(n, k) for k in [1, K]) >= N
             total, c = 0, 1
             for k in range(1, K+1):
                 c *= n-k+1
