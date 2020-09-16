@@ -1,6 +1,7 @@
-# Time:  O(m * logn), m is the number of schedule, n is the number of employees, m >= n
+# Time:  O(m * logn), m is total number of schedule, n is the number of employees, m >= n
 # Space: O(n)
 
+# 759
 # We are given a list schedule of employees, which represents the working time for each employee.
 # Each employee has a list of non-overlapping Intervals, and these intervals are in sorted order.
 # Return the list of finite intervals representing common, positive-length free time for all employees, also in sorted order.
@@ -35,6 +36,8 @@
 
 import heapq
 
+# insert interval: O(n^2)
+# merge interval: sort all intervals O(nlogn)
 
 class Solution(object):
     def employeeFreeTime(self, schedule):
@@ -43,14 +46,33 @@ class Solution(object):
         :rtype: List[Interval]
         """
         result = []
-        min_heap = [(emp[0].start, eid, 0) for eid, emp in enumerate(schedule)]
+        # heap item (start, eid, idx_in_eid_schedule)
+        min_heap = [(emp[0][0], eid, 0) for eid, emp in enumerate(schedule)]
         heapq.heapify(min_heap)
         last_end = -1
         while min_heap:
-            t, eid, i = heapq.heappop(min_heap)
-            if 0 <= last_end < t:
-                result.append(Interval(last_end, t))
-            last_end = max(last_end, schedule[eid][i].end)
-            if i+1 < len(schedule[eid]):
-                heapq.heappush(min_heap, (schedule[eid][i+1].start, eid, i+1))
+            start, eid, i = heapq.heappop(min_heap)
+            if 0 <= last_end < start:
+                result.append([last_end, start])
+            last_end = max(last_end, schedule[eid][i][1])
+            if i < len(schedule[eid]) - 1:
+                heapq.heappush(min_heap, (schedule[eid][i+1][0], eid, i+1))
         return result
+
+    # Time O(nlogn) similar to LC 253 meeting-room-ii
+    def employeeFreeTime2(self, schedule):
+        times = [x for sch in schedule for s, e in sch for x in [[s, 1], [e, -1]]]
+        times.sort()
+        freeTimeStart, busyEmp, ans = None, 0, []
+        for time, delta in times:
+            busyEmp += delta
+            if busyEmp == 1 and freeTimeStart is not None:
+                ans.append([freeTimeStart, time])
+                freeTimeStart = None
+            elif busyEmp == 0:
+                freeTimeStart = time
+        return ans
+
+print(Solution().employeeFreeTime([[[1,2],[5,6]], [[1,3]], [[4,10]]])) # [[3,4]]
+print(Solution().employeeFreeTime([[[1,2],[5,6]], [[0,3]], [[4,10]]])) # [[3,4]]
+print(Solution().employeeFreeTime([[[1,3],[6,7]], [[2,4]], [[2,5],[9,12]]])) # [[5,6],[7,9]]

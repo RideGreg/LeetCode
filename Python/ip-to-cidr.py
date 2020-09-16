@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
 
+# 751
 # Given a start IP address ip and a number of ips we need to cover n,
 # return a representation of the range as a list (of smallest possible length) of CIDR blocks.
 #
@@ -60,15 +61,29 @@ class Solution(object):
             return result
 
         def intToIP(n):
-            return ".".join(str((n >> i) % 256) \
-                            for i in (24, 16, 8, 0))
+            ans = []
+            for _ in range(4):
+                n, rem = divmod(n, 256)
+                ans.append(str(rem))
+            return '.'.join(ans[::-1])
+            #return ".".join(str((n >> i) % 256) for i in (24, 16, 8, 0))
 
         start = ipToInt(ip)
         result = []
         while n:
-            mask = max(33-(start & ~(start-1)).bit_length(), \
-                       33-n.bit_length())
+            rigthmostOne = start & (-start)
+            flexibleBits = min(rigthmostOne.bit_length() - 1, n.bit_length() - 1)
+            mask = 32 - flexibleBits
             result.append(intToIP(start) + '/' + str(mask))
             start += 1 << (32-mask)
             n -= 1 << (32-mask)
         return result
+
+print(Solution().ipToCIDR("0.0.0.8", 2)) # ["0.0.0.8/31"]
+print(Solution().ipToCIDR("0.0.0.8", 3)) # ["0.0.0.8/31","0.0.0.10/32"]
+
+print(Solution().ipToCIDR("0.0.0.9", 2)) # ["0.0.0.9/32","0.0.0.10/32"]
+print(Solution().ipToCIDR("0.0.0.9", 3)) # ["0.0.0.9/32","0.0.0.10/31"]
+
+print(Solution().ipToCIDR("0.0.0.7", 10)) # ["0.0.0.7/32","0.0.0.8/29","0.0.0.16/32"]
+print(Solution().ipToCIDR("0.0.0.6", 10)) # ["0.0.0.6/31","0.0.0.8/29""]

@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(1)
 
+# 498
 # Given a matrix of M x N elements (M rows, N columns),
 # return all elements of the matrix in diagonal order as shown in the below image.
 #
@@ -18,49 +19,53 @@
 # The total number of elements of the given matrix will not exceed 10,000.
 # Show Company Tags
 
+from typing import List
+import collections
 class Solution(object):
-    def findDiagonalOrder(self, matrix):
+    # Time: O(m * n), Space: O(m)
+    def findDiagonalOrder(self, matrix: List[List[int]]) -> List[int]: # USE THIS: level order traverse, use deque
+        if not matrix: return []
+
+        ans, m, n = [], len(matrix), len(matrix[0])
+        q = collections.deque()
+        for i in range(m+n-1):
+            nextq = collections.deque()
+            if i < m:
+                if i & 1:
+                    q.append([i, 0])
+                else:
+                    q.appendleft([i, 0])
+
+            for r, c in q:
+                ans.append(matrix[r][c])
+                if c + 1 < len(matrix[r]):
+                    nextq.appendleft([r, c+1])
+            q = nextq
+        return ans
+
+    # hash table Time:  O(m * n), Space: O(m * n)
+    def findDiagonalOrder2(self, matrix: List[List[int]]) -> List[int]:
+        lookup = []
+        for r, row in enumerate(matrix):
+            for c, num in enumerate(row):
+                if len(lookup) <= r+c:
+                    lookup.append([])
+                lookup[r+c].append(num)
+        ans = []
+        for k, level in enumerate(lookup):
+            ans.extend(level if k & 1 else level[::-1])
+        return ans
+
+    def findDiagonalOrder_bookshadow(self, matrix): # adjust direction
         """
         :type matrix: List[List[int]]
         :rtype: List[int]
         """
-        if not matrix or not matrix[0]:
-            return []
-
-        result = []
-        row, col, d = 0, 0, 0
-        dirs = [(-1, 1), (1, -1)]
-
-        for i in xrange(len(matrix) * len(matrix[0])):
-            result.append(matrix[row][col])
-            row += dirs[d][0]
-            col += dirs[d][1]
-
-            # EASY TO MAKE MISTAKE: have to check row/col against len(matrix), len(matrix[0]) before check 0
-            # e.g. [[1,2,3], [4,5,6], [7,8,9]]
-            if row >= len(matrix):
-                row = len(matrix) - 1
-                col += 2
-                d = 1 - d
-            elif col >= len(matrix[0]):
-                col = len(matrix[0]) - 1
-                row += 2
-                d = 1 - d
-            elif row < 0:
-                row = 0
-                d = 1 - d
-            elif col < 0:
-                col = 0
-                d = 1 - d
-
-        return result
-
-    def findDiagonalOrder_bookshadow(self, matrix): # USE THIS
         if not matrix: return []
         m, n, ans = len(matrix), len(matrix[0]), []
         i, j, d = 0, 0, 0
         dirs = [[-1, 1], [1, -1]]
-        for _ in xrange(m*n):
+        for _ in range(m*n):
             ans.append(matrix[i][j])
             ni = i + dirs[d][0]
             nj = j + dirs[d][1]
@@ -81,6 +86,26 @@ class Solution(object):
                 d = 1 - d
         return ans
 
+
+    def sameDiagonalOrder(self, matrix): # modify book_shadow solution for follow up question
+                                         # always traverse to right-up direction
+        if not matrix: return []
+        m, n, ans = len(matrix), len(matrix[0]), []
+        i, j, dir = 0, 0, [-1, 1]
+        starti, startj = i, j
+        for _ in range(m*n):
+            ans.append(matrix[i][j])
+            ni, nj = i + dir[0], j + dir[1]
+            if 0<=ni<m and 0<=nj<n:
+                i, j = ni, nj
+            else:
+                if starti + 1 < m:
+                    starti, startj = starti + 1, 0
+                else:
+                    starti, startj = m - 1, startj + 1
+                i, j = starti, startj
+        return ans
+
     def findDiagonalOrder_ming(self, matrix): # Time Limit Exceeded because checking too many out-of-boundary positions
         if not matrix: return []
         m, n, level, ans = len(matrix), len(matrix[0]), 0, []
@@ -91,25 +116,5 @@ class Solution(object):
             level = 1 - level
         return ans
 
-    def sameDiagonalOrder(self, matrix): # A follow up question, always traverse to right-up direction
-        if not matrix: return []
-        m, n, ans = len(matrix), len(matrix[0]), []
-        i, j, dir = 0, 0, [-1, 1]
-        starti, startj = i, j
-        for _ in xrange(m*n):
-            ans.append(matrix[i][j])
-            ni, nj = i + dir[0], j + dir[1]
-            if 0<=ni<m and 0<=nj<n:
-                i, j = ni, nj
-            else:
-                if starti + 1 < m:
-                    starti += 1
-                    startj = 0
-                else:
-                    starti = m - 1
-                    startj += 1
-                i, j = starti, startj
-        return ans
-
-print Solution().sameDiagonalOrder([[1,2,3,4], [5,6,7,8], [9, 10, 11, 12]])
-print Solution().sameDiagonalOrder([[1,2,3], [4,5,6],[7,8,9], [10, 11, 12],[13,14,15]])
+print(Solution().sameDiagonalOrder([[1,2,3,4], [5,6,7,8], [9, 10, 11, 12]]))
+print(Solution().sameDiagonalOrder([[1,2,3], [4,5,6],[7,8,9], [10, 11, 12],[13,14,15]]))

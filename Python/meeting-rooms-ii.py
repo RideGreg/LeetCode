@@ -25,6 +25,18 @@ class Solution: # USE THIS
             result = max(result, curr)
         return result
 
+    # follow up: input is list of list of int (each worker's meeting time), ask the time interval no worker is using any meeting room
+    def freeTimes(self, intervals):
+        result, curr, start = [], 0, None
+        line = [x for interval in intervals for s, e in interval for x in [[s, 1], [e, -1]]]
+        line.sort()
+        for t, num in line:
+            curr += num
+            if curr == 0:
+                start = t
+            elif curr == 1 and start is not None:
+                result.append([start, t])
+        return result
 
 # Time:  O(nlogn)
 # Space: O(n)
@@ -81,5 +93,7 @@ class Solution3(object):
         
         return len(free_rooms)
 
-print(Solution().minMeetingRooms([Interval(2,15), Interval(36,45), Interval(9,29), Interval(16,23), Interval(4,9)]))
-print(Solution().minMeetingRooms([Interval(0,30), Interval(5,10), Interval(15,20)])) # 2
+print(Solution().minMeetingRooms([(2,15), (36,45), (9,29), (16,23), (4,9)])) # 2
+print(Solution().minMeetingRooms([(0,30), (5,10), (15,20)])) # 2
+
+print(Solution().freeTimes([[[1,3], [6,7]], [[2, 4]], [[2, 3], [9, 12]]])) # [[4,6], [7,9]]

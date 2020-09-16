@@ -13,7 +13,7 @@ import itertools
 
 
 class Solution(object):
-    def largestTimeFromDigits(self, A):
+    def largestTimeFromDigits(self, A): # USE THIS
         """
         :type A: List[int]
         :rtype: str
@@ -26,21 +26,31 @@ class Solution(object):
                 return "{:02}:{:02}".format(hours, mins)
         return ''
 
-    # DFS: the DFS here is really permutations. Graph does need DFS.
-    def largestTimeFromDigits_dfs(self, A):
-        self.ans = ['-1', '-1']
-        def dfs(nums, time):
-            if not nums:
-                nh, nm = int(time[0:2]), int(time[2:])
-                if 0<=nh<=23 and 0<=nm<=59 and (nh > int(self.ans[0]) or (nh==int(self.ans[0]) and nm>int(self.ans[1]))):
-                    self.ans = [time[0:2], time[2:]]
-                return
+    # backtracking to generate own permutation, compare every possible time string.
+    def largestTimeFromDigits_backtrack(self, A):
+        def backtrack(cur):
+            if len(cur) == 4:
+                perm.append(cur[:])
+            else:
+                for i in range(4):
+                    if not used[i]:
+                        used[i] = True
+                        cur.append(A[i])
+                        backtrack(cur)
+                        cur.pop()
+                        used[i] = False
 
-            for i in xrange(len(nums)):
-                dfs(nums[:i]+nums[i+1:], time+str(nums[i]))
+        mx, ans = -1, None
+        used = [False] * 4
+        perm = []
+        backtrack([])
+        for B in perm:
+            h = 10*B[0] + B[1]
+            m = 10*B[2] + B[3]
+            if 0 <= h < 24 and 0 <= m < 60 and 60*h+m > mx:
+                mx, ans = 60*h+m, B
+        return "{}{}:{}{}".format(ans[0],ans[1],ans[2],ans[3]) if mx != -1 else ''
 
-        dfs(A, '')
-        return str(self.ans[0])+':'+str(self.ans[1]) if self.ans[0] != '-1' else ''
 
     # VERY HARD to write code for picking up valid digits for each place. And the following
     # is still wrong which returns '' for [2,0,6,6] (tried to make '20:xx')

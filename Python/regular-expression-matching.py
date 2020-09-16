@@ -48,7 +48,7 @@ class Solution:
         return dp[len(s)% 2][-1]
 
     # without space optimization
-    def isMatch_fullSpace(self, s, p):
+    def isMatch_fullSpace(self, s, p):   # USE THIS
         result = [[False] * (len(p) + 1) for _ in range(len(s) + 1)]
 
         result[0][0] = True # empty string vs empty pattern
@@ -59,9 +59,10 @@ class Solution:
         for i in range(1,len(s) + 1):
             for j in range(1, len(p) + 1):
                 if p[j-1] != '*':
-                    result[i][j] = result[i-1][j-1] and (s[i-1] == p[j-1] or p[j-1] == '.')
+                    result[i][j] = result[i-1][j-1] and p[j-1] in (s[i-1], '.')
                 else:
-                    result[i][j] = result[i][j-2] or (result[i-1][j] and (s[i-1] == p[j-2] or p[j-2] == '.'))
+                    result[i][j] = result[i][j-2] or (result[i-1][j] and p[j-2] in (s[i-1], '.'))
+                                   # note here is not ^^ result[i-1][j-1] otherwise 'aa' fail to match 'ab*a*'
         return result[len(s)][len(p)]
 
     # cannot handle '.*', should write a match function for a==b or b=='.'

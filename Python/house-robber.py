@@ -28,6 +28,8 @@ class Solution:
             take, skip = skip + n, max(take, skip)
         return max(take, skip)
 
+
+    # now is max money today can get, last is max money the previous day can get
     def rob2(self, nums):
         last, now = 0, 0
         for i in nums:

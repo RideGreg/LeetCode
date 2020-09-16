@@ -77,14 +77,19 @@ class MyCircularQueue(object):
         :type value: int
         :rtype: bool
         """
-        # automatically acquire the lock when entering the block
+        # Use 'with' keyword when working with unmanaged resources (e.g. file streams), auto cleanup of
+        # the resource is guaranteed no matter how the 'with' block code finishes even exception.
+        # It’s handy when two related operations need to execute as a pair, with a block of code in between.
+        # The classic example is opening a file, manipulating the file, then closing it:
+        #   with open('output.txt', 'w') as f:
+        #      f.write('Hi there!')
+        # Here acquire the lock when entering the block, and automatically release the lock when leaving the block.
         with self.queueLock:
             if self.isFull():
                 return False
             pos = (self.start+self.cnt) % len(self.q)
             self.q[pos] = value
             self.cnt += 1
-        # automatically release the lock when leaving the block
         return True
 
     def deQueue(self):

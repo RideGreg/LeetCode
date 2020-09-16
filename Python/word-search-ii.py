@@ -44,19 +44,17 @@
 # 2. 从 Trie 中删除匹配的单词。
 # 此问题我们被要求返回所有匹配的单词，而不是潜在匹配的数量。因此，一旦到达包含单词匹配的特定 Trie 节点，我们就可以从 Trie
 # 中删除匹配单词。好处在于我们不需要检查结果集中是否有任何重复项。因此，可以使用一个列表而不是集合来保存结果，加快解决方案的速度。
-
+import collections
 class TrieNode(object):
     # Initialize your data structure here.
     def __init__(self):
         self.is_string = False
-        self.leaves = {}   # better to use collections.defaultdict
+        self.leaves = collections.defaultdict(TrieNode)
 
     # Inserts a word into the trie.
     def insert(self, word): # call this method on a root node object, or define the method in a Trie class with a root node member.
         cur = self
         for c in word:
-            if not c in cur.leaves:
-                cur.leaves[c] = TrieNode()
             cur = cur.leaves[c]
         cur.is_string = True
 
@@ -68,35 +66,32 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[str]
         """
-        def dfs(node, i, j, cur_word):
-            # 如果只有判断(i,j)是否valid，可以放在recursive call dfs之前。
-            # 如果有更多check，还是全部放此处最好。
-            if not (0 <= i < len(board) and 0 <= j < len(board[0])) or board[i][j] not in node.leaves:
-                return
-
-            cur_word.append(board[i][j])
-            next_node = node.leaves[board[i][j]]
-            if next_node.is_string:
-                ans.add("".join(cur_word))
-
-            letter = board[i][j]
-            board[i][j] = '#' # mark as visited
-            for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                dfs(next_node, i + di, j + dj, cur_word)
-            board[i][j] = letter
-            cur_word.pop()
+        def dfs(s, node, i, j):  # s, node and (i,j) are all matched
+            if node.is_string:
+                ans.append(s)
+                node.is_string = False # remove dup in board, or use 'set' type for ans
+            for ni, nj in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
+                if 0 <= ni < m and 0 <= nj < n and (ni, nj) not in visited:
+                    c = board[ni][nj]
+                    if c in node.leaves:
+                        visited.add((ni, nj))
+                        dfs(s + c, node.leaves[c], ni, nj)
+                        visited.discard((ni, nj))
 
         # build trie
-        trie = TrieNode()
+        root = TrieNode()
         for word in words:
-            trie.insert(word)
+            root.insert(word)
 
         # start with each cell
-        m, n, ans = len(board), len(board[0]), set()
+        m, n, ans = len(board), len(board[0]), []
         for i in range(m):
             for j in range(n):
-                dfs(trie, i, j, [])
-        return list(ans)
+                c = board[i][j]
+                if c in root.leaves:
+                    visited = {(i, j)}
+                    dfs(c, root.leaves[c], i, j)
+        return ans
 
 
 board = [
@@ -105,5 +100,5 @@ board = [
   ['i','h','k','r'],
   ['i','f','l','v']
 ]
-print(Solution().findWords(board, ["oath","pea","eat","rain"])) # ["eat","oath"]
-print(Solution().findWords([['a', 'a']], ['a'])) # ['a']
+print(Solution().findWords(board, ["oath","pea","eat","rain","oathtao"])) # ["eat","oath"]
+print(Solution().findWords([['a', 'b', 'a']], ['ab'])) # ['ab'], not ['ab', 'ab']

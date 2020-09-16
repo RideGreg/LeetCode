@@ -33,6 +33,8 @@
 from functools import lru_cache
 
 class Solution(object):
+    # For each day, if don't have to travel, then it's strictly better not to buy a pass.
+    # If have to travel, choose the min cost from buying either a 1-day, 7-day, or 30-day pass.
     # DP: for each new day, choose the min cost when this day uses a 1/7/30 day ticket.
     def mincostTickets(self, days, costs): # USE THIS
         """
@@ -48,8 +50,21 @@ class Solution(object):
                 for k in range(prev+1, day):
                     dp[k] = dp[prev]
 
-            dp[day] = min(dp(day-d) + c if day > d else c for c, d in zip(costs, [1,7,30]))
+            dp[day] = min(dp[day-d] + c if day > d else c for c, d in zip(costs, [1,7,30]))
         return dp[-1]
+
+    def mincostTickets2(self, days, costs): # ALSO OK: lru_cache version
+        @lru_cache(None)
+        def dp(n):
+            if n == 0: return 0
+            elif n in dayset:
+                return min(dp(n-d)+c if n >d else c for d,c in zip([1,7,30], costs))
+            else:
+                return dp(n-1)
+
+        dayset = set(days)
+        return dp(days[-1])
+
 
     # For each day, if you don't have to travel today, then it's strictly better to wait to buy a pass.
     # If you have to travel today, you have up to 3 choices: you must buy either a 1-day, 7-day, or 30-day pass.
@@ -113,4 +128,5 @@ class Solution(object):
         return dp[len(days)%W]
 
 
-print(Solution().mincostTickets([1,4,6,7,8,20], [2,7,15]))
+print(Solution().mincostTickets([1,4,6,7,8,20], [2,7,15])) # 11
+print(Solution().mincostTickets([1,2,3,4,5,6,7,8,9,10,30,31], [2,7,15])) # 17

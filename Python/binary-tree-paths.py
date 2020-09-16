@@ -1,6 +1,6 @@
 # Time:  O(n * h)
 # Space: O(h)
-#
+# 257
 # Given a binary tree, return all root-to-leaf paths.
 #
 # For example, given the following binary tree:
@@ -27,26 +27,19 @@ class Solution(object):
     # @param {TreeNode} root
     # @return {string[]}
     def binaryTreePaths(self, root):
-        result, path = [], []
-        self.binaryTreePathsRecu(root, path, result)
-        return result
+        def dfs(node, path): # status: path not contain node's value yet.
+            if not node: return
 
-    def binaryTreePathsRecu(self, node, path, result):
-        if node is None:
-            return
+            path.append(str(node.val))
 
-        if node.left is node.right is None:
-            ans = ""
-            for n in path:
-                ans += str(n.val) + "->"
-            result.append(ans + str(node.val))
+            if not node.left and not node.right:
+                ans.append('->'.join(path))
+            else:
+                dfs(node.left, path)
+                dfs(node.right, path)
 
-        if node.left:
-            path.append(node)
-            self.binaryTreePathsRecu(node.left, path, result)
             path.pop()
 
-        if node.right:
-            path.append(node)
-            self.binaryTreePathsRecu(node.right, path, result)
-            path.pop()
+        ans = []
+        dfs(root, [])
+        return ans

@@ -25,7 +25,7 @@ class Solution:
     # @param word, a string
     # @return a boolean
     def exist(self, board, word):
-        def dfs(x, y, i):
+        def dfs(i, x, y):
             if i == len(word): return True
 
             # all "if check" merges here. Since we change to '#' for visited cell,
@@ -35,15 +35,13 @@ class Solution:
 
             letter = board[x][y]
             board[x][y] = '#' # mark as visited
-            ans = False
-            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
-                if dfs(x+dx, y+dy, i+1):
-                    ans = True
-                    break
+            for nx, ny in [(x-1,y), (x+1,y), (x,y-1), (x,y+1)]:
+                if dfs(i+1, nx, ny):
+                    return True
             board[x][y] = letter
-            return ans
+            return False
 
-        return any(dfs(x, y, 0) for x in range(len(board)) for y in range(len(board[0])))
+        return any(dfs(0, x, y) for x in range(len(board)) for y in range(len(board[0])))
 
 
     def exist_kamyu(self, board, word):

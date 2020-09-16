@@ -1,6 +1,9 @@
 # Time:  O(1)
 # Space: O(w)
 
+# 346
+# Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.
+
 from collections import deque
 
 class MovingAverage(object):
@@ -23,9 +26,12 @@ class MovingAverage(object):
             self.__sum -= self.__q.popleft()
         self.__sum += val
         self.__q.append(val)
-        return 1.0 * self.__sum / len(self.__q)
+        return self.__sum / len(self.__q)
 
 
 # Your MovingAverage object will be instantiated and called as such:
-# obj = MovingAverage(size)
-# param_1 = obj.next(val)
+m = MovingAverage(3)
+print(m.next(1)) # 1.0
+print(m.next(10)) # (1 + 10) / 2 = 5.5
+print(m.next(3)) # (1 + 10 + 3) / 3 = 4.66
+print(m.next(5)) # (10 + 3 + 5) / 3 = 6.0

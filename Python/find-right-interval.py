@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(n)
 
+# 436
 # Given a set of intervals, for each of the interval i,
 # check if there exists an interval j whose start point is bigger than or
 # equal to the end point of the interval i, which can be called that j is on the "right" of i.
@@ -50,9 +51,9 @@ class Solution(object):
         :type intervals: List[Interval]
         :rtype: List[int]
         """
-        sorted_intervals = sorted((interval.start, i) for i, interval in enumerate(intervals))
-        result = []
-        for interval in intervals:
-            idx = bisect.bisect_left(sorted_intervals, (interval.end,))
-            result.append(sorted_intervals[idx][1] if idx < len(sorted_intervals) else -1)
-        return result
+        sorted_intervals = sorted((x.start, i) for i, x in enumerate(intervals))
+        ans = []
+        for x in intervals:
+            idx = bisect.bisect_left(sorted_intervals, (x.end,))  # shorter tuple always "less than" longer tuple
+            ans.append(sorted_intervals[idx][1] if idx < len(sorted_intervals) else -1)
+        return ans

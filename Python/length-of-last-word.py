@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 58
 # Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
 #
 # If the last word does not exist, return 0.
@@ -15,6 +16,16 @@
 class Solution:
     # @param s, a string
     # @return an integer
+    def lengthOfLastWord(self, s: str) -> int: # USE THIS
+        r = len(s) - 1
+        while r >= 0 and s[r] == ' ':
+            r -= 1
+        l = r
+        while l >= 0 and s[l] != ' ':
+            l -= 1
+        return r - l
+
+
     def lengthOfLastWord(self, s):
         length = 0
         for i in reversed(s):
@@ -33,6 +44,5 @@ class Solution2:
     def lengthOfLastWord(self, s):
         return len(s.strip().split(" ")[-1])
 
-if __name__ == "__main__":
-    print Solution().lengthOfLastWord("Hello World")
-    print Solution2().lengthOfLastWord("")
+print(Solution().lengthOfLastWord("Hello World")) # 5
+print(Solution2().lengthOfLastWord("")) # 0

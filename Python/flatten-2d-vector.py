@@ -25,8 +25,8 @@
 # 7 Common logic in two different places should be refactored into a common method.
 
 class Vector2D:
-    x, y = 0, 0
-    vec = None
+    #x, y = 0, 0
+    #vec = None
 
     # Initialize your data structure here.
     # @param {integer[][]} vec2d
@@ -69,3 +69,13 @@ class Vector2D:
 
         # remove the element
         self.vec[lastRow].pop(lastCol)
+
+
+mx = [[], [1,2],[3],[]]
+v = Vector2D(mx)
+for _ in range(6):
+    print(v.hasNext()) # True
+    if v.hasNext():
+        print(v.next())
+        v.remove()
+        print(mx)

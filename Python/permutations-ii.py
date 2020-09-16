@@ -14,24 +14,27 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        nums.sort()
+    def permuteUnique(self, num):
+        def backtrack(cur):
+            if len(cur) == len(num):
+                result.append(cur[:])
+                return
+            for i in range(len(num)):
+                if i > 0 and num[i] == num[i-1] and not used[i-1]: # remove dup
+                    continue
+                if not used[i]:
+                    used[i] = True
+                    cur.append(num[i])
+                    backtrack(cur)
+                    cur.pop()
+                    used[i] = False
+
         result = []
-        used = [False] * len(nums)
-        self.permuteUniqueRecu(result, used, [], nums)
+        used = [False] * len(num)
+        num.sort()
+        backtrack([])
         return result
 
-    def permuteUniqueRecu(self, result, used, cur, nums):
-        if len(cur) == len(nums):
-            result.append(cur + [])
-            return
-        for i in xrange(len(nums)):
-            if used[i] or (i > 0 and nums[i-1] == nums[i] and not used[i-1]):
-                continue
-            used[i] = True
-            cur.append(nums[i])
-            self.permuteUniqueRecu(result, used, cur, nums)
-            cur.pop()
-            used[i] = False
 
 class Solution2:
     # @param num, a list of integer
@@ -42,7 +45,7 @@ class Solution2:
         for num in nums:
             next = []
             for solution in solutions:
-                for i in xrange(len(solution) + 1):
+                for i in range(len(solution) + 1):
                     candidate = solution[:i] + [num] + solution[i:]
                     if candidate not in next:
                         next.append(candidate)
@@ -52,7 +55,11 @@ class Solution2:
         return solutions
 
 if __name__ == "__main__":
-    print Solution().permuteUnique([1, 1, 2])
-    print Solution().permuteUnique([1, -1, 1, 2, -1, 2, 2, -1])
-
-
+    print(Solution().permuteUnique([1, 1, 2])) # [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
+    print(Solution().permuteUnique([1, 1, 2, 1])) # [[1, 1, 1, 2], [1, 1, 2, 1], [1, 2, 1, 1], [2, 1, 1, 1]]
+    print(Solution().permuteUnique([1, -1, 2, -1, 2]))
+    # [[-1, -1, 1, 2, 2], [-1, -1, 2, 1, 2], [-1, -1, 2, 2, 1], [-1, 1, -1, 2, 2], [-1, 1, 2, -1, 2], [-1, 1, 2, 2, -1],
+    # [-1, 2, -1, 1, 2], [-1, 2, -1, 2, 1], [-1, 2, 1, -1, 2], [-1, 2, 1, 2, -1], [-1, 2, 2, -1, 1], [-1, 2, 2, 1, -1],
+    # [1, -1, -1, 2, 2], [1, -1, 2, -1, 2], [1, -1, 2, 2, -1], [1, 2, -1, -1, 2], [1, 2, -1, 2, -1], [1, 2, 2, -1, -1],
+    # [2, -1, -1, 1, 2], [2, -1, -1, 2, 1], [2, -1, 1, -1, 2], [2, -1, 1, 2, -1], [2, -1, 2, -1, 1], [2, -1, 2, 1, -1],
+    # [2, 1, -1, -1, 2], [2, 1, -1, 2, -1], [2, 1, 2, -1, -1], [2, 2, -1, -1, 1], [2, 2, -1, 1, -1], [2, 2, 1, -1, -1]]

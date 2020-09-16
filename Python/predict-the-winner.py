@@ -31,35 +31,30 @@
 # If the scores of both players are equal, then player 1 is still the winner.
 
 class Solution(object):
-    def PredictTheWinner(self, nums): # refer to conis-in-a-line case 3
+    def PredictTheWinner(self, nums): # USE THIS: easy to remember. Refer to conis-in-a-line case 3
         """
         :type nums: List[int]
         :rtype: bool
         """
         # if the count of nums is even, player 1 can choose either all odd indices or all even indices, ganrantee to win.
         n = len(nums)
-        if n % 2 == 0 or n == 1:
-            return True
+        if n % 2 == 0 or n == 1: return True
 
-        # dp is optimized from 2D list. In 2D dp[i,j] stores "player1's score minus player2's score" when there is nums[i:j+1] to choose.
-        dp = [0] * n
+        prefixSum = [0]
+        for x in nums:
+            prefixSum.append(prefixSum[-1] + x)
+
+        dp = [[0]*n for _ in range(n)]
         for i in reversed(range(n)):
-            dp[i] = nums[i]
+            dp[i][i] = nums[i]
             for j in range(i+1, n):
-                # when nums[i:j+1] available, either takes i and opponent choose from nums[i+1:j+1],
-                # or takes j and opponent choose from nums[i:j]
-                dp[j] = max(nums[i] - dp[j], nums[j] - dp[j - 1])
-
-        return dp[-1] >= 0
+                dp[i][j] = prefixSum[j+1]-prefixSum[i] - min(dp[i][j-1], dp[i+1][j])
+        return dp[0][-1] * 2 >= prefixSum[-1]
 
         '''
         # dp[rowId][j] is the most value first player can get when rowId to j coins left
         # space optmized, eventually rowId is 0
         dp = [0] * n
-        prefixSum = [0]
-        for num in nums:
-            prefixSum.append(prefixSum[-1] + num)
-
         for i in reversed(range(n)):
             dp[i] = nums[i]
             for j in range(i+1, n):
@@ -70,10 +65,23 @@ class Solution(object):
 
 
     def PredictTheWinner2(self, nums):
+        # dp is optimized from 2D list. In 2D dp[i,j] stores "player1's score minus player2's score" when there is nums[i:j+1] to choose.
+        n = len(nums)
+        if n % 2 == 0 or n == 1: return True
+
+        dp = [0] * n
+        for i in reversed(range(n)):
+            dp[i] = nums[i]
+            for j in range(i + 1, n):
+                # when nums[i:j+1] available, either takes i and opponent choose from nums[i+1:j+1],
+                # or takes j and opponent choose from nums[i:j]
+                dp[j] = max(nums[i] - dp[j], nums[j] - dp[j - 1])
+
+        return dp[-1] >= 0
         """
         print the path of picking: don't save the path along the way, after dp 2-D
         array is filled, find the path which only takes O(n) time
-        """
+
         length = len(nums)
         dp = [[0] * length for _ in range(length)]
         for s in reversed(range(len(nums))):
@@ -94,6 +102,7 @@ class Solution(object):
         print("I" if player1 else "You", "take", nums[s], "at", s)
 
         return
+        """
 
     def PredictTheWinner3(self, nums):
         """
@@ -138,6 +147,7 @@ class Solution(object):
 
         return False
 
+print(Solution().PredictTheWinner([1,5,2])) # False
 print(Solution().PredictTheWinner([0,0,7,6,5,6,1])) # False
 print(Solution().PredictTheWinner([3,2,2,3,1,2])) # True
 print(Solution().PredictTheWinner([1,5,233,7])) # True

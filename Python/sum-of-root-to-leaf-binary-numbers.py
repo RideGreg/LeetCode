@@ -32,20 +32,20 @@ class Solution(object):
         :type root: TreeNode
         :rtype: int
         """
-        def dfs(root, val):
+        def dfs(root, pre):
             if not root:
                 return 0
-            val = val*2 + root.val # KENG val<<1 + root.val is wrong, should be (val<<1) + root.val
+            cur = pre*2 + root.val # KENG val<<1 + root.val is wrong, should be (val<<1) + root.val
             if not root.left and not root.right:
-                return val
-            return dfs(root.left, val) + dfs(root.right, val)
+                return cur
+            return dfs(root.left, cur) + dfs(root.right, cur)
         
         return dfs(root, 0)
 
     def sumRootToLeaf_globalVar_noReturnAPI(self, root: TreeNode) -> int:
-        def dfs(node, cur):
+        def dfs(node, pre):
             if node:
-                cur = cur * 2 + node.val
+                cur = pre * 2 + node.val
                 if not node.left and not node.right:
                     self.ans += cur
 
@@ -55,7 +55,7 @@ class Solution(object):
         dfs(root, 0)
         return self.ans
 
-    # O(n^2) not good, just for a lessen: maintain the path and scan path at the end
+    # O(n*h) not good, just for a lessen: maintain the path and scan path at the end
     def sumRootToLeaf_n2_calcPath(self, root):
         self.ans = 0
 

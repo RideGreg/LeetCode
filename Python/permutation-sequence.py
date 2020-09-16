@@ -1,6 +1,7 @@
 # Time:  O(n^2)
 # Space: O(n)
 
+# 60
 # The set [1,2,3,...,n] contains a total of n! unique permutations.
 #
 # By listing and labeling all of the permutations in order,
@@ -26,17 +27,41 @@ class Solution(object):
         :type k: int
         :rtype: str
         """
-        seq, k, fact = "", k - 1, math.factorial(n - 1)
-        perm = [i for i in xrange(1, n + 1)]
-        for i in reversed(xrange(n)):
-            curr = perm[k / fact]
-            seq += str(curr)
-            perm.remove(curr)
+        k = k - 1        # 1 based change to 0 based
+        seq, fact = [], math.factorial(n - 1)
+        cand = list(range(1, n + 1))
+        for i in reversed(range(n)):   # O(n)
+            pos, k = divmod(k, fact)
+            seq.append(str(cand[pos]))
+            cand.pop(pos)              # O(n)
+
             if i > 0:
-                k %= fact
-                fact /= i
-        return seq
+                fact //= i
+        return ''.join(seq)
 
+    # backtrack + maintain counter, TLE for getPermutation(9,296662)
+    # O(n*k), need to generate k results each is n-length
+    def getPermutation_TLE(self, n: int, k: int) -> str:
+        def backtrack(cur):
+            if len(cur) == n:
+                self.cnt -= 1
+                return ''.join(cur) if self.cnt == 0 else None
+            for i in range(1, n+1):
+                if not used[i]:
+                    used[i] = True
+                    cur.append(str(i))
+                    s = backtrack(cur)
+                    if s:
+                        break
+                    cur.pop()
+                    used[i] = False
+            return s
 
-if __name__ == "__main__":
-    print Solution().getPermutation(3, 2)
+        self.cnt = k
+        used = [False] * (n+1)
+        return backtrack([])
+
+print(Solution().getPermutation(4, 16)) # '3241'
+print(Solution().getPermutation(3, 1)) # '132'
+print(Solution().getPermutation(3, 2)) # '132'
+print(Solution().getPermutation(3, 3)) # '213'

@@ -1,6 +1,6 @@
-# Time:  O(n * t)
-# Space: O(max(k, t))
-#
+# Time:  O(n)
+# Space: O(n)
+# 220
 # Given an array of integers, find out whether there
 # are two distinct inwindowes i and j in the array such
 # that the difference between nums[i] and nums[j] is
@@ -8,15 +8,27 @@
 # most k.
 #
 
-# This is not the best solution
-# since there is no built-in bst structure in Python.
-# The better solution could be found in C++ solution.
 '''
-hash table (key normalized over t, otherwise need to check 2*t keys). Hash funciton:
-  if： | nums[i] - nums[j] | <= t
+Brute Force:
+1. O(n*k) for a new item, check previous k numbers to see if value diff <= t
+2. O(n*t) use hash table to store everything seen (i,v) pair. For a new item v1, check if any from [v1-t, v1+t]
+was seen. Search range may be large, so need to shrink search range (by normalization).
+
+Bucket + hash table:
+hash table key is bucketID (= input int num normalized by dividing t), value is the index and real value
+of that int num; for a new int, all int having a value difference up to t will be in current bucket or its left/right
+neighbor buckets.
+This bucketization is much better than using a set to record nums already seen, which needs to
+check 2*t numbers.
+  | nums[i] - nums[j] | <= t
   equivalent to： | nums[i] / t - nums[j] / t | <= 1
-  so： | floor(nums[i] / t) - floor(nums[j] / t) | <= 1 (floor value is int which can be key in HT)
+  so： | floor(nums[i] / t) - floor(nums[j] / t) | <= 1 (floor value is int bucketID used as HT key)
   equivalent to： floor(nums[j] / t) ∈ {floor(nums[i] / t) - 1, floor(nums[i] / t), floor(nums[i] / t) + 1}
+
+BST:
+C++(multiset) / Java(TreeSet) has a data structure of self-balanced BST, which
+can be used to solve this problem in O(nlogk) time.
+No built-in bst structure in Python.
 '''
 import collections
 
@@ -27,25 +39,28 @@ class Solution:
     # @param {integer} t
     # @return {boolean}
 
-    # Simple HashMap, store both k and v. Revised hash function to search only 3 buckets. No need OrderedDict to maintain window.
-    def containsNearbyAlmostDuplicate_ming(self, nums, k, t): # USE THIS
-        d = {}
+    # HashTable stores both index and int. Only need to search current bucket and left/right
+    # neighbors. No need OrderedDict to maintain window.
+    def containsNearbyAlmostDuplicate(self, nums, k, t): # USE THIS
+        buckets = {}
         for i, n in enumerate(nums):
-            bucket = n if not t else n / t
-            for key in (bucket-1, bucket, bucket+1):
-                if key in d and i-d[key][0] <= k and abs(n-d[key][1]) <= t:
-                    return True
+            bucket = n if t == 0 else n // t
+            for b in (bucket-1, bucket, bucket+1):
+                if b in buckets:
+                    j, m = buckets[b]
+                    if i-j <= k and abs(n-m) <= t:
+                        return True
 
-            # each bucket won't have 2 eligible items for current elem, otherwise the 2 items already meets condition.
-            d[bucket] = (i, n)
+            # replace the item in bucket which has smaller index is ok, because if 2 items fall into the same bucket
+            # (means their value diff <= t), and they are not answer means index diff not <= k. We only need to keep the
+            # new item which has larger index for future items.
+            buckets[bucket] = (i, n)
         return False
 
-    def containsNearbyAlmostDuplicate(self, nums, k, t):
-        if k < 0 or t < 0:
-            return False
+    def containsNearbyAlmostDuplicate2(self, nums, k, t):
         window = collections.OrderedDict()
         for i, n in enumerate(nums):
-            # Make sure window size
+            # Make sure window size. All items stayed in window meet the index diff <= k.
             if i > k:
                 window.popitem(False)
 
@@ -58,8 +73,8 @@ class Solution:
             window[bucket] = n
         return False
 
-    # simple HashMap, over all previous numbers. Time Limit Exceeded if input array has many items.
-    def containsNearbyAlmostDuplicate_TLE1(self, nums, k, t):
+    # TLE: search over all previous numbers. Time Limit Exceeded if input array has many items.
+    def containsNearbyAlmostDuplicate_BruteForce1(self, nums, k, t):
         d = {}
         for i, n in enumerate(nums):
             for key in d.keys():
@@ -68,12 +83,17 @@ class Solution:
             d[n] = i
         return False
 
-    # simple HashMap, over value range, too many buckets to check. Time Limit Exceeded for input [0,2147483647], 1, 2147483647
-    def containsNearbyAlmostDuplicate_TLE2(self, nums, k, t):
+    # TLE: search over value range, too many buckets to check. Time Limit Exceeded for input [0,2147483647], 1, 2147483647
+    def containsNearbyAlmostDuplicate_BruteForce2(self, nums, k, t):
         d = {}
         for i, n in enumerate(nums):
-            for key in xrange(n-t, n+t+1):
+            for key in range(n-t, n+t+1):
                 if key in d and i-d[key] <= k:
                     return True
             d[n] = i
         return False
+
+print(Solution().containsNearbyAlmostDuplicate2([1,12,22,1,12,21], 2, 3)) # False
+print(Solution().containsNearbyAlmostDuplicate([1,5,9,1,5,9], 2, 3)) # False
+print(Solution().containsNearbyAlmostDuplicate([1,2,3,1], 3, 0)) # True
+print(Solution().containsNearbyAlmostDuplicate([1,0,1,1], 1, 2)) # True

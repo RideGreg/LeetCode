@@ -1,7 +1,8 @@
 # Time:  O(n * l^2 + n * r), l is the max length of the words,
 #                            r is the number of the results.
 # Space: O(n^2)
-#
+
+# 140
 # Given a string s and a dictionary of words dict,
 # add spaces in s to construct a sentence where each word is a valid dictionary word.
 #
@@ -17,29 +18,29 @@
 class Solution(object):
     def wordBreak_backtrack(self, s, wordDict): # USE THIS: may slower than wordBreak_memorization 
                                                 # but easy to remember
-        def dfs(start, cur):
+        def backtrack(start, cur):
             if start == len(s):
                 ans.append(' '.join(cur))
                 return
-            for i in xrange(start + 1, len(s) + 1):
-                if s[start:i] in dset:
-                    cur.append(s[start:i])
-                    dfs(i, cur)
+            for i in xrange(start, len(s)):
+                if s[start:i+1] in wset:
+                    cur.append(s[start:i+1])
+                    backtrack(i+1, cur)
                     cur.pop()
 
         # check doable O(n^2) to avoid TLE. See word-break.py
         if not wordDict: return []
-        n, dset = len(s), set(wordDict)
-        maxlen = max(len(w) for w in dset)
+        n, wset = len(s), set(wordDict)
+        maxlen = max(len(w) for w in wset)
         dp = [False] * (n + 1)
         dp[0] = True
         for j in range(1, n + 1):
-            dp[j] = any(dp[i] and s[i:j] in dset \
-                        for i in xrange(max(0, j - maxlen), j))
+            dp[j] = any(dp[i] and s[i:j] in wset \
+                        for i in range(j-1, max(0, j - maxlen) - 1, -1))
 
         ans = []
         if dp[n]:
-            dfs(0, [])
+            backtrack(0, [])
         return ans
 
     def wordBreak_memorization(self, s, wordDict):

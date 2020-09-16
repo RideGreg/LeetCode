@@ -1,4 +1,4 @@
-# Time:  O(n * 4^n)
+# Time:  O(4^n)
 # Space: O(n)
 #
 # Given a digit string, return all possible letter combinations that the number could represent.
@@ -15,8 +15,32 @@
 
 # Iterative Solution
 class Solution:
-    # @return a list of strings, [s1, s2]
+    # Recursive Solution
     def letterCombinations(self, digits):
+        def backtrack(i, path):
+            if i == len(digits):
+                # https://stackoverflow.com/questions/3055477/how-slow-is-pythons-string-concatenation-vs-str-join
+                ans.append(''.join(path)) # better string concatenate
+                return
+
+            if digits[i] < '2' or digits[i] > '9':
+                return
+            
+            for c in lookup[int(digits[i])]:
+                path.append(c)
+                backtrack(i+1, path)
+                path.pop()
+
+        lookup, result = ["", "", "abc", "def", "ghi", "jkl", "mno", \
+                          "pqrs", "tuv", "wxyz"], []
+        # filter edge case empty input: should return [] not ['']
+        if digits:
+            backtrack(0, [])
+        return result
+
+
+    # itenative
+    def letterCombinations2(self, digits):
         if not digits:
             return []
 
@@ -33,26 +57,6 @@ class Solution:
 
         return result
 
-
-# Time:  O(n * 4^n)
-# Space: O(n)
-# Recursive Solution
-class Solution2:
-    # @return a list of strings, [s1, s2]
-    def letterCombinations(self, digits):
-        if not digits:
-            return []
-        lookup, result = ["", "", "abc", "def", "ghi", "jkl", "mno", \
-                          "pqrs", "tuv", "wxyz"], []
-        self.letterCombinationsRecu(result, digits, lookup, "", 0)
-        return result
-
-    def letterCombinationsRecu(self, result, digits, lookup, cur, n):
-        if n == len(digits):
-            result.append(cur)
-        else:
-            for choice in lookup[int(digits[n])]:
-                self.letterCombinationsRecu(result, digits, lookup, cur + choice, n + 1)
 
 if __name__ == "__main__":
     print Solution().letterCombinations("23")

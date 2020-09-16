@@ -22,27 +22,22 @@
 
 import collections
 
+# Time:  O(n)
+# Space: O(h)
+# DFS, Recursive solution.
+class Solution:                # USE THIS: DFS, bottom up
+    # @param {TreeNode} root
+    # @return {TreeNode}
+    def invertTree(self, root):
+        if root is not None:
+            root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
+            ''' NOTE the following is WRONG!!
+            root.left = self.invertTree(root.right)
+            root.right = self.invertTree(root.left) # copy the inverted right subtree
+            '''
+        return root
 
 # BFS solution.
-class Queue:
-    def __init__(self):
-        self.data = collections.deque()
-
-    def push(self, x):
-        self.data.append(x)
-
-    def peek(self):
-        return self.data[0]
-
-    def pop(self):
-        return self.data.popleft()
-
-    def size(self):
-        return len(self.data)
-
-    def empty(self):
-        return len(self.data) == 0
-
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, x):
@@ -50,7 +45,7 @@ class Queue:
 #         self.left = None
 #         self.right = None
 
-class Solution:
+class Solution2:   # BFS, top down
     # @param {TreeNode} root
     # @return {TreeNode}
     def invertTree(self, root):
@@ -81,10 +76,30 @@ class Solution:
 
         return root
 
+class Queue: # implement my own Queue
+    def __init__(self):
+        self.data = collections.deque()
+
+    def push(self, x):
+        self.data.append(x)
+
+    def peek(self):
+        return self.data[0]
+
+    def pop(self):
+        return self.data.popleft()
+
+    def size(self):
+        return len(self.data)
+
+    def empty(self):
+        return len(self.data) == 0
+
+
 # Time:  O(n)
 # Space: O(h)
 # Stack solution.
-class Solution2:
+class Solution3:           # stack version of BFS top down
     # @param {TreeNode} root
     # @return {TreeNode}
     def invertTree(self, root):
@@ -101,15 +116,4 @@ class Solution2:
 
         return root
 
-# Time:  O(n)
-# Space: O(h)
-# DFS, Recursive solution.
-class Solution3:
-    # @param {TreeNode} root
-    # @return {TreeNode}
-    def invertTree(self, root):
-        if root is not None:
-            root.left, root.right = self.invertTree(root.right), \
-                                    self.invertTree(root.left)
 
-        return root

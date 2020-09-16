@@ -64,7 +64,7 @@ class Solution(object):
             P.append(P[-1] + x)
 
         #Want smallest y-x with Py - Px >= K
-        ans = len(A)+1 # init to an impossible value
+        ans = float('inf')
         monoq = collections.deque() #opt(y) candidates, represented as indices of P
         for y, Py in enumerate(P):
             while monoq and Py <= P[monoq[-1]]:
@@ -77,7 +77,7 @@ class Solution(object):
 
             monoq.append(y)
 
-        return ans if ans < len(A)+1 else -1
+        return ans if ans < float('inf') else -1
 
 ''' # time: O(n^2) worst case, space: O(n)
     def shortestSubarray_TLE(self, A, K):

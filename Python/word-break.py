@@ -1,4 +1,5 @@
-# Time:  O(n * l^2), slice to get substring s[i-l:i] takes l time
+# Time:  O(n * l^2), n is length of string s, l is maxLen of words in dict; 
+#                    slice to get substring s[i-l:i] takes l time
 # Space: O(n)
 
 # 139
@@ -27,7 +28,7 @@ class Solution(object):
         dp[0] = True
         for j in range(1, n + 1):
             dp[j] = any(dp[i] and s[i:j] in dset \
-                        for i in xrange(max(0, j - maxlen), j))
+                        for i in range(j-1, max(0, j - maxlen) - 1, -1))
         return dp[n]
 
 

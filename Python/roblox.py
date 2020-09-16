@@ -110,6 +110,12 @@ def getCourse(prereqs):
             if in_degree[nei] == 0:
                 zero_in.append(nei)
 
+# You are a developer for a university. Your current project is to develop a system for
+# students to find courses they share with friends. The university has a system for querying
+# courses students are enrolled in, returned as a list of (ID, course) pairs.
+#
+# Write a function that takes in a list of (student ID number, course name) pairs and returns,
+# for every pair of students, a list of all courses they share.
 def find_pairs(pairs: List[List[str]]) -> dict:
     reg = collections.defaultdict(set)
     for idx, name in pairs:
@@ -120,8 +126,30 @@ def find_pairs(pairs: List[List[str]]) -> dict:
         for id2 in reg:
             if id2 > id1:
                 key = ','.join([id1, id2])
-                ans[key] = [] # init the pair of ids
-                for class1 in reg[id1]:
-                    if class1 in reg[id2]:
-                        ans[key].append(class1)
+                ans[key] = [x for x in reg[id1] if x in reg[id2]]
     return ans
+
+student_course_pairs_1 = [
+  ["58", "Software Design"],
+  ["58", "Linear Algebra"],
+  ["94", "Art History"],
+  ["94", "Operating Systems"],
+  ["17", "Software Design"],
+  ["58", "Mechanics"],
+  ["58", "Economics"],
+  ["17", "Linear Algebra"],
+  ["17", "Political Science"],
+  ["94", "Economics"],
+  ["25", "Economics"],
+]
+print(find_pairs(student_course_pairs_1))
+'''
+{
+  '58,17': ["Software Design", "Linear Algebra"]
+  [58, 94]: ["Economics"]
+  [58, 25]: ["Economics"]
+  [94, 25]: ["Economics"]
+  [17, 94]: []
+  [17, 25]: []
+}
+'''

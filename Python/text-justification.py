@@ -1,6 +1,6 @@
 # Time:  O(n)
 # Space: O(k), k is maxWidth.
-#
+# 68
 # Given an array of words and a length L, format the text such that
 # each line has exactly L characters and is fully (left and right) justified.
 #
@@ -34,37 +34,38 @@ class Solution(object):
         :type maxWidth: int
         :rtype: List[str]
         """
-        def addSpaces(i, spaceCnt, maxWidth, is_last):
-            if i < spaceCnt:
-                # For the last line of text, it should be left justified,
-                # and no extra space is inserted between words.
-                return 1 if is_last else (maxWidth // spaceCnt) + int(i < maxWidth % spaceCnt)
-            return 0
+        def addSpaces(i, spaceCnt, spaceWidth):
+            return (spaceWidth // spaceCnt) + int(i < spaceWidth % spaceCnt)
 
-        def connect(words, maxWidth, begin, end, length, is_last):
+        def connect(begin, end, wordlength, is_last):
             s = []  # The extra space O(k) is spent here.
-            n = end - begin
-            for i in xrange(n):
-                s += words[begin + i],
-                s += ' ' * addSpaces(i, n - 1, maxWidth - length, is_last),
+            for i in range(begin, end):
+                s.append(words[i])
+                if i < end - 1:
+                    if is_last: # For the last line of text, it is left justified
+                        s.append(' ')
+                    else:
+                        s.append(' ' * addSpaces(i - begin, end - begin - 1, maxWidth - wordlength))
             # For only one word in a line.
             line = "".join(s)
-            if len(line) < maxWidth:
+            if len(line) < maxWidth:    #!!! note this is not only for last line!!
                 line += ' ' * (maxWidth - len(line))
             return line
 
         res = []
         begin, length = 0, 0
-        for i in xrange(len(words)):
+        for i in range(len(words)):
             if length + len(words[i]) + (i - begin) > maxWidth:
-                res += connect(words, maxWidth, begin, i, length, False),
+                res.append(connect(begin, i, length, False))
                 begin, length = i, 0
             length += len(words[i])
 
         # Last line.
-        res += connect(words, maxWidth, begin, len(words), length, True),
+        res.append(connect(begin, len(words), length, True))
         return res
 
 
-if __name__ == "__main__":
-    print Solution().fullJustify(["This", "is", "an", "example", "of", "text", "justification."], 16)
+print(Solution().fullJustify(["This", "is", "an", "example", "of", "text", "just."], 16))
+# ['This    is    an',
+#  'example  of text',
+#  'just aa.        ']

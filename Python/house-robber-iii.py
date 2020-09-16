@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 337
 # The thief has found himself a new place for his thievery again.
 # There is only one entrance to this area, called the "root."
 # Besides the root, each house has one and only one parent house.
@@ -43,7 +44,8 @@ class Solution(object):
         def robHelper(root):
             if not root:
                 return (0, 0)
-            left, right = robHelper(root.left), robHelper(root.right)
-            return (root.val + left[1] + right[1], max(left) + max(right))
+            lTake, lSkip = robHelper(root.left)
+            rTake, rSkip = robHelper(root.right)
+            return root.val + lSkip + rSkip, max(lTake, lSkip) + max(rTake, rSkip)
 
         return max(robHelper(root))
