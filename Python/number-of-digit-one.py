@@ -1,3 +1,4 @@
+
 # Time:  O(logn)
 # Space: O(1)
 #
@@ -16,11 +17,12 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        pivot, result = 1, 0
-        while n >= pivot:
-            result += (n//(10*pivot))*pivot + \
-                      min(pivot, max(n%(10*pivot) - pivot + 1, 0))
-            pivot *= 10
+        digit, result = 1, 0
+        base = 1
+        while n >= base:
+            result += (n//(10*base))*base + \
+                      min(base, max(n%(10*base) - digit*base + 1, 0))
+            base *= 10
         return result
 
 
