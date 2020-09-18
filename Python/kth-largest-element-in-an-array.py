@@ -35,13 +35,14 @@ class Solution2(object):  # kamyu's tri_partition solution. need to research
             left, right = 0, len(nums)-1
             while left <= right:
                 pivot_idx = randint(left, right)
-                mid_left, mid_right = tri_partition(nums, left, right, nums[pivot_idx], compare)
-                if mid_left <= n <= mid_right:
-                    return nums[n]
-                elif mid_left > n:
-                    right = mid_left-1
-                else:  # mid_right < n.
-                    left = mid_right+1
+                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)
+                if pivot_left <= n <= pivot_right:
+                    break
+                elif pivot_left > n:
+                    right = pivot_left-1
+                else:  # pivot_right < n.
+                    left = pivot_right+1
+            return nums[n]
 
         return nth_element(nums, k-1, compare=lambda a, b: a > b)
 
@@ -101,6 +102,7 @@ class Solution2(object):
 
         nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]
         return new_pivot_idx
+
 
 # sorted = [1,2,2,3,3,4,5,5,6]
 print(Solution().findKthLargest([3,2,3,1,2,4,5,5,6], 1)) # 6
