@@ -37,14 +37,14 @@ class Solution2(object):  # kamyu's tri_partition solution. need to research
                 pivot_idx = randint(left, right)
                 pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)
                 if pivot_left <= n <= pivot_right:
-                    break
+                    return
                 elif pivot_left > n:
                     right = pivot_left-1
                 else:  # pivot_right < n.
                     left = pivot_right+1
-            return nums[n]
 
-        return nth_element(nums, k-1, compare=lambda a, b: a > b)
+        nth_element(nums, k-1, compare=lambda a, b: a > b)
+        return nums[k-1]
 
 
 # Time:  O(n) on average, using Median of Medians could achieve O(n) (Intro Select)
