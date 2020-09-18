@@ -9,6 +9,7 @@
 from random import randint
 
 
+# optimized for duplicated nums
 class Solution2(object):  # kamyu's tri_partition solution. need to research
     def findKthLargest(self, nums, k):
         """
