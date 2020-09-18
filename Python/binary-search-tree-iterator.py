@@ -21,45 +21,25 @@ class TreeNode(object):
 
 # 把所有节点按中序遍历放入栈需要O(n) space。我们使用自定义的栈，只存O(h)节点，按需要暂停和重启中序遍历。
 class BSTIterator_bookshadow(object):   # USE THIS, very clean
+    # @param root, a binary search tree's root node
     def __init__(self, root):
         self.stack = []
         self.pushLeft(root)
+
+    # @return a boolean, whether we have a next smallest number
+    def hasNext(self):
+        return self.stack
+
+    # @return an integer, the next smallest number
+    def next(self):
+        cur = self.stack.pop()
+        self.pushLeft(cur.right)
 
     def pushLeft(self, node):
         while node:
             self.stack.append(node)
             node = node.left
-
-    def hasNext(self):
-        return self.stack
-
-    def next(self):
-        cur = self.stack.pop()
-        self.pushLeft(cur.right)
         return cur.val
-
-class BSTIterator(object):
-    # @param root, a binary search tree's root node
-    def __init__(self, root):
-        self.stack = []
-        self.cur = root
-
-    # @return a boolean, whether we have a next smallest number
-    def hasNext(self):
-        return self.stack or self.cur
-
-    # @return an integer, the next smallest number
-    def next(self):
-        while self.cur:
-            self.stack.append(self.cur)
-            self.cur = self.cur.left
-
-        self.cur = self.stack.pop()
-        node = self.cur
-        # not clean, change to right subtree but not go deeper, but go deeper in next loop.
-        self.cur = self.cur.right
-
-        return node.val
 
 
 # Time O(h) Space O(1) same algorithm as in inorder-successor-in-bst.py
