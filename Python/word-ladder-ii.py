@@ -1,6 +1,10 @@
-# Time:  O(n * d^2), n is length of string, d is size of dictionary. In BFS, search neighbors for
-#             each word is nested loop O(d^2), compare if they diff by 1 char O(n)
-# Space: O(d^2) BFS worst case edge # is O(d^2), all nodes connected to each other.
+# Time:  O(26 * d * l + r), d is the size of wordlist,
+#                         , l is the max length of words
+#                         , r is the total size of result
+# Space: O(d * l)
+
+import collections
+from string import ascii_lowercase
 
 # 126
 # Given two words (start and end), and a dictionary, find all shortest transformation sequence(s)
