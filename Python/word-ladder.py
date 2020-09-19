@@ -61,6 +61,7 @@ class Solution2(object):
         lookup = set(wordList)
         if endWord not in lookup:
             return 0
+        lookup.remove(endWord)
         ladder = 2
         left, right = set([beginWord]), set([endWord])
         while left and right:
