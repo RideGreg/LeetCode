@@ -24,10 +24,42 @@
 # All words contain only lowercase alphabetic characters.
 #
 
+class Solution(object):
+    def findLadders(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: List[List[str]]
+        """
+        def backtracking(tree, word): 
+            return [[word]] if word == endWord else [[word] + path for new_word in tree[word] for path in backtracking(tree, new_word)]
+
+        if endWord not in wordList:
+            return []
+        tree, words = collections.defaultdict(set), set(wordList)
+        is_found, left, right, is_reversed = False, {beginWord}, {endWord},  False
+        while left and not is_found:
+            words -= set(left)
+            new_left = set()
+            for word in left:
+                for new_word in [word[:i]+c+word[i+1:] for i in xrange(len(beginWord)) for c in ascii_lowercase]:
+                    if new_word in words:
+                        if new_word in right: 
+                            is_found = True
+                        else: 
+                            new_left.add(new_word)
+                        tree[new_word].add(word) if is_reversed else tree[word].add(new_word)
+            left = new_left
+            if len(left) > len(right): 
+                left, right, is_reversed = right, left, not is_reversed
+        return backtracking(tree, beginWord)
+
+
 # BFS: ask for SHORTEST SEQUENCES
 # If two words has 1 char diff, they are connected in BFS.
 # Since path needs to output, we record the path along the BFS. And trace back to produces the paths.
-class Solution:
+class Solution2:
     # @param start, a string
     # @param end, a string
     # @param dict, a set of string
@@ -35,11 +67,14 @@ class Solution:
     def findLadders(self, start, end, wrodList):
         def backtrack(word, path):
             if word not in trace:
-                ans.append([word] + path)
-                return
-
-            for prev in trace[word]:
-                backtrack(prev, [word] + path)
+                path.append(word)
+                result.append(path[::-1])
+                path.pop()
+            else:
+                for prev in trace[word]:
+                    path.append(word)
+                    self.backtrack(result, trace, path, prev)
+                    path.pop()
 
         dict = set(wrodList)
         dict.add(end)
@@ -71,7 +106,7 @@ class Solution:
 
 # Backtracking: TLE, since it visits many non-minimum path.
 import collections
-class Solution2:
+class Solution3:
     def findLadders(self, beginWord, endWord, wordList):
         def backtrack(curPath):
             w = curPath[-1]
