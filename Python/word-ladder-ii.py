@@ -1,7 +1,5 @@
-# Time:  O(26 * d * l + r), d is the size of wordlist,
-#                         , l is the max length of words
-#                         , r is the total size of result
-# Space: O(d * l)
+# Time:  O(b^(d/2)), b is the branch factor of bfs, d is the result depth
+# Space: O(w * l), w is the number of words, l is the max length of words
 
 import collections
 from string import ascii_lowercase
@@ -65,7 +63,9 @@ class Solution(object):
 # BFS: ask for SHORTEST SEQUENCES
 # If two words has 1 char diff, they are connected in BFS.
 # Since path needs to output, we record the path along the BFS. And trace back to produces the paths.
-class Solution2:
+# Time:  O(b^d), b is the branch factor of bfs, d is the result depth
+# Space: O(w * l), w is the number of words, l is the max length of words
+class Solution2(object):
     # @param start, a string
     # @param end, a string
     # @param dict, a set of string
