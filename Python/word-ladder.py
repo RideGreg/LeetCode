@@ -60,7 +60,7 @@ class Solution2(object):
     def ladderLength(self, beginWord, endWord, wordList):
         if endWord not in wordList:
             return 0
-        tree, words = collections.defaultdict(set), set(wordList)
+        words = set(wordList)
         is_found, left, right, is_reversed = False, {beginWord}, {endWord},  False
         ladder = 2
         while left:
@@ -73,7 +73,6 @@ class Solution2(object):
                             return ladder
                         else: 
                             new_left.add(new_word)
-                        tree[new_word].add(word) if is_reversed else tree[word].add(new_word)
             left = new_left
             ladder += 1
             if len(left) > len(right): 
