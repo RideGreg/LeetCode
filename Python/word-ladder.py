@@ -1,5 +1,7 @@
 # Time:  O(n * d), n is length of string, d is size of dictionary
 # Space: O(d)
+# Time:  O(b^(d/2)), b is the branch factor of bfs, d is the result depth
+# Space: O(w * l), w is the number of words, l is the max length of words
 #
 # Given two words (start and end), and a dictionary, find the length of shortest transformation sequence from start to end, such that:
 #
@@ -19,6 +21,8 @@
 # All words have the same length.
 # All words contain only lowercase alphabetic characters.
 #
+
+from string import ascii_lowercase
 
 # BFS
 class Solution(object):
@@ -81,9 +85,15 @@ class Solution2(object):
         return 0
 
 
+<<<<<<< HEAD
 # Time:  O(26 * d * l) = O(d * l), d is the size of wordlist, l is the max length of words
 # Space: O(d * l)
 class Solution3(object):
+=======
+# Time:  O(b^d), b is the branch factor of bfs, d is the result depth
+# Space: O(w * l), w is the number of words, l is the max length of words
+class Solution2(object):
+>>>>>>> 2039fe3d... Update word-ladder.py
     def ladderLength(self, beginWord, endWord, wordList):
         """
         :type beginWord: str
