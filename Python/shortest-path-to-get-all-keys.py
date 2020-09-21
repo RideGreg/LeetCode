@@ -72,7 +72,7 @@ class Solution(object):
 
         directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
-        def bfs(source):
+        def bfs(source: str) -> dict:
             r, c = locations[source]
             lookup = {(r,c)}
             q = collections.deque([(r, c, 0)])
@@ -99,28 +99,28 @@ class Solution(object):
         graph = {place: bfs(place) for place in locations}
 
         # Dijkstra's algorithm
+        key_count = (len(locations) - 1) // 2
+        target_state = 2**key_count - 1 # bit presentation when all keys obtained
+
+        best = {}
         min_heap = [(0, '@', 0)]  # distance, place, state
-        best = collections.defaultdict(lambda: float("inf"))
-        best['@', 0] = 0
-        target_state = 2**sum(place.islower() for place in locations)-1 # all keys obtained
         while min_heap:
             cur_d, place, state = heapq.heappop(min_heap)
             if state == target_state:
                 return cur_d
 
-            if best[place, state] < cur_d:
-                continue
+            if (place, state) in best: continue
+            best[place, state] = cur_d
 
-            for dest, d in graph[place].iteritems():
+            for nei, d in graph[place].items():
                 next_state = state
-                if dest.islower(): #key
-                    next_state |= (1 << (ord(dest)-ord('a')))
-                elif dest.isupper(): #lock
-                    if not (state & (1 << (ord(dest)-ord('A')))): #no key
+                if nei.islower(): #key
+                    next_state |= (1 << (ord(nei)-ord('a')))
+                elif nei.isupper(): #lock
+                    if not (state & (1 << (ord(nei)-ord('A')))): #no key
                         continue
-                if cur_d+d < best[dest, next_state]: # ok to go back to a visited cell as long as state is different
-                    best[dest, next_state] = cur_d+d
-                    heapq.heappush(min_heap, (cur_d+d, dest, next_state))
+                if (nei, next_state) not in best: # ok to go back to a visited cell as long as state is different
+                    heapq.heappush(min_heap, (cur_d+d, nei, next_state))
         return -1
 
 

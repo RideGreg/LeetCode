@@ -20,6 +20,23 @@
 # 3. Perform generic algorithm start from both the ends
 
 class Solution(object):
+    # add integers only
+    def addStrings_int(self, num1: str, num2: str) -> str:
+        i, j, carry = len(num1)-1, len(num2)-1, 0
+        ans = []
+        while carry or i >= 0 or j >= 0:
+            if i >= 0:
+                carry += int(num1[i])
+                i -= 1
+            if j >= 0:
+                carry += int(num2[j])
+                j -= 1
+            carry, v = divmod(carry, 10)
+            ans.append(str(v))
+        return ''.join(ans[::-1])
+
+
+    # for decimal numbers
     def addStrings(self, num1, num2):
         """
         :type num1: str
@@ -57,32 +74,10 @@ class Solution(object):
                 j -= 1
             carry, v = divmod(carry, 10)
             result.append(str(v))
-            # result.append(str(carry % 10))
-            # carry //= 10  BETTER USE divmod, easy to make a mistake by using /=
         result.reverse()
 
         return "".join(result).rstrip('0').rstrip('.')
 
-    def addStrings2(self, num1, num2):
-        """
-        :type num1: str
-        :type num2: str
-        :rtype: str
-        """
-        length = max(len(num1), len(num2))
-        num1 = num1.zfill(length)[::-1]
-        num2 = num2.zfill(length)[::-1]
-        res, plus = '', 0
-        for index, num in enumerate(num1):
-            tmp = str(int(num) + int(num2[index]) + plus)
-            res += tmp[-1]
-            if int(tmp) > 9:
-                plus = 1
-            else:
-                plus = 0
-        if plus:
-            res += '1'
-        return res[::-1]
 
 print(Solution().addStrings("123.523", "11.6")) # "135.123"
 print(Solution().addStrings("110.75", "9.35")) # "120.1"

@@ -59,9 +59,9 @@ class Solution:
         par, visited = {}, set()
         dfs(root, None)
         while p in par:
-            visited.add(p.val)
+            visited.add(p)
             p = par[p]
-        while q.val not in visited:
+        while q not in visited:
             q = par[q]
         return q
 

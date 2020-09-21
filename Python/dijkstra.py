@@ -8,6 +8,7 @@
 import heapq
 
 class Solution(object):
+    # If graph nodes are labelled by a number, we can use list for best distance. List uses less space than dict.
     def dijkstra_listForDist(self, edges, N):
         graph = [{} for _ in range(N)]
         for u, v, w in edges:
@@ -36,6 +37,7 @@ class Solution(object):
         print(dist)
         return
 
+    # Very useful for graph where nodes are not labelled by a number. Refer to LC864 shortest-path-to-get-all-keys.py
     def dijkstra_dictForDist(self, edges, N):
         graph = [{} for _ in range(N)]
         for u, v, w in edges:

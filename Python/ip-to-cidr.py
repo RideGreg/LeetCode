@@ -9,6 +9,8 @@
 # and then the prefix length. For example: "123.45.67.89/20".
 # That prefix length "20" represents the number of common prefix bits in the specified range.
 #
+# IP: 32 bits, CIDR: classless inter-domain routing
+
 # Example 1:
 # Input: ip = "255.0.0.7", n = 10
 # Output: ["255.0.0.7/32","255.0.0.8/29","255.0.0.16/32"]
@@ -54,13 +56,13 @@ class Solution(object):
         :type n: int
         :rtype: List[str]
         """
-        def ipToInt(ip):
+        def ip2int(ip):
             result = 0
             for i in ip.split('.'):
                 result = 256 * result + int(i)
             return result
 
-        def intToIP(n):
+        def int2ip(n):
             ans = []
             for _ in range(4):
                 n, rem = divmod(n, 256)
@@ -68,16 +70,17 @@ class Solution(object):
             return '.'.join(ans[::-1])
             #return ".".join(str((n >> i) % 256) for i in (24, 16, 8, 0))
 
-        start = ipToInt(ip)
+        start = ip2int(ip)
         result = []
         while n:
-            rigthmostOne = start & (-start)
-            flexibleBits = min(rigthmostOne.bit_length() - 1, n.bit_length() - 1)
+            rightOne = start & (-start)
+            flexibleBits = min(rightOne.bit_length(), n.bit_length()) - 1
             mask = 32 - flexibleBits
-            result.append(intToIP(start) + '/' + str(mask))
-            start += 1 << (32-mask)
-            n -= 1 << (32-mask)
+            result.append(int2ip(start) + '/' + str(mask))
+            start += 1 << flexibleBits
+            n -= 1 << flexibleBits
         return result
+
 
 print(Solution().ipToCIDR("0.0.0.8", 2)) # ["0.0.0.8/31"]
 print(Solution().ipToCIDR("0.0.0.8", 3)) # ["0.0.0.8/31","0.0.0.10/32"]

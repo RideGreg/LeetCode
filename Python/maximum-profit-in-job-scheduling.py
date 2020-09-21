@@ -39,11 +39,13 @@ class Solution(object):
         dp = [(0, 0)]
         for s, e, p in jobs:
             # bisect in the dp to find the largest profit we can make before start time s.
-            i = bisect.bisect_right(dp, (s, float('inf')))-1
+            # because items in dp has increasing profit, so the last item current start time can
+            # fit in will have largest profit.
+            i = bisect.bisect_right(dp, (s, float('inf')))
 
             # if making more money, choose this job, add pair of [e, newProfit] to end of dp
-            if dp[i][1]+p > dp[-1][1]:
-                dp.append((e, dp[i][1]+p))
+            if dp[i-1][1]+p > dp[-1][1]:
+                dp.append((e, dp[i-1][1]+p))
         return dp[-1][1]
 
     # dfs: O(2^n)

@@ -4,6 +4,7 @@
 #        readContentFromFile: O(l + c)
 # Space: O(n + s), n is the number of dir/file nodes, s is the total content size.
 
+# 588
 # Design an in-memory file system to simulate the following functions:
 #
 # ls: Given a path in string format. If it is a file path,
@@ -40,17 +41,14 @@
 
 
 class TrieNode(object):
-
     def __init__(self):
         self.is_file = False
         self.children = {}
         self.content = ""
 
 class FileSystem(object):
-
     def __init__(self):
         self.__root = TrieNode()
-
 
     def ls(self, path):
         """
@@ -64,41 +62,23 @@ class FileSystem(object):
 
         return sorted(curr.children.keys())
 
-
-    def mkdir(self, path):
-        """
-        :type path: str
-        :rtype: void
-        """
+    def mkdir(self, path: str) -> None:
         curr = self.__putNode(path)
         curr.is_file = False
 
-
-    def addContentToFile(self, filePath, content):
-        """
-        :type filePath: str
-        :type content: str
-        :rtype: void
-        """
+    def addContentToFile(self, filePath: str, content: str) -> None:
         curr = self.__putNode(filePath)
         curr.is_file = True
         curr.content += content
 
-
-    def readContentFromFile(self, filePath):
-        """
-        :type filePath: str
-        :rtype: str
-        """
+    def readContentFromFile(self, filePath: str) -> str:
         return self.__getNode(filePath).content
-
 
     def __getNode(self, path):
         curr = self.__root
         for s in self.__split(path, '/'):
             curr = curr.children[s]
         return curr
-
 
     def __putNode(self, path):
         curr = self.__root
@@ -108,15 +88,15 @@ class FileSystem(object):
             curr = curr.children[s]
         return curr
 
-
     def __split(self, path, delim):
         if path == '/':
             return []
         return path.split('/')[1:]
 
-# Your FileSystem object will be instantiated and called as such:
-# obj = FileSystem()
-# param_1 = obj.ls(path)
-# obj.mkdir(path)
-# obj.addContentToFile(filePath,content)
-# param_4 = obj.readContentFromFile(filePath)
+
+obj = FileSystem()
+print(obj.ls("/")) # []
+obj.mkdir("/a/b/c")
+obj.addContentToFile("/a/b/c/d","hello")
+print(obj.ls("/")) # ["a"]
+print(obj.readContentFromFile("/a/b/c/d")) #"hello"

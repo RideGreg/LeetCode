@@ -58,6 +58,8 @@
 # 很多复杂数据结构都可以通过数组实现。对于一个固定大小的数组，任何位置都可以是队首，另外要知道队列长度。
 #
 from threading import Lock # for thread safety
+# compare to remember
+# from typing import List
 
 class MyCircularQueue(object):
 

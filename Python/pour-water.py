@@ -1,6 +1,7 @@
 # Time:  O(v * n)
 # Space: O(1)
 
+# 755
 # We are given an elevation map, heights[i] representing the height of the terrain at that index.
 # The width at each index is 1. After V units of water fall at index K, how much water is at each index?
 #
@@ -120,6 +121,7 @@
 # - K will be in range [0, heights.length - 1].
 
 class Solution(object):
+    # maintain two pointers, i for search, best stores best result
     def pourWater(self, heights, V, K):
         """
         :type heights: List[int]
@@ -127,15 +129,20 @@ class Solution(object):
         :type K: int
         :rtype: List[int]
         """
-        for _ in xrange(V):
+        for _ in range(V):
             best = K
-            for d in (-1, 1):
+            for d in (-1, 1):   # -1 for left, 1 for right
                 i = K
-                while 0 <= i+d < len(heights) and \
-                      heights[i+d] <= heights[i]:
-                    if heights[i+d] < heights[i]: best = i+d
+                while 0 <= i+d < len(heights) and heights[i+d] <= heights[i]: # continue searching if lower or equal
+                    if heights[i+d] < heights[i]:
+                        best = i+d                   # update 'best' only when lower
                     i += d
-                if best != K:
+                if best != K:                # if left side has a lower location, skip check right side
                     break
             heights[best] += 1
         return heights
+
+
+print(Solution().pourWater([2,1,1,2,1,2,2], 4, 3)) # [2,2,2,3,2,2,2]
+print(Solution().pourWater([1,2,3,4], 2, 2)) # [2,3,3,4]
+print(Solution().pourWater([3,1,3], 5, 1)) # [4,4,4]

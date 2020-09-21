@@ -2,6 +2,7 @@
 #        if we can further to use Fibonacci heap, it would be O(|E| + |V| * log|V|)
 # Space: O(|E| + |V|) = O(|E|)
 
+# 787
 # There are n cities connected by m flights. Each fight starts from city u and arrives at v with a price w.
 #
 # Now given all the cities and fights, together with starting city src and the destination dst,
@@ -37,7 +38,29 @@ import heapq
 
 
 class Solution(object):
+    # Dijkstra with dict
     def findCheapestPrice(self, n, flights, src, dst, K): # USE THIS
+        graph = collections.defaultdict(dict)
+        for u, v, w in flights:
+            graph[u][v] = w
+
+        best = {}
+        heap = [[0, src, 0]]  # cost, node, step
+        while heap:
+            cost, node, step = heapq.heappop(heap)
+            if node == dst:
+                return cost
+            if (node, step) in best or step > K:
+                continue
+            best[node, step] = cost
+
+            for nei, w in graph[node].items():
+                if (nei, step + 1) not in best:
+                    heapq.heappush(heap, (cost + w, nei, step + 1))
+        return -1
+
+    # Dijkstra with list
+    def findCheapestPrice2(self, n, flights, src, dst, K):
         graph = [{} for _ in range(n)]
         for u, v, p in flights:
             graph[u][v] = p
@@ -58,6 +81,7 @@ class Solution(object):
                     best[nei][step + 1] = price + p
 
         return -1
+
 
     def findCheapestPrice_kamyu(self, n, flights, src, dst, K):
         """

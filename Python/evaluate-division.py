@@ -59,9 +59,12 @@ class Solution(object):
 
         ans = []
         for x, y in queries:
-            visited = set()
-            v = dfs(x, y)
-            ans.append(v if v is not None else -1.0)
+            if x not in graph or y not in graph:
+                ans.append(-1.0)
+            else:
+                visited = set()
+                v = dfs(x, y)
+                ans.append(v if v is not None else -1.0)
         return ans
 
     # Weighted UnionFind
@@ -145,7 +148,7 @@ class Solution_kamyu(object):
         :rtype: List[float]
         """
         union_find = UnionFind()
-        for (a, b), k in itertools.izip(equations, values):
+        for (a, b), k in zip(equations, values):
             union_find.union_set(a, b, k)
         return [union_find.query_set(a, b) for a, b in queries]
 
@@ -166,7 +169,7 @@ class Solution2(object):
         :rtype: List[float]
         """
         adj = collections.defaultdict(dict)
-        for (a, b), k in itertools.izip(equations, values):
+        for (a, b), k in zip(equations, values):
             adj[a][b] = k
             adj[b][a] = 1.0/k
 
@@ -182,11 +185,10 @@ class Solution2(object):
                 if u == b:
                     lookup[a, b] = val
                     return val
-                for v, k in adj[u].iteritems():
-                    if v in visited:
-                        continue                    
-                    visited.add(v)
-                    q.append((v, val*k))
+                for v, k in adj[u].items():
+                    if v not in visited:
+                        visited.add(v)
+                        q.append((v, val*k))
             lookup[a, b] = -1.0
             return -1.0
 
@@ -200,7 +202,7 @@ import collections
 import itertools
 
 
-# variant of floyd–warshall algorithm solution
+# variant of floyd–warshall algorithm solution: populate many edges
 class Solution3(object):
     def calcEquation(self, equations, values, queries):
         """
@@ -220,40 +222,13 @@ class Solution3(object):
                     adj[i][j] = adj[i][k]*adj[k][j]
         return [adj[a].get(b, -1.0) for a, b in queries]
 
-    
-# Time:  O(e + q * n), at most O(n^3 + q)
-# Space: O(e)
-import collections
 
 
-class Solution4(object):
-    def calcEquation(self, equations, values, query):
-
-        def check(up, down, lookup, visited):
-            if up in lookup and down in lookup[up]:
-                return (True, lookup[up][down])
-            for k, v in lookup[up].iteritems():
-                if k not in visited:
-                    visited.add(k)
-                    tmp = check(k, down, lookup, visited)
-                    if tmp[0]:
-                        return (True, v * tmp[1])
-            return (False, 0)
-
-        lookup = collections.defaultdict(dict)
-        for i, e in enumerate(equations):
-            lookup[e[0]][e[1]] = values[i]
-            if values[i]:
-                lookup[e[1]][e[0]] = 1.0 / values[i]
-
-        result = []
-        for q in query:
-            visited = set()
-            tmp = check(q[0], q[1], lookup, visited)
-            result.append(tmp[1] if tmp[0] else -1)
-        return result
-
-
+print(Solution().calcEquation(
+    [["x1","x2"],["x2","x3"],["x3","x4"],["x4","x5"]],
+    [3.0,4.0,5.0,6.0],
+    [["x1","x5"],["x5","x2"],["x2","x4"],["x2","x2"],["x2","x9"],["x9","x9"]]
+)) # [360.00000,0.00833,20.00000,1.00000,-1.00000,-1.00000]
 print(Solution().calcEquation(
     [["a", "b"], ["b", "c"]],
     [2.0, 3.0],

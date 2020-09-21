@@ -1,5 +1,5 @@
-# Time:  O((m * n) * 2^(m * n))
-# Space: O((m * n) * 2^(m * n))
+# Time:  O((m * n) * 2^(m * n))，total 2^(m*n) states, in each state try to flip each of m*n positions.
+# Space: O(2^(m * n)), queue to store total number of states.
 
 # 1284 weekly contest 166 12/7/2019
 
@@ -16,6 +16,10 @@
 
 import collections
 
+# 求到达目的状态的最少翻转次数，自然想到使用广度优先搜索。
+# 本题的状态表示是一个二维矩阵。如果将二维矩阵直接作为状态进行存储，会占用较多空间，并且不易判断其是否被搜索过：
+# Python中可以使用 set() 存储和判断二维矩阵，但在 Java和C++ 中实现起来复杂。因此考虑将二维矩阵与语言的内置类型进行映射。
+# 因为矩阵所有元素都是0或1，可把二维矩阵展开，看出一个二进制数，就得到了一种从二维矩阵到整数的映射方法。
 
 class Solution(object):
     def minFlips(self, mat): # USE THIS: bit representation is a better way to record state
@@ -31,7 +35,7 @@ class Solution(object):
         lookup = {start}
         while q:
             state, step = q.popleft()
-            if not state:
+            if state == 0:           # required destination, it can be any state.
                 return step
             for r in range(len(mat)):
                 for c in range(len(mat[0])):

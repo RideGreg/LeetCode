@@ -1,6 +1,7 @@
 # Time:  O((m * n) * (m * n)!)
 # Space: O((m * n) * (m * n)!)
 
+# 773
 # On a 2x3 board, there are 5 tiles represented by the integers 1 through 5,
 # and an empty square represented by 0.
 #
@@ -37,17 +38,54 @@
 # - board will be a 2 x 3 array as described above.
 # - board[i][j] will be a permutation of [0, 1, 2, 3, 4, 5].
 
-import heapq
-import itertools
+import collections, heapq, itertools
+from typing import List
 
-
-# A* Search Algorithm
 class Solution(object):
+    # BFS. Optimization can save position of 0 in queue (together with state and step)
+    # so don't need to search position of 0 in each iteration.
+    def slidingPuzzle(self, board: List[List[int]]) -> int:          # USE THIS: simpler
+        cur = [str(x) for x in board[0] + board[1]]
+        src = ''.join(cur)
+        dst = '123450'
+
+        q = collections.deque([(src, 0)]) # state, step
+        seen = {src}
+        while q:
+            state, step = q.popleft()
+            if state == dst:
+                return step
+
+            pos = state.index('0')  # this info can save to queue for optimization
+            x, y = divmod(pos, 3)
+            for nx, ny in [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]:
+                if 0<=nx<2 and 0<=ny<3:
+                    new_pos = nx*3 + ny
+                    arr = list(state)
+                    arr[pos], arr[new_pos] = arr[new_pos], arr[pos]
+                    new_state = ''.join(arr)
+                    if new_state not in seen:
+                        seen.add(new_state)
+                        q.append((new_state, step+1))
+        return -1
+
+
+# Time:  O((m * n) * (m * n)! * log((m * n)!))
+# Space: O((m * n) * (m * n)!)
+# A* Search Algorithm
+# 对于每个节点，定义一个预估代价 node.priority = node.depth + node.heuristic，其中 node.depth 为已经走过的距离，
+# node.heuristic 为预估的剩余距离。
+#
+# 对于熟悉 Dijkstra 算法 的读者来说，可以把 Dijkstra 算法 当成一种在 node.heuristic = 0 情况下 A* 搜索算法 的特例。
+# 在一些特定的图中，A* 搜索算法 是要比深度优先搜索更快的。
+#
+# 每个节点代表一种棋盘的状态。保持一个优先队列，根据 node.depth + node.heuristic 排序。预估的剩余距离为每个节点到终点
+# 的曼哈顿距离。对于初始状态的棋盘，有可能解开谜题，也有可能解不开谜题。为了加快算法，定义 targetWrong，
+# 如果进入这种状态是一定不能到达终点的，也就不用继续搜便下去了。这里其实是可以证明，除了最后两块其他块是一定能
+# 放到正确的位置上的。具体证明可以看这个链接 http://kevingong.com/Math/SixteenPuzzle.html.
+
+class Solution2(object):
     def slidingPuzzle(self, board):
-        """
-        :type board: List[List[int]]
-        :rtype: int
-        """
         def dot(p1, p2):
             return p1[0]*p2[0]+p1[1]*p2[1]
 
@@ -97,15 +135,7 @@ class Solution(object):
         return min_steps
 
 
-# Time:  O((m * n) * (m * n)! * log((m * n)!))
-# Space: O((m * n) * (m * n)!)
-# A* Search Algorithm
-class Solution2(object):
-    def slidingPuzzle(self, board):
-        """
-        :type board: List[List[int]]
-        :rtype: int
-        """
+    def slidingPuzzle2(self, board):
         def heuristic_estimate(board, R, C, expected):
             result = 0
             for i in xrange(R):
@@ -144,3 +174,9 @@ class Solution2(object):
                         lookup[new_board] = f
                         heapq.heappush(min_heap, (f, g+1, new_zero, new_board))
         return -1
+
+
+print(Solution().slidingPuzzle([[1,2,3],[4,0,5]])) # 1
+print(Solution().slidingPuzzle([[1,2,3],[5,4,0]])) # -1
+print(Solution().slidingPuzzle([[4,1,2],[5,0,3]])) # 5
+print(Solution().slidingPuzzle([[3,2,4],[1,5,0]])) # 14

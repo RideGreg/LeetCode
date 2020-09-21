@@ -1,6 +1,7 @@
 # Time:  O(nlogr)
 # Space: O(1)
 
+# 875
 # Koko loves to eat bananas.
 # There are N piles of bananas, the i-th pile has piles[i] bananas.
 # The guards have gone and will come back in H hours.
@@ -41,14 +42,16 @@ class Solution(object):
         :rtype: int
         """
         l, r = 1, max(piles)
-        while l <= r:
-            m = (l+r)/2
-            if sum( -(-p/m) for p in piles) <= H:
-                # or sum( (p-1)/m + 1 for p in piles) <= H:
+        while l < r:
+            m = (l+r)//2
+            if sum( (p-1)//m + 1 for p in piles) <= H:
+                # or sum( p//m if p % m == 0 else p//m + 1 for p in piles) <= H:
+                # or floor division round down to smaller negative number
+                # sum( -(-p//m) for p in piles) <= H:
                 r = m
             else:
                 l = m+1
         return l
 
 
-print(Solution().minEatingSpeed([3,6,7,11], 8))
+print(Solution().minEatingSpeed([3,6,7,11], 8)) # 4

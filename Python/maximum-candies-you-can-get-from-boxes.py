@@ -34,22 +34,22 @@ class Solution(object):
         q = collections.deque(initialBoxes)
         while q:
             changed = False
-            for _ in xrange(len(q)):
+            sz = len(q)
+            for _ in range(sz):
                 box = q.popleft()
                 if not status[box]:
                     q.append(box)
-                    continue
-                changed = True
-                result += candies[box]
-                for contained_key in keys[box]:
-                    status[contained_key] = 1
-                for contained_box in containedBoxes[box]:
-                    q.append(contained_box)
+                else:
+                    changed = True
+                    result += candies[box]
+                    for contained_key in keys[box]:
+                        status[contained_key] = 1
+                    q.extend(containedBoxes[box])
             if not changed:
                 break
         return result
 
-    def maxCandies_ming(self, status: List[int], candies: List[int], keys: List[List[int]], containedBoxes: List[List[int]], initialBoxes: List[int]) -> int:
+    def maxCandies_ming(self, status, candies, keys, containedBoxes, initialBoxes):
         ans, cur, cont = 0, initialBoxes, True
         while cont:
             cont = False

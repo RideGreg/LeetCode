@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(1)
 
+# 646
 # You are given n pairs of numbers.
 # In every pair, the first number is always smaller than the second number.
 #
@@ -18,15 +19,31 @@
 # The number of given pairs will be in the range [1, 1000].
 
 class Solution(object):
+    # Greedy: among all num-pair can put in front of current num-pair,
+    # choose the one with smallest end number.
     def findLongestChain(self, pairs):
         """
         :type pairs: List[List[int]]
         :rtype: int
         """
-        pairs.sort(key=lambda x: x[1])
-        cnt, i = 0, 0
-        for j in xrange(len(pairs)):
-            if j == 0 or pairs[i][1] < pairs[j][0]:
-                cnt += 1
-                i = j
-        return cnt
+        ans, last = 0, float('-inf')
+        for b, e in sorted(pairs, key=lambda x: x[1]):
+            if last < b:
+                ans += 1
+                last = e
+        return ans
+
+
+    # DP O(n^2)
+    def findLongestChain_TLE(self, pairs):
+        pairs.sort()
+        dp = [1] * len(pairs)
+
+        for j in range(len(pairs)):
+            for i in range(j):
+                if pairs[i][1] < pairs[j][0]:
+                    dp[j] = max(dp[j], dp[i] + 1)
+
+        return max(dp)
+
+print(Solution().findLongestChain([[1,2], [2,3], [3,4]])) # 2

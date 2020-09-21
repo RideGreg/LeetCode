@@ -2,6 +2,7 @@
 #                     between each 2 calls, we reduce the size of possible candidates.
 # Space: O(n^2), H (2D array)
 
+# 843
 # This problem is an interactive problem new to the LeetCode platform.
 #
 # We are given a word list of unique words, each word is 6 letters long,
@@ -74,6 +75,7 @@ class Master(object):
 
 import collections
 import itertools
+from typing import List
 
 try:
     xrange          # Python 2
@@ -82,7 +84,7 @@ except NameError:
 
 class Solution(object):
     def findSecretWord(self, wordlist, master):  # USE THIS: use Counter instead of append and calculate list len
-        def solve(possible):
+        def solve(possible: List[int]) -> int: # return # of matched chars
             if len(possible) < 2: return possible[0]
 
             bestMaxGroupLen, bestGuess = len(possible), None
@@ -94,16 +96,16 @@ class Solution(object):
             return bestGuess
 
         n = len(wordlist)
-        H = [[sum(a == b for a, b in itertools.izip(wordlist[i], wordlist[j]))
+        H = [[sum(a == b for a, b in zip(wordlist[i], wordlist[j]))
                   for j in xrange(n)]
                   for i in xrange(n)]
         possible = range(n)  # init
         while possible:
-            best = solve(possible)
-            matches = master.guess(wordlist[best])  # KENG: write as master.guess(best)
-            if matches == len(wordlist[0]): return
-
-            possible = [j for j in possible if H[best][j] == matches] # reduce scope. KENG: easy to write for j in xrange(n)
+            bestId = solve(possible)
+            matches = master.guess(wordlist[bestId])  # KENG: write as master.guess(best)
+            if matches == len(wordlist[0]):
+                return
+            possible = [j for j in possible if H[bestId][j] == matches] # reduce scope. KENG: easy to write for j in xrange(n)
 
 
 class Solution1(object):
@@ -195,9 +197,10 @@ class Solution_kamyu(object):
             possible = [j for j in possible if sum(a == b for a, b in itertools.izip(wordlist[guess], wordlist[j])) == n]
 
 
-
+import random
 wordlist = ["acckzz","ccbazz","eiowzz","abcczz"]
-master = Master(wordlist, wordlist[0])
+secret = wordlist[random.randint(0, len(wordlist)-1)]
+master = Master(wordlist, secret)
 print(Solution().findSecretWord(wordlist, master))
 # H is
 # 6 3 2 4

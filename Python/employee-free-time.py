@@ -1,5 +1,5 @@
-# Time:  O(m * logn), m is total number of schedule, n is the number of employees, m >= n
-# Space: O(n)
+# Time:  O(n * logm), n is total number of schedule, m is the number of employees, n >= m
+# Space: O(m)
 
 # 759
 # We are given a list schedule of employees, which represents the working time for each employee.
@@ -36,10 +36,12 @@
 
 import heapq
 
-# insert interval: O(n^2)
+# insert interval: O(n)
 # merge interval: sort all intervals O(nlogn)
 
 class Solution(object):
+    # This solution time O(nlogm) better than solution 2 O(nlogn), because each employee's intervals
+    # are sorted, we don't need to sort all intervals.
     def employeeFreeTime(self, schedule):
         """
         :type schedule: List[List[Interval]]
