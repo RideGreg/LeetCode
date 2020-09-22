@@ -87,11 +87,11 @@ private:
     bool check(const vector<vector<int> *>& arrays, int num, int target) {
         int res = 0;
         for (const auto array : arrays) {
-            if (!array->empty()) {
-                res += distance(upper_bound(array->cbegin(), array->cend(), num),
-                                array->cend());
+            if (!array->empty()) {  // count the number of values which are less or equal to num
+                res += distance(array->cbegin(),
+                                upper_bound(array->cbegin(), array->cend(), num));
             }
         }
-        return res < target;
+        return res >= target;
     }
 };
