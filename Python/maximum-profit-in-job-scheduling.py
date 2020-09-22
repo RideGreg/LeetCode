@@ -18,14 +18,19 @@ import bisect
 class Solution(object):
     # compare to 646. Maximum Length of Pair Chain.
     # For Unweighted Interval Scheduling, we use greedy algorithm. First sort by finish time
-    # (ascending order) then decide whether to fit the next interval in based on its start time.
+    # (ascending order) then decide whether to fit the next interval in based on its start time:
+    # EITHER EXTEND OR SKIP the next interval.
     # See the prove here http://www.cs.cornell.edu/courses/cs482/2007su/ahead.pdf.
 
-    # But Greedy algorithm can fail spectacularly if arbitrary weights are allowed. So need DP.
+    # But Greedy algorithm can fail if arbitrary weights are allowed, because longest interval
+    # chain not necessarily have biggest profit. So we cannot just keep the smallest end time,
+    # it is worth to record larger end time if it produces more profit: need DP to record info
+    # from multiple intervals.
     # Greedy does local optimization and DP does global optimization.
+
     # For this problem we still first sort by finish time (ascending order) then use DP to
     # decide whether it is profitable to put in the next interval based on its value.
-    # Use bisect to locate the maximum possible profit.
+    # Use bisect to locate the maximum previous profit can get before the current interval.
     def jobScheduling(self, startTime, endTime, profit):
         """
         :type startTime: List[int]
@@ -35,18 +40,21 @@ class Solution(object):
         """
         import operator
         jobs = sorted(zip(startTime, endTime, profit), key=lambda v: v[1])
-        # dp (time, profit) means that within the first 'time', we make at most 'profit' money.
+        # dp (end, profit) means that within the 'end' time, we make at most 'profit' money.
+        # In dp sequence: both 'end' and 'profit' are mono increasing.
         dp = [(0, 0)]
         for s, e, p in jobs:
             # bisect in the dp to find the largest profit we can make before start time s.
-            # because items in dp has increasing profit, so the last item current start time can
-            # fit in will have largest profit.
+            # because items in dp has increasing profit, so the last item where current start time can
+            # fit in will have largest possible profit.
             i = bisect.bisect_right(dp, (s, float('inf')))
 
-            # if making more money, choose this job, add pair of [e, newProfit] to end of dp
+            # if making less/equal money, don't append [e, newProfit] to end of dp. Because it is always
+            # inferior than the last item has smaller end time and bigger profit.
             if dp[i-1][1]+p > dp[-1][1]:
                 dp.append((e, dp[i-1][1]+p))
         return dp[-1][1]
+
 
     # dfs: O(2^n)
     def jobScheduling_TLE(self, startTime, endTime, profit):

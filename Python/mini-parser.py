@@ -98,7 +98,7 @@ class Solution(object):
             elif c == '[':
                 if cur is not None:
                     stk.append(cur)
-                cur = NestedInteger()
+                cur = NestedInteger()  # an empty list
             elif c in ',]':
                 if s[i-1].isdigit():
                     cur.add(NestedInteger(sign*num))

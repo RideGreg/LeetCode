@@ -29,13 +29,16 @@ class TreeNode(object):
 # Then we find we need 3 states for each node: camera at the node (state 2); when camera at the node, child node can be
 # either being monitored by itself/underneath (state 1), or not being monitored by itself/underneath but by this node (state 0)
 
-# [State 2] Placed camera: All the nodes below and including this node are covered, and there is a camera here (which may cover nodes above this node).
+# [State 2] Placed camera: All the nodes below and including this node are covered, and there is a camera
+# here (which may cover nodes above this node).
 # [State 1] Normal subtree: All the nodes below and including this node are covered, but there is no camera here.
 # [State 0] Strict subtree: All the nodes below this node are covered, but not this node.
 
-# Find the min # of cameras for 3 states on children node, then use them to calculate for parent node. The State Transfer function is:
+# Find the min # of cameras for 3 states on children node, then use them to calculate for parent node.
+# The State Transfer function is:
 # - To cover a strict subtree, the children of this node must be in state 1.
-# - To cover a normal subtree without placing a camera here, the children of this node must be in states 1 or 2, and at least 1 child must be in state 2.
+# - To cover a normal subtree without placing a camera here, the children of this node must be in
+# states 1 or 2, and at least 1 child must be in state 2.
 # - To cover the subtree when placing a camera here, the children can be in any state.
 
 class Solution(object):
@@ -76,29 +79,38 @@ class Solution(object):
         return result[0]
 
 # Greedy
-# Start with the deepest nodes and working our way up the tree, placing a camera only when necessary.
-# E.g. If a node has its children covered and has a parent, then don't place camera at this node because it is strictly
-# better to place the camera at this node's parent.
-#
-# Some obeservation is: never place camera at leaf nodes, leaf nodes' parents are better to minimize total cameras.
-#
-# The necessary condition is: 1. if a node has children that are not covered, then we must place a camera here.
-# 2. if a node has no parent and it is not covered, we must place a camera here.
+# Have to traverse all tree nodes; choose from top down or bottom up. WHY BOTTOM UP IS BETTER THAN TOP DOWN?
+# It is impossible to decide whether we should place a camera at root node; but easy to conclude that never
+# place camera at leaf nodes, leaf nodes' parents are better to minimize total cameras as no need to cover
+# leaf's children which are None.
 
-class Solution2(object):
+# Start with the deepest nodes and working our way up the tree, placing a camera only when necessary.
+# The *necessary* conditions are:
+# 1. if a node has children that are not covered, then we must place a camera here.
+# 2. if a node is not covered and has no parent, we must place a camera here.
+
+# In the contrast, some *unnecessary* conditions are:
+# 1. If a node has its children covered and has a parent, no need to place camera at this node because
+# it is strictly better to place the camera at this node's parent.
+# 2. Never place a camera at leaf nodes, left's parents is better places.
+
+class Solution2(object):              # USE THIS
     def minCameraCover(self, root):
         self.ans = 0
-        covered = {None}  # set literal is faster than set constructor, only works for non-empty set
-                          # https://stackoverflow.com/questions/36674083/why-is-it-possible-to-replace-sometimes-set-with
+        # Treat 'None' node as covered, so leaf node has its children covered.
+        # set literal is faster than set constructor, only works for non-empty set
+        # https://stackoverflow.com/questions/36674083/why-is-it-possible-to-replace-sometimes-set-with
+        covered = {None}
 
         def dfs(node, par):
             if node:
                 dfs(node.left, node)
                 dfs(node.right, node)
 
-                if (par is None and node not in covered or
-                    node.left not in covered or node.right not in covered):
-                    self.ans += 1
+                if node.left not in covered or \
+                    node.right not in covered or \
+                    (node not in covered and par is None):  # need this, otherwise wrong for 0->1->2->3 tree with all right nodes
+                    self.ans += 1          # put a camera at node, which covers node and par and node's children
                     covered.update({node, par, node.left, node.right})
 
         dfs(root, None)
@@ -113,5 +125,14 @@ r1 = TreeNode(0)
 r1.left = TreeNode(1)
 r1.left.left = TreeNode(2)
 r1.left.left.left = TreeNode(3)
-r1.left.left.left.right = TreeNode(4)
-print(Solution2().minCameraCover(r1)) # 2: place camera at node 1 and node 3
+r1.left.left.left.left = TreeNode(4)
+r1.left.left.left.left.left = TreeNode(5)
+print(Solution2().minCameraCover(r1)) # 2: place camera at node 1 and node 4
+
+# if we don't place camera when (node not in covered and par is None), will be a bug
+# where camera at node 2 covered 1/2/3, but node 0 is not covered.
+r1 = TreeNode(0)
+r1.right = TreeNode(1)
+r1.right.right = TreeNode(2)
+r1.right.right.right = TreeNode(3)
+print(Solution2().minCameraCover(r1)) # 2: place camera at node 0 and node 2

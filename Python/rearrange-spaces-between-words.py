@@ -1,9 +1,30 @@
 # Time:  O(n)
 # Space: O(1)
 
-# inplace solution
+# 1592
+# You are given a string text of words that are placed among some number of spaces. Each word 
+# consists of one or more lowercase English letters and are separated by at least one space. 
+# It's guaranteed that text contains at least one word.
+
+# Rearrange the spaces so that there is an equal number of spaces between every pair of 
+# adjacent words and that number is maximized. If you cannot redistribute all the spaces equally, 
+# place the extra spaces at the end, meaning the returned string should be the same length as text.
+
+# Return the string after rearranging the spaces.
+
 class Solution(object):
     def reorderSpaces(self, text):
+        spaces = text.count(' ')
+        words = text.split()
+        if len(words) > 1:
+            q, r = divmod(spaces, len(words) - 1)
+            return (' ' * q).join(words)  + ' ' * r
+        else:
+            return words[0] + ' ' * spaces
+
+
+    # inplace solution
+    def reorderSpaces_kamyu(self, text):
         """
         :type text: str
         :rtype: str
@@ -45,3 +66,6 @@ class Solution(object):
                 right -= equal_count  # keep equal_count spaces
             i -= 1
         return "".join(text)
+
+print(Solution().reorderSpaces("  this   is  a sentence   ")) # "this   is   a   sentence  "
+print(Solution().reorderSpaces("hello  world ")) # "hello   world"

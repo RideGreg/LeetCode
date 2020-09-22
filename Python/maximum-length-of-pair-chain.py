@@ -19,8 +19,19 @@
 # The number of given pairs will be in the range [1, 1000].
 
 class Solution(object):
-    # Greedy: among all num-pair can put in front of current num-pair,
-    # choose the one with smallest end number.
+    # Greedy: 
+    # 1. If two num-pair can chain, it is good and we increment chain length by 1; 
+
+    # 2. If they overlap, which one to keep? the one with smaller end, so we leave more
+    # space for future pairs. This also answers the question should we sort by begin or by end.
+    # If sorting by begin, if 2nd pair overlaps 1st pair, we still need to compare their
+    # ends to determine which one to keep -- not good as we sorting by end.
+
+    # 3. If we have a chain, we just need to keep the last item's end, and the info of all
+    # previous items no longer useful. Why? For next num-pair, if can extend, we extend
+    # the chain; if it overlaps the last item, no matter the new pair overlaps the last last
+    # item or not, it won't imporve the chain length AND it is always better to keep 
+    # the last item (skip the new one) so we have a smaller end. 
     def findLongestChain(self, pairs):
         """
         :type pairs: List[List[int]]

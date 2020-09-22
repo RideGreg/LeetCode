@@ -28,6 +28,11 @@
 import collections
 import heapq
 
+# Ituition: if two classes (t1, d1) and (t2, d2) have d1 < d2, then take (t1, d1) first
+# has a strict better chance to finish both classes before the end time, so SORT by end time d.
+
+# Heap: put all classes taken into a heap, whenever we need to drop a class due to end time
+# cannot meet, we drop the one taking longest duration.
 
 class Solution(object):
     def scheduleCourse(self, courses):
@@ -35,12 +40,14 @@ class Solution(object):
         :type courses: List[List[int]]
         :rtype: int
         """
-        courses.sort(key=lambda(t, end): end)
-        max_heap = []
-        now = 0
+        courses.sort(key=lambda x: x[1])
+        max_heap, now = [], 0
         for t, end in courses:
             now += t
             heapq.heappush(max_heap, -t)
             if now > end:
                 now += heapq.heappop(max_heap)
         return len(max_heap)
+
+print(Solution().scheduleCourse([[100, 200], [200, 1300], [1000, 1250], [2000, 3200]]))
+# 3
