@@ -74,6 +74,7 @@
 
 import collections
 import itertools
+import operator
 
 try:
     xrange          # Python 2
