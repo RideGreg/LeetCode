@@ -50,7 +50,7 @@ class Solution(object): # dont use this: too fancy, prefer simpleness and easy t
             elif s[i] == '(':
                 operators.append(s[i])
             elif s[i] == ')':
-                while operators and operators[-1] != '(':
+                while operators[-1] != '(':
                     compute(operands, operators)
                 operators.pop()
             elif s[i] in precedence:
