@@ -71,13 +71,12 @@ class Solution2(object):
             words -= left
             new_left = set()
             for word in left:
-                for new_word in [word[:i]+c+word[i+1:] for i in xrange(len(beginWord)) for c in ascii_lowercase]:
+                for new_word in (word[:i]+c+word[i+1:] for i in xrange(len(beginWord)) for c in ascii_lowercase):
                     if new_word not in words:
                         continue
                     if new_word in right: 
                         return ladder
-                    else: 
-                        new_left.add(new_word)
+                    new_left.add(new_word)
             left = new_left
             ladder += 1
             if len(left) > len(right): 
