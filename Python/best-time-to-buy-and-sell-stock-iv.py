@@ -29,14 +29,12 @@ class Solution(object):
         if k >= n // 2:
             return sum(max(0, prices[i] - prices[i - 1]) for i in range(1, n))
 
-        bal_buy = [float('-inf')] * k
-        bal_sell = [0] * k
+        bal_buy = [float('-inf')] * (k+1)
+        bal_sell = [0] * (k+1)
         for i in range(n):
             # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set bal_buy[0].
             # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
-            for j in range(min(k, i+1)):
-                bal_after_last_sell = bal_sell[j-1] if j > 0 else 0
-                bal_buy[j] = max(bal_buy[j], bal_after_last_sell - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+            for j in range(1, k+1):
+                bal_buy[j] = max(bal_buy[j], bal_sell[j-1] - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
                 bal_sell[j] = max(bal_sell[j], bal_buy[j] + prices[i])
-        return bal_sell[k-1]
-
+        return bal_sell[-1]
