@@ -32,7 +32,9 @@ class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
         hold1, hold2 = float('-inf'), float('-inf')
         cash1, cash2 = 0, 0
         for p in prices:
-            # to be sequential, hold[j] refers to cash[j-1], and cash[j] refers to hold[j]
+            # to be sequential, hold[j] refers to cash[j-1], and cash[j] refers to hold[j].
+            # because it is ok to buy then sell in the same day, so the 4 lines
+            # don't need to execute simultaneously (i.e. write in 1 line)
             hold1 = max(hold1, -p)
             cash1 = max(cash1, hold1+p)
             hold2 = max(hold2, cash1-p)
@@ -43,18 +45,18 @@ class Solution(object):  # USE THIS: CAN EXTEND to k transactions.
     # hold[i] is the balance after ith buy, cash[i] is the balance after ith sell.
     def maxProfit_extend(self, prices):
         n, k = len(prices), 2
-        hold = [float('-inf')] * k
-        cash = [0] * k
+        hold = [float('-inf')] * (k + 1) # entry at index 0 is easy to calculate boundary value
+        cash = [0] * (k + 1)
         for i in range(n):
             # because k is constant, won't benefit much by doing the following optimization:
             # optimization skip unnecessary large k. Need to be i+1, so when i is 0, still set hold[0].
             # kamyu solution uses min(k, i//2+1) + 1, but I think for day i, we can do i transactions.
-            for j in range(min(k, i+1)):
+            #for j in range(1, min(k, i+1)+1):
+            for j in range(1, k + 1):
                 # to be sequential, hold[j] refers to cash[j-1], and cash[j] refers to hold[j]
-                last_cash = cash[j-1] if j > 0 else 0
-                hold[j] = max(hold[j], last_cash - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
+                hold[j] = max(hold[j], cash[j-1] - prices[i]) # maximize max_buy means price at buy point needs to be as small as possible
                 cash[j] = max(cash[j], hold[j] + prices[i])
-        return cash[k-1]
+        return cash[-1]
 
 
 # Time:  O(n)

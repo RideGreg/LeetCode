@@ -24,9 +24,9 @@
 
 # Definition for singly-linked list.
 class ListNode(object):
-    def __init__(self, x):
+    def __init__(self, x = 0, next = None):
         self.val = x
-        self.next = None
+        self.next = next
     def __repr__(self):
         return "{}->{}".format(self.val, self.next)
 
@@ -53,12 +53,13 @@ class Solution(object):
                 carry += stk2.pop()
 
             carry, v = divmod(carry, 10)
-            cur = ListNode(v)
-            cur.next = head
+            cur = ListNode(v, head)
             head = cur
         return head
 
-    def addTwoNumbers_reverseTwice(self, l1, l2):
+
+    # result list can be built from back to front, not need final reverse.
+    def addTwoNumbers_reverseInput(self, l1, l2):
         def reverse(l):
             prev = None
             while l:
@@ -66,8 +67,20 @@ class Solution(object):
             return prev
 
         l1r, l2r = reverse(l1), reverse(l2)
-        l3r = self.addTwoNumbers(l1r, l2r)
-        return reverse(l3r)
+        head, c = None, 0
+        while l1r or l2r or c:
+            if l1r:
+                c += l1r.val
+                l1r = l1r.next
+            if l2r:
+                c += l2r.val
+                l2r = l2r.next
+            
+            c, v = divmod(c, 10)
+            cur = ListNode(v, head)
+            head = cur
+        return head
+
 
 l1 = ListNode(7)
 l1.next = ListNode(2)
