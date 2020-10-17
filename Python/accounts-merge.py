@@ -77,7 +77,7 @@ class Solution():
         pid, email2id = list(range(N)), {}
         for i, account in enumerate(accounts):
             for email in account[1:]:
-                if email in email2id and accounts[email2id[email]][0] == accounts[i][0]:
+                if email in email2id:
                     # duplicate email triggers union
                     union(i, email2id[email])
                 else:
@@ -95,7 +95,7 @@ class Solution():
 
 # DFS 如果两个电子邮件出现在同一个帐户中，则在它们之间连一条边。那么问题归结为找到这个图的连接组件（每个连通子图算一个组件）。
 # 具体算法：对于每个帐户，从第一个电子邮件到每个电子邮件画一条边。然后使用深度优先搜索合并相同的账户。
-class Solution2(object):
+class Solution(object):
     def accountsMerge(self, accounts):
         em_to_name = {}
         graph = collections.defaultdict(set)
@@ -104,7 +104,7 @@ class Solution2(object):
             for email in acc[1:]:
                 em_to_name[email] = name
                 graph[acc[1]].add(email) # KENG: 要连一条边指向自身，不然不会出现在graph中
-                graph[email].add(acc[1])
+                #graph[email].add(acc[1])
 
         seen, ans = set(), []
         for email in graph:
@@ -123,7 +123,7 @@ class Solution2(object):
         return ans
 
 
-print(Solution2().accountsMerge([
+print(Solution().accountsMerge([
     ["John", "johnsmith@mail.com", "john00@mail.com"],
     ["John", "johnnybravo@mail.com"],
     ["John", "johnsmith@mail.com", "john_newyork@mail.com"],

@@ -1,6 +1,9 @@
 # Time:  O(|V| + |E|)
 # Space: O(|V|)
 
+# 1242
+# Same as LC 1236, but implement a Multi-threaded web crawler.
+
 import threading
 import Queue
 

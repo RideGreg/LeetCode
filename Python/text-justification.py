@@ -64,8 +64,28 @@ class Solution(object):
         res.append(connect(begin, len(words), length, True))
         return res
 
+    # similar question: Lintcode contest #28 10/15/2020
+    def prettyPrint(self, text, width):
+        res = ['*' * (width + 2)]
+        for sentence in text:
+            begin = length = 0
+            for i in range(len(sentence)):
+                if length + len(sentence[i]) + i - begin > width:
+                    row = '*' + ' '.join(sentence[begin:i]) \
+                          + ' ' * (width - length - (i - begin - 1)) + '*'
+                    res.append(row)
+                    begin, length = i, 0
+                length += len(sentence[i])
+
+            row = '*' + ' '.join(sentence[begin:len(sentence)]) \
+                  + ' ' * (width - length - (len(sentence) - begin - 1)) + '*'
+            res.append(row)
+        res.append('*' * (width + 2))
+        return res
 
 print(Solution().fullJustify(["This", "is", "an", "example", "of", "text", "just."], 16))
 # ['This    is    an',
 #  'example  of text',
 #  'just aa.        ']
+
+print(Solution().prettyPrint([["hello","world"],["I","love","cats","and","dogs"]], 12))

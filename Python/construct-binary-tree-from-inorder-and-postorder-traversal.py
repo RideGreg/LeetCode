@@ -28,7 +28,7 @@ class Solution:
 
             node = TreeNode(v)
             node.left = build(pb, ib, leftlen)
-            node.right = build(pb + leftlen, ib + leftlen + 1, leng - 1 - leftlen)
+            node.right = build(pb + leftlen, idx + 1, leng - 1 - leftlen)
             return node
 
         lookup = {v: k for k, v in enumerate(inorder)}

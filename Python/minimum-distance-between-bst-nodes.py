@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(h)
 
+# 783
 # Given a Binary Search Tree (BST) with the root node root,
 # return the minimum difference between the values of any two different nodes in the tree.
 #
@@ -39,16 +40,31 @@ class Solution(object):
         :type root: TreeNode
         :rtype: int
         """
-        def dfs(node):
-            if not node:
-                return
-            dfs(node.left)
-            self.result = min(self.result, node.val-self.prev)
-            self.prev = node.val
-            dfs(node.right)
+        stk, prev, ans = [(root, False)], float('-inf'), float('inf')
+        while stk:
+            node, visited = stk.pop()
+            if node:
+                if visited:
+                    ans = min(ans, node.val - prev)
+                    prev = node.val
+                else:
+                    stk.append((node.right, False))
+                    stk.append((node, True))
+                    stk.append((node.left, False))
+        return ans
+
+
+    # recursion
+    def getMinimumDifference2(self, root): # use global variable
+        def inorder(node):
+            if node:
+                inorder(node.left)
+                self.result = min(self.result, node.val-self.prev)
+                self.prev = node.val
+                inorder(node.right)
 
         self.prev = float('-inf')
         self.result = float('inf')
-        dfs(root)
+        inorder(root)
         return self.result
 

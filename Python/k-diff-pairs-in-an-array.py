@@ -1,10 +1,7 @@
 # Time:  O(n)
 # Space: O(n)
 
-# Total Accepted: 5671
-# Total Submissions: 20941
-# Difficulty: Easy
-# Contributors: murali.kf370
+# 532
 # Given an array of integers and an integer k,
 # you need to find the number of unique k-diff pairs in the array.
 # Here a k-diff pair is defined as an integer pair (i, j),
@@ -25,22 +22,39 @@
 # Explanation: There is one 0-diff pair in the array, (1, 1).
 # Note:
 # The pairs (i, j) and (j, i) count as the same pair.
-# The length of the array won't exceed 10,000.
-# All the integers in the given input belong to the range: [-1e7, 1e7].
+# 1 <= nums.length <= 104
+# -107 <= nums[i] <= 107
+# 0 <= k <= 107
 
+import collections
 class Solution(object):
+    # Use set since there may be duplicates: suppose 2 valid pairs (1,3) (3,5):
+    # 'result' set only stores the smaller one, 'seen' set for fast lookup of pairs.
     def findPairs(self, nums, k):
         """
         :type nums: List[int]
         :type k: int
         :rtype: int
         """
-        if k < 0: return 0
-        result, lookup = set(), set()
+        if k < 0: return 0 # question says k is absolute difference
+        result, seen = set(), set()
         for num in nums:
-            if num-k in lookup:
-                result.add(num-k)
-            if num+k in lookup:
-                result.add(num)
-            lookup.add(num)
+            for cand in (num-k, num+k):
+                if cand in seen:
+                    result.add(min(num, cand))
+            seen.add(num)
         return len(result)
+
+
+    # get Counter first, then count.
+    def findPairs2(self, nums, k):
+        cnt = collections.Counter(nums)
+        if k == 0:
+            return sum(x > 1 for x in cnt.values())
+        else:
+            return sum(x+k in cnt for x in cnt.keys())
+
+
+print((Solution().findPairs([3,1,4,1,5], 2))) # 2
+print((Solution().findPairs([1,3,1,5,4], 0))) # 1
+print((Solution().findPairs([1,2,4,4,3,3,0,9,2,3], 3))) # 2

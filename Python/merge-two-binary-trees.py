@@ -38,24 +38,27 @@
 #         self.right = None
 
 class Solution(object):
+    # merge into the first tree and return that tree
     def mergeTrees(self, t1, t2): # pretty and clean, save a lot steps upon empty subtree
         """
         :type t1: TreeNode
         :type t2: TreeNode
         :rtype: TreeNode
         """
-        if t1 is None:
-            return t2
-        if t2 is None:
+        if t1 and t2:
+            t1.val += t2.val
+            t1.left = self.mergeTrees(t1.left, t2.left)
+            t1.right = self.mergeTrees(t1.right, t2.right)
             return t1
-        t1.val += t2.val
-        t1.left = self.mergeTrees(t1.left, t2.left)
-        t1.right = self.mergeTrees(t1.right, t2.right)
-        return t1
+        else:
+            return t1 or t2
 
+
+    # if don't allow to modify input, construct a new tree
     def mergeTrees_ming(self, t1, t2): # con: construct a new tree, iterate every nodes
         if not t1 and not t2:
             return None
+
         v = t1.val if t1 else 0
         v += t2.val if t2 else 0
         t = TreeNode(v)

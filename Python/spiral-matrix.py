@@ -17,7 +17,25 @@
 class Solution:
     # @param matrix, a list of lists of integers
     # @return a list of integers
-    def spiralOrder(self, matrix):   #  USE THIS: OUT TO INNER LAYERS
+    def spiralOrder_coord(self, matrix):  # USE THIS: get the next coordinates
+        if not matrix: return []
+        m, n, ans = len(matrix), len(matrix[0]), []
+        dirs, k, i, j = [[0,1],[1,0],[0,-1],[-1,0]], 0, 0, 0
+        for _ in xrange(m*n):
+            ans.append(matrix[i][j])
+            matrix[i][j] = '#'
+
+            # get correct coords for next cell
+            ni, nj = i+dirs[k][0], j+dirs[k][1]
+            if 0<=ni<m and 0<=nj<n and matrix[ni][nj]!='#':
+                i, j = ni, nj
+            else:  # out of boundary
+                k = (k+1) % 4
+                i, j = i+dirs[k][0], j+dirs[k][1]
+        return ans
+
+
+    def spiralOrder2(self, matrix):   # need careful boundary condition: FROM OUT TO INNER LAYERS
         if not matrix: return []
         ans = []
         t, b, l, r = 0, len(matrix)-1, 0, len(matrix[0])-1
@@ -46,22 +64,6 @@ class Solution:
             for row in range(b, t, -1):
                 ans.append(matrix[row][l])
             t, b, l, r = t+1, b-1, l+1, r-1
-        return ans
-
-    def spiralOrder_coord(self, matrix):  # get the next coordinates
-        if not matrix: return []
-        m, n, ans = len(matrix), len(matrix[0]), []
-        dirs, k, i, j = [[0,1],[1,0],[0,-1],[-1,0]], 0, 0, 0
-        for _ in xrange(m*n):
-            ans.append(matrix[i][j])
-            matrix[i][j] = '#'
-
-            ni, nj = i+dirs[k][0], j+dirs[k][1]
-            if 0<=ni<m and 0<=nj<n and matrix[ni][nj]!='#':
-                i, j = ni, nj
-            else:  # out of boundary
-                k = (k+1) % 4
-                i, j = i+dirs[k][0], j+dirs[k][1]
         return ans
 
 

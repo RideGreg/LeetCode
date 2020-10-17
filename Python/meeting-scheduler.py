@@ -2,8 +2,8 @@
 # Space: O(n)
 
 # 1229 biweekly contest 11 10/19/2019
-# Given the availability time slots arrays slots1 and slots2 of two people and a meeting duration duration,
-# return the earliest time slot that works for both of them and is of duration duration.
+# Given the availability time slots arrays 'slots1' and 'slots2' of two people and a meeting duration 'duration',
+# return the earliest time slot that works for both of them and is of duration 'duration'.
 #
 # If there is no common time slot that satisfies the requirements, return an empty array.
 #
@@ -21,36 +21,63 @@
 # 0 <= slots1[i][j], slots2[i][j] <= 10^9
 # 1 <= duration <= 10^6
 
+import heapq
 
-# Time:  O(nlogn)
-# Space: O(n)
-class Solution(object):
-    def minAvailableDuration(self, slots1, slots2, duration): # USE THIS
+
+# if input sorted, similar to LC 986 interval-list-intersection.py. Since input not sorted, need to put all entries in
+# heap to auto sort (still better than full sort); and we only need first answer, consider not to full sort (heapify) 
+class Solution(object): # USE THIS
+    def minAvailableDuration(self, slots1, slots2, duration): # Best time complexity: no need sort all
         """
         :type slots1: List[List[int]]
         :type slots2: List[List[int]]
         :type duration: int
         :rtype: List[int]
         """
-        slots1.sort() # sort on first item by default
-        slots2.sort()
-        x, y = 0, 0
-        while x < len(slots1) and y < len(slots2):
-            s1, e1 = slots1[x]
-            s2, e2 = slots2[y]
-            start, end = max(s1, s2), min(e1, e2)
-            if duration <= end - start:
-                return [start, start+duration]
-
-            #if s1 < s2 or (s1==s2 and e1 < e2): # KENG: this is WRONG!! [[10,100]], [[20,25], [30,50]], 10
-            if e1 < e2:
-                x += 1
-            else:
-                y += 1
+        min_heap = list(filter(lambda slot: slot[1] - slot[0] >= duration, slots1 + slots2))  # O(n)
+        heapq.heapify(min_heap)    # Transform list x into a heap, in-place, in linear time: O(n)
+        while len(min_heap) > 1:   # worst case O(n), best case O(1)
+            left = heapq.heappop(min_heap)   # Time: O(logn)
+            right = min_heap[0]
+            if left[1]-right[0] >= duration:
+                return [right[0], right[0]+duration]
         return []
 
-    # divide start and end makes the solution complext, just for a new idea
-    def minAvailableDuration_awice(self, slots1, slots2, duration):
+
+# Time:  O(nlogn), n is len(slots1) + len(slots2)
+# Space: O(1)
+class Solution2(object):
+    def minAvailableDuration(self, slots1, slots2, duration): # ALSO GOOD: line sweep
+        """
+        :type slots1: List[List[int]]
+        :type slots2: List[List[int]]
+        :type duration: int
+        :rtype: List[int]
+        """
+        slots1.sort() # sort on first item by default, O(nlogn)
+        slots2.sort()
+        i = j = 0
+        while i < len(slots1) and j < len(slots2):
+            left = max(slots1[i][0], slots2[j][0])
+            right = min(slots1[i][1], slots2[j][1])
+            if left+duration <= right:
+                return [left, left+duration]
+
+            #if s1 < s2 or (s1==s2 and e1 < e2): # KENG: should discard small endTime, not small beginTime!! [[10,100]], [[20,25], [30,50]], 10
+            # in both the following 2 cases, should discard period #2 which has smaller endTime
+            # ------1----------
+            #  -2-  ----3-----
+
+            #   ------1---------
+            #  -2-  ----3-----
+            if slots1[i][1] < slots2[j][1]:
+                i += 1
+            else:
+                j += 1
+        return []
+
+    # sort both slots together, code relatively shorter
+    def minAvailableDuration_awice(self, slots1, slots2, duration):  # ALSO GOOD
         events = []
         OPEN, CLOSE = 0, 1
         for a, b in slots1:
@@ -60,7 +87,7 @@ class Solution(object):
             events.append((a, OPEN))
             events.append((b, CLOSE))
 
-        events.sort()
+        events.sort() # O(nlogn)
         prev = events[0][0]
         active = 0
         for x, cmd in events:
@@ -73,25 +100,6 @@ class Solution(object):
                 active -= 1
 
             prev = x
-        return []
-
-import heapq
-
-class Solution2(object):
-    def minAvailableDuration(self, slots1, slots2, duration):
-        """
-        :type slots1: List[List[int]]
-        :type slots2: List[List[int]]
-        :type duration: int
-        :rtype: List[int]
-        """
-        min_heap = list(filter(lambda slot: slot[1] - slot[0] >= duration, slots1 + slots2))
-        heapq.heapify(min_heap)  # Time: O(n)
-        while len(min_heap) > 1:
-            left = heapq.heappop(min_heap)  # Time: O(logn)
-            right = min_heap[0]
-            if left[1]-right[0] >= duration:
-                return [right[0], right[0]+duration]
         return []
 
 

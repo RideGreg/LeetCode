@@ -22,18 +22,20 @@ class Solution:
             ans = max(ans, end-start+1)
         return ans
 
-    def lengthOfLongestSubstring2(self, s): # alternative: HashMap stores index of previous occurrence
-        lookup, ans = {}, 0
-        start = 0
-        for end, v in enumerate(s):
-            if v in lookup and lookup[v] >= start: # Python3 TypeError if comparing None to int
-                start = lookup[v] + 1
-            ''' OR
-            if v in lookup:
-            	start = max(start, lookup[v]+1)
-            '''
-            lookup[v] = end
-            ans = max(ans, end - start + 1)
-        return ans
+
+    # this solution is easy to make mistake, use Hash Table to store the last position of a char
+    # rather than to store the times a char appears
+    def lengthOfLongestSubstring2(self, s: str) -> int:
+        start, res, c_dict = -1, 0, {}
+        for i, c in enumerate(s):
+            if c in c_dict and c_dict[c] > start:  # 字符c在字典中 且 上次出现的下标大于当前长度的起始下标
+                start = c_dict[c]
+                c_dict[c] = i
+            else:
+                c_dict[c] = i
+                res = max(res, i-start)
+        return res
+
+
 
 print(Solution().lengthOfLongestSubstring3("abcabcbb")) # 3

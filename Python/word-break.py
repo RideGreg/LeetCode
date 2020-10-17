@@ -20,15 +20,15 @@ class Solution(object):
         :type wordDict: Set[str]
         :rtype: bool
         """
-        if not wordDict: return []
+        if not wordDict: return False
         n, dset = len(s), set(wordDict)
         maxLen = max(len(w) for w in dset)
 
         dp = [False] * (n+1)
         dp[0] = True
         for j in range(1, n + 1):
-            dp[j] = any(dp[i] and s[i:j] in dset \
-                        for i in range(j-1, max(0, j - maxlen) - 1, -1))
+            dp[j] = any(dp[j-l] and s[j-l:j] in dset \
+                        for l in range(1, max(maxLen, j)+1))
         return dp[n]
 
 
@@ -43,5 +43,5 @@ class Solution(object):
                     dp[i][j] = any(dp[i][k] and dp[k + 1][j] for k in range(i, j))
         return dp[0][-1]
 
-if __name__ == "__main__":
-    print Solution().wordBreak("leetcode", ["leet", "code"])
+print(Solution().wordBreak("leetcode", ["leet", "code"])) # True
+print(Solution().wordBreak("catsandog", ["cats", "dog", "sand", "and", "cat"])) # False

@@ -19,22 +19,46 @@ class ListNode:
             return "{} -> {}".format(self.val, repr(self.next))
 
 class Solution(object):
-    def rotateRight(self, head, k):
+    def rotateRight(self, head, k): # USE THIS: fast+slow pointers
         """
         :type head: ListNode
         :type k: int
         :rtype: ListNode
         """
+        if not head: return None
+        cur, sz = head, 0
+        while cur:
+            cur = cur.next
+            sz += 1
+
+        k %= sz
+        if k != 0:
+            slow, fast = head, head
+            for _ in range(k):
+                fast = fast.next
+
+            while fast.next:
+                fast = fast.next
+                slow = slow.next
+            fast.next = head
+            head = slow.next
+            slow.next = None
+        return head
+
+
+    def rotateRight2(self, head, k): # get and use tail
         if not head or not head.next:
             return head
 
-        n, cur = 1, head
-        while cur.next:
-            cur = cur.next
+        n, tail = 1, head
+        while tail.next:
+            tail = tail.next
             n += 1
-        cur.next = head
+        if k % n == 0:
+            return head
 
-        cur, tail = head, cur
+        tail.next = head
+        cur = head
         for _ in xrange(n - k % n):
             tail = cur
             cur = cur.next

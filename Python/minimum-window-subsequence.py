@@ -11,7 +11,7 @@
 # - The length of S will be in the range [1, 20000].
 # - The length of T will be in the range [1, 100].
 
-class Solution(object):
+class Solution2(object): # Don't use: too difficult
     # DP: 数组dp[i]存储当T[0 .. i]在S中找到子序列匹配时，对应的最大起点下标(注意是不断update到最大起点不是最小起点，所以子序列最短)
     # 初始令dp[0 .. len(T) - 1] = -1
     def minWindow(self, S, T):
@@ -59,21 +59,41 @@ class Solution(object):
     
 # Time:  O(s * t)
 # Space: O(s)
-class Solution2(object):
-    def minWindow(self, S, T):
-        """
-        :type S: str
-        :type T: str
-        :rtype: str
-        """
-        dp = [[None for _ in xrange(len(S))] for _ in xrange(2)]
+class Solution(object):
+    def minWindow(self, S: str, T: str) -> str:  # USE THIS: easy to understand/remember
+        dp = [[-1] * len(S) for _ in range(len(T))] # classical DP for two string inputs
+        # first letter in T
         for j, c in enumerate(S):
             if c == T[0]:
                 dp[0][j] = j
 
-        for i in xrange(1, len(T)):
+        # all other letters in T
+        for i in range(1, len(T)):
             prev = None
-            dp[i%2] = [None] * len(S)
+            for j, c in enumerate(S):
+                if prev is not None and c == T[i]: # cannot swap two if
+                    dp[i][j] = prev
+                if dp[i-1][j] != -1:
+                    prev = dp[i-1][j]
+
+        if all(x == -1 for x in dp[-1]):  # no subsequence can match
+            return ''
+        minStart, minEnd = 0, float('inf')
+        for j, start in enumerate(dp[-1]):
+            if start != -1 and j-start < minEnd-minStart:
+                minStart, minEnd = start, j
+        return S[minStart:minEnd+1]
+
+
+    def minWindow2(self, S, T): # same as above, but with space optimization
+        dp = [[-1 for _ in range(len(S))] for _ in range(2)]
+        for j, c in enumerate(S):
+            if c == T[0]:
+                dp[0][j] = j
+
+        for i in range(1, len(T)):
+            prev = None
+            dp[i%2] = [-1] * len(S)
             for j, c in enumerate(S):
                 if prev is not None and c == T[i]:
                     dp[i%2][j] = prev
@@ -82,13 +102,15 @@ class Solution2(object):
 
         start, end = 0, len(S)
         for j, i in enumerate(dp[(len(T)-1)%2]):
-            if i >= 0 and j-i < end-start:
+            if i != -1 and j-i < end-start:
                 start, end = i, j
         return S[start:end+1] if end < len(S) else ""
 
+print(Solution().minWindow("abczebzze", "bde")) # ""
 print(Solution().minWindow("abcdebdde", "bde")) # "bcde"
 print(Solution().minWindow("abcebdde", "bde")) # "bdde"
 print(Solution().minWindow("acccedde", "ccd")) # "cced"
+# solution 1
 # dp = [-1,-1,-1]
 #      [ 1,-1,-1]
 #      [ 2, 1,-1]

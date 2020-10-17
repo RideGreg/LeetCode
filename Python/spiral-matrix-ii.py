@@ -45,6 +45,7 @@ class Solution:
         dirs, k, i, j = [[0,1],[1,0],[0,-1],[-1,0]], 0, 0, 0
         for num in xrange(1, n*n+1):
             ans[i][j] = num
+
             ni, nj = i+dirs[k][0], j+dirs[k][1]
             if 0<=ni<n and 0<=nj<n and ans[ni][nj] is False:
                 i, j = ni, nj

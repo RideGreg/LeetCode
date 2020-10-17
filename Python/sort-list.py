@@ -1,6 +1,7 @@
 # Time:  O(nlogn)
 # Space: O(logn) for stack call
-#
+
+# 148
 # Sort a linked list in O(n log n) time using constant space complexity.
 #
 
@@ -22,7 +23,7 @@ class Solution:
             return head
 
         fast, slow, prev = head, head, None
-        while fast != None and fast.next != None:
+        while fast and fast.next:
             prev, fast, slow = slow, fast.next.next, slow.next
         prev.next = None
 
@@ -41,9 +42,9 @@ class Solution:
             else:
                 cur.next, cur, l2 = l2, l2, l2.next
 
-        if l1 != None:
+        if l1:
             cur.next = l1
-        if l2 != None:
+        if l2:
             cur.next = l2
 
         return dummy.next

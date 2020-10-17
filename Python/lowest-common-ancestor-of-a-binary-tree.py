@@ -33,9 +33,7 @@ class Solution:
     # @param {TreeNode} q
     # @return {TreeNode}
     def lowestCommonAncestor(self, root, p, q):
-        if not root:
-            return None
-        if root in (p, q): # 不可能走更低拿LCA
+        if root == None or root == p or root == q: # 不可能走更低拿LCA
             return root
 
         # 1. If the left and right subtrees contain p and q separately,

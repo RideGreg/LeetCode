@@ -1,6 +1,7 @@
 # Time:  O(n)
-# Space: O(k), k is size of the alphabet
+# Space: O(1), used space is size of the alphabet, which is constant
 
+ # 316
 # Given a string which contains only lowercase letters,
 # remove duplicate letters so that every letter appear
 # once and only once. You must make sure your result is
@@ -25,12 +26,14 @@ class Solution(object):
         """
         remaining = Counter(s)
 
-        in_stack, stk = set(), []
+        used, stk = set(), []
         for c in s:
-            if c not in in_stack:
+            if c not in used:
                 while stk and stk[-1] > c and remaining[stk[-1]]:
-                    in_stack.remove(stk.pop())
-                stk += c
-                in_stack.add(c)
+                    used.remove(stk.pop())
+                stk.append(c)
+                used.add(c)
             remaining[c] -= 1
         return "".join(stk)
+
+print(Solution().removeDuplicateLetters("cbacdcbc")) # "acdb"

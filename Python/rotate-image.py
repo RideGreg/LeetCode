@@ -21,6 +21,8 @@ class Solution:
         # 90 rotate => m[r][c] -> m[c][n-1-r]
         # we can do horizontal mirror + diagonal mirror
         # r,c -> n-1-r, c -> c, n-1-r
+        # OR diagonal mirror + vertical mirror: r,c -> c,r -> c, n-1-r, but vertical mirror 
+        # not easy to implement (not easy to get a column)
         for i in range(n//2):
             matrix[i], matrix[n-1-i] = matrix[n-1-i], matrix[i]
         for i in range(n-1):

@@ -106,3 +106,49 @@ board = [
 ]
 print(Solution().findWords(board, ["oath","pea","eat","rain","oathtao"])) # ["eat","oath"]
 print(Solution().findWords([['a', 'b', 'a']], ['ab'])) # ['ab'], not ['ab', 'ab']
+
+# Time complexity: avg O(m*n* 4^(k)), k is the average length of dictionary words
+# worst O(m*n* 4^(m*n))
+
+# Space O(k*n) Size of Trie ~= # of chars in dictionary, k is the avg length and n is # of words
+
+import collections
+class TrieNode(object):
+    def __init__(self):
+        self.is_string = False
+        self.children = collections.defaultdict(TrieNode)
+        
+        
+def search(matrix, words):
+    def dfs(x, y, node, cur):
+        if node.is_string:
+            ans.add(cur)
+            
+        for nx, ny in [(x-1, y), (x+1,y), (x, y-1), (x,y+1)]:
+            if 0<=nx<m and 0<=ny<n and (nx,ny) not in visited:
+                nc = matrix[nx][ny]
+                if nc in node.children:
+                    visited.add((nx,ny))
+                    dfs(nx, ny, node.children[nc], cur+nc)
+                    visited.discard((nx, ny))    
+        
+    
+    # build trie
+    root = TrieNode()
+    for word in words:
+        cur = root
+        for c in word:
+            cur = cur.children[c]
+        cur.is_string = True
+        
+    # traverse the matrix
+    ans = set()
+    m, n = len(matrix), len(matrix[0])
+    for i in range(m):
+        for j in range(n):
+            c = matrix[i][j]
+            visited = set()
+            if c in root.children:
+               visited.add((i,j))
+               dfs(i, j, root.children[c], c)
+    return list(ans)

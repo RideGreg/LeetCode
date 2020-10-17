@@ -1,6 +1,7 @@
 # Time:  O(h)
 # Space: O(1)
 
+# 701
 # Given the root node of a binary search tree (BST) and
 # a value to be inserted into the tree, insert the value into the BST.
 # Return the root node of the BST after the insertion. It is guaranteed
@@ -51,16 +52,38 @@ class Solution(object):
         :type val: int
         :rtype: TreeNode
         """
+        if not root: return TreeNode(val)
+
+        cur = root
+        while cur:
+            if val < cur.val:
+                if cur.left:
+                    cur = cur.left
+                else:
+                    cur.left = TreeNode(val)
+                    break
+            else:
+                if cur.right:
+                    cur = cur.right
+                else:
+                    cur.right = TreeNode(val)
+                    break
+        return root
+
+
+    # use a 'parent' pointer
+    def insertIntoBST2(self, root, val):
+        if not root: return TreeNode(val)
+
         curr, parent = root, None
         while curr:
             parent = curr
-            if val <= curr.val:
+            if val < curr.val:
                 curr = curr.left
             else:
                 curr = curr.right
-        if not parent:
-            root = TreeNode(val)
-        elif val <= parent.val:
+
+        if val < parent.val:
             parent.left = TreeNode(val)
         else:
             parent.right = TreeNode(val)
@@ -77,10 +100,10 @@ class Solution2(object):
         :rtype: TreeNode
         """
         if not root:
-            root = TreeNode(val)
+            return TreeNode(val)
+
+        if val < root.val:
+            root.left = self.insertIntoBST(root.left, val)
         else:
-            if val <= root.val:
-                root.left = self.insertIntoBST(root.left, val)
-            else:
-                root.right = self.insertIntoBST(root.right, val)
+            root.right = self.insertIntoBST(root.right, val)
         return root

@@ -75,43 +75,7 @@ class Solution:
             prefix[i] = j
         return prefix
 
-    # 1424
-    def findDiagonalOrder(self, nums):
-        import collections
-        diag = collections.defaultdict(list)
-        for i in reversed(range(len(nums))):
-            for j in range(len(nums[i])):
-                diag[i+j].append(nums[i][j])
-        ans = []
-        for k in sorted(diag):
-            ans.extend(diag[k])
-        return ans
-        ''' TLE
-        m = len(nums)
-        n = max(len(nums[i]) for i in range(m))
-        ans = []
-        for k in range(m+n-1):
-            for i in reversed(range(m)):
-                j = k - i
-                if 0<=j<len(nums[i]):
-                    ans.append(nums[i][j])
-        return ans'''
 
-    # 1425
-    def constrainedSubsetSum(self, nums, k):
-        import heapq, collections
-        dp = list(nums)
-        hp = collections.deque([])
-        m = float('-inf')
-        for i in range(1, len(nums)):
-            if len(hp) >= k:
-                mm = hp.popleft()
-                if mm == m:
-                    m = heapq.nlargest(1, hp)[0] if hp else float('-inf')
-            hp.append(dp[i-1])
-            m = max(m, dp[i-1])
-            dp[i] = dp[i] + max(0, m)
-        return max(dp)
 
     # 1353
     # Greedy: traverse days from 1 to max(endTime). For each day, maintain the endTime of all events

@@ -1,6 +1,7 @@
 # Time:  O(m * n)
 # Space: O(1)
 
+# 419
 # Given an 2D board, count how many different battleships are in it.
 # The battleships are represented with 'X's, empty slots are represented with
 # '.'s.
@@ -39,6 +40,14 @@ class Solution(object):
         :type board: List[List[str]]
         :rtype: int
         """
+        return sum(board[i][j] == 'X' and 
+                    (i==0 or board[i-1][j] != 'X') and 
+                    (j==0 or board[i][j-1] != 'X')
+                    for i in range(len(board))
+                    for j in range(len(board[0])))
+
+
+    def countBattleships2(self, board):
         if not board or not board[0]:
             return 0
 
@@ -49,3 +58,15 @@ class Solution(object):
                            (i == 0 or board[i - 1][j] != 'X') and
                            (j == 0 or board[i][j - 1] != 'X'))
         return cnt
+
+
+print(Solution().countBattleships([
+    'X..X',
+    '...X',
+    '...X'
+])) # 2
+print(Solution().countBattleships([
+    '...X',
+    '.XXX',
+    '...X'
+])) # invalid board won't be given as input.

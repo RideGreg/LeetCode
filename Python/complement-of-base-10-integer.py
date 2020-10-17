@@ -19,13 +19,13 @@ class Solution(object):
         if N == 0: return 1
         ans, power = 0, 0
         while N:
-            N, d = divmod(N, 2)
-            ans += (1 - d) * (2 ** power)
-            ''' OR USE BIT OP
             b = (N & 1) ^ 1    # "与"下来
             N >>= 1
             if b:
                 ans |= b << power  # "或"上去
+            '''
+            N, d = divmod(N, 2)
+            ans += (1 - d) * (2 ** power)
             '''
             power += 1
         return ans
@@ -44,11 +44,11 @@ class Solution(object):
 
 
     def bitwiseComplement_strConversion(self, N):
-        s = bin(N)[2:]
+        s = bin(N)[2:]              # bin(5) => '0b101'
         a = list(s)
         a = map(lambda c: 1-int(c), a)
         a = map(str, a)
-        return int(''.join(a), 2)
+        return int(''.join(a), 2)   # int('101', 2) => 5, int('101', 10) => 101
 
 print(Solution().bitwiseComplement(5)) # 2
 print(Solution().bitwiseComplement(7)) # 0

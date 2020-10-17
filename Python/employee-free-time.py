@@ -34,6 +34,13 @@
 #         self.start = s
 #         self.end = e
 
+
+# 与 LC 986 interval-list-intersections, LC 1229 meeting-scheduler 不同的是：
+# 1. 多个list，不是2个list -> 用two pointers很难做，必须用heap，但每个list自己是sorted，所以只放m entries not all entries； 
+# 2. 求不交叉interval，不是求intersections
+# 3. 如果pop out by startTime，必须记录last_end；如果pop out by endTime， 需要跟heap里剩下的最小startTime比，
+#    像LC 1229 meeting-scheduler那样，这题由于没有把所以entries一次全放入heap，不好copy LC 1229.
+
 import heapq
 
 # insert interval: O(n)
@@ -49,7 +56,7 @@ class Solution(object):
         """
         result = []
         # heap item (start, eid, idx_in_eid_schedule)
-        min_heap = [(emp[0][0], eid, 0) for eid, emp in enumerate(schedule)]
+        min_heap = [(times[0][0], eid, 0) for eid, times in enumerate(schedule)]
         heapq.heapify(min_heap)
         last_end = -1
         while min_heap:
@@ -57,6 +64,7 @@ class Solution(object):
             if 0 <= last_end < start:
                 result.append([last_end, start])
             last_end = max(last_end, schedule[eid][i][1])
+
             if i < len(schedule[eid]) - 1:
                 heapq.heappush(min_heap, (schedule[eid][i+1][0], eid, i+1))
         return result
@@ -74,6 +82,7 @@ class Solution(object):
             elif busyEmp == 0:
                 freeTimeStart = time
         return ans
+
 
 print(Solution().employeeFreeTime([[[1,2],[5,6]], [[1,3]], [[4,10]]])) # [[3,4]]
 print(Solution().employeeFreeTime([[[1,2],[5,6]], [[0,3]], [[4,10]]])) # [[3,4]]

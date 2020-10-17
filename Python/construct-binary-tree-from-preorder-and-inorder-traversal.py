@@ -22,10 +22,13 @@ class Solution:
     def buildTree(self, preorder, inorder): #USE THIS
         def build(preleft, inleft, length):
             if length <= 0: return None
-            idx = lookup[preorder[preleft]]
-            node = TreeNode(preorder[preleft])
-            node.left = build(preleft+1, inleft, idx-inleft)
-            node.right = build(preleft+idx-inleft+1, idx+1, length-(idx-inleft+1))
+            x = preorder[preleft]
+            idx = lookup[x]
+            leftLen = idx - inleft
+
+            node = TreeNode(x)
+            node.left = build(preleft+1, inleft, leftLen)
+            node.right = build(preleft+leftLen+1, idx+1, length-leftLen-1)
             return node
 
         lookup = {n: i for i, n in enumerate(inorder)}

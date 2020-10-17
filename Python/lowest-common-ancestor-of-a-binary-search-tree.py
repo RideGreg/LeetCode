@@ -1,6 +1,7 @@
 # Time:  O(n)
 # Space: O(1)
-#
+
+# 235
 # Given a binary search tree (BST), find the lowest common ancestor (LCA)
 # of two given nodes in the BST.
 #
@@ -31,10 +32,32 @@ class Solution:
     # @param {TreeNode} p
     # @param {TreeNode} q
     # @return {TreeNode}
-    def lowestCommonAncestor(self, root, p, q):
-        s, b = sorted([p.val, q.val])
+    def lowestCommonAncestor(self, root, p, q):  # USE THIS
+        while (root.val - p.val) * (root.val - q.val) > 0:
+            if root.val > p.val:
+                root = root.left
+            else:
+                root = root.right
+        # s <= root.val <= b.
+        return root
+
+
+    def lowestCommonAncestor_kamyu(self, root, p, q):
+        s, b = min(p.val, q.val), max(p.val, q.val)
         while not s <= root.val <= b:
             # Keep searching since root is outside of [s, b].
-            root = root.left if s <= root.val else root.right
+            if root.val > b:
+                root = root.left
+            else:
+                root = root.right
         # s <= root.val <= b.
+        return root
+
+
+    def lowestCommonAncestor_recursion(self, root, p, q):
+        if root.val > p.val and root.val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        elif root.val < p.val and root.val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        
         return root
