@@ -49,7 +49,6 @@ class Solution(object):
         return len(LIS_tail)
 
 
-
 # Range Maximum Query
 class SegmentTree(object):  # 0-based index
     def __init__(self, N,
@@ -132,8 +131,8 @@ class SegmentTree(object):  # 0-based index
 
 # Time:  O(nlogn)
 # Space: O(n)
-# optimized from Solution3
-class Solution2(object):
+# optimized from Solution4
+class Solution3(object):
     def lengthOfLIS(self, nums):
         """
         :type nums: List[int]
@@ -151,7 +150,7 @@ class Solution2(object):
 # Time:  O(n^2)
 # Space: O(n)
 # Traditional DP solution.
-class Solution3(object):
+class Solution4(object):
     def lengthOfLIS(self, nums):
         """
         :type nums: List[int]
