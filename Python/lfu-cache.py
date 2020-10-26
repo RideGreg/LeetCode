@@ -81,7 +81,6 @@ class LFUCache(object):
         self.__freq_to_nodes = collections.defaultdict(LinkedList)
         self.__key_to_node = {}
 
-
     def get(self, key):
         """
         :type key: int
@@ -92,7 +91,6 @@ class LFUCache(object):
         value = self.__key_to_node[key].val
         self.__update(key, value)
         return value
-
 
     def put(self, key, value):
         """
