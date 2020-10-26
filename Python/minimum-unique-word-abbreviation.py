@@ -1,5 +1,5 @@
-# Time:  O(n * 2^n)
-# Space: O(n)
+# Time:  O((d + n) * 2^n)
+# Space: O(d)
 
 # 411
 # A string such as "word" contains the following abbreviations:
@@ -82,8 +82,8 @@ class Solution(object):
         return bits_to_abbr(target, result)
     
 
-# Time:  O(n * 2^n)
-# Space: O(n)
+# Time:  O((d + n) * 2^n)
+# Space: O(d + n)
 class Solution2(object):
     def minAbbreviation(self, target, dictionary):
         """
