@@ -77,7 +77,7 @@ class LFUCache(object):
         """
         self.__capa = capacity
         self.__size = 0
-        self.__min_freq = 0
+        self.__min_freq = float("inf")
         self.__freq_to_nodes = collections.defaultdict(LinkedList)
         self.__key_to_node = {}
 
@@ -89,19 +89,9 @@ class LFUCache(object):
         """
         if key not in self.__key_to_node:
             return -1
-
-        old_node = self.__key_to_node[key]
-        self.__key_to_node[key] = ListNode(key, old_node.val, old_node.freq)
-        self.__freq_to_nodes[old_node.freq].delete(old_node)
-        if not self.__freq_to_nodes[self.__key_to_node[key].freq].head:
-            del self.__freq_to_nodes[self.__key_to_node[key].freq]
-            if self.__min_freq == self.__key_to_node[key].freq:
-                self.__min_freq += 1
-
-        self.__key_to_node[key].freq += 1
-        self.__freq_to_nodes[self.__key_to_node[key].freq].append(self.__key_to_node[key])
-
-        return self.__key_to_node[key].val
+        value = self.__key_to_node[key].val
+        self.__update(key, value)
+        return value
 
 
     def put(self, key, value):
@@ -113,21 +103,33 @@ class LFUCache(object):
         if self.__capa <= 0:
             return
 
-        if self.get(key) != -1:
-            self.__key_to_node[key].val = value   # node is shared by __key_to_node and __freq_to_nodes
-            return
-
-        if self.__size == self.__capa:
+        if key not in self.__key_to_node and self.__size == self.__capa:
             del self.__key_to_node[self.__freq_to_nodes[self.__min_freq].head.key]
             self.__freq_to_nodes[self.__min_freq].delete(self.__freq_to_nodes[self.__min_freq].head)
             if not self.__freq_to_nodes[self.__min_freq].head:
                 del self.__freq_to_nodes[self.__min_freq]
             self.__size -= 1
+        self.__update(key, value)
+        
+    def __update(self, key, value):
+        freq = 0
+        if key in self.__key_to_node:
+            old_node = self.__key_to_node[key]
+            freq = old_node.freq
+            self.__freq_to_nodes[freq].delete(old_node)
+            if not self.__freq_to_nodes[freq].head:
+                del self.__freq_to_nodes[freq]
+                if self.__min_freq == freq:
+                    self.__min_freq += 1
+            self.__size -= 1
 
-        self.__min_freq = 1     # a new key
-        self.__key_to_node[key] = ListNode(key, value, self.__min_freq)
-        self.__freq_to_nodes[self.__key_to_node[key].freq].append(self.__key_to_node[key])
+        freq += 1
+        self.__min_freq = min(self.__min_freq, freq)
+        self.__key_to_node[key] = ListNode(key, value, freq)   # node is shared by __key_to_node and __freq_to_nodes
+        self.__freq_to_nodes[freq].append(self.__key_to_node[key])
         self.__size += 1
+
+
 
 # Your LFUCache object will be instantiated and called as such:
 obj = LFUCache(3)
