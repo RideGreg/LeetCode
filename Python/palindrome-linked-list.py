@@ -16,15 +16,41 @@ class Solution:
     # @param {ListNode} head
     # @return {boolean}
 
-    # 避免使用 O(n)额外空间的方法就是改变输入!完成后应将链表恢复原样，因为使用该函数不应该更改链表结构。
+    # 避免使用 O(n)额外空间的方法就是改变输入! 这个solution reverse后半段
+    # 简易版：没有将链表复原
+    def isPalindrome(self, head: ListNode) -> bool:
+        if not head or not head.next:
+            return True
+
+        # found middle
+        fast = slow = head
+        pre = None
+        while fast and fast.next:
+            fast, pre, slow = fast.next.next, slow, slow.next
+
+        # revert second half
+        pre = None
+        while slow:
+            slow.next, pre, slow = pre, slow, slow.next
+
+        while head and pre:
+            if head.val != pre.val:
+                return False
+            head, pre = head.next, pre.next
+        return True
+
+
+    # 完整版：完成后应将链表恢复原样，因为使用该函数不应该更改链表结构。
     # 唯一缺点：并发环境下，函数运行时需要锁定其他线程或进程对链表的访问，因为在函数执执行过程中链表暂时断开。
-    def isPalindrome(self, head):
+    # 这个solution reverse前半段
+    def isPalindrome2(self, head):
         # Reverse the first half part of the list.
         pre, fast = None, head
         while fast and fast.next:
             fast = fast.next.next
             head.next, pre, head = pre, head, head.next
 
+        # FACT: second half is ALWAYS equal or longer than first half.
         # If the number of the nodes is odd,
         # set the head of the second half to the next of the median node.
         head2 = head.next if fast else head

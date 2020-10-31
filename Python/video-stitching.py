@@ -24,21 +24,37 @@ class Solution(object):
         :type T: int
         :rtype: int
         """
-        # curend 已有segment能cover到哪儿，maxend 记录引入新的segment能续到哪儿
-        ans, curend, maxend = 1, 0, 0
+        # ans 初始化为1而不是0，不然无法处理第一段就满足条件的情况，因为后面代码只有在出现断口才会increment ans
+        # curend 上一个segment能cover到哪儿，tmpend 当前遍历的新的segment能续到哪儿
+        # tmpend永远大于等于curend
+        ans, curend, tmpend = 1, 0, 0
         clips.sort()
         for left, right in clips:
-            if left > maxend:
-                break
-            elif left > curend:   # no longer covered by curend, has to introduce a new segment
-                curend = maxend
-                ans += 1
-            # if still less than curend, don't increment ans or update curend,
-            # only extend reach
-            maxend = max(maxend, right)
-            if maxend >= T:
+            if left > curend:   # no longer covered by curend, has to introduce a new segment
+                if left > tmpend:
+                    return -1
+                curend, ans = tmpend, ans + 1
+
+            # if still less than curend, don't update curend/ans, only extend reach
+            tmpend = max(tmpend, right)
+            if tmpend >= T:
                 return ans
         return -1
+
+    def videoStitching_wrong(self, clips: List[List[int]], T: int) -> int:
+        ans, curend, tmpend = 1, 0, 0
+        clips.sort()
+        for left, right in clips:
+            if left > curend:
+                if left > tmpend:
+                    return -1
+                curend, ans = tmpend, ans + 1
+
+            tmpend = max(tmpend, right)
+            if tmpend >= T:
+                break
+        return ans # only difference but wrong, final return can only be -1 in case all segments visited but cannot reach end.
+
 
     # O(max(N, T)), waste time if T >> N due to check all index in a segment
     def videoStitching_ming(self, clips: List[List[int]], T: int) -> int:
@@ -53,4 +69,8 @@ class Solution(object):
             s, e = e, max(reach.get(i, i) for i in range(s + 1, e + 1)) # check all segment, bad!!
         return -1
 
-print(Solution().videoStitching([[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]], 10))
+print(Solution().videoStitching([[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]], 10)) # 3
+print(Solution().videoStitching([[0,1],[1,2]], 5)) # -1
+print(Solution().videoStitching([
+    [0,1],[6,8],[0,2],[5,6],[0,4],[0,3],[6,7],[1,3],[4,7],[1,4],[2,5],[2,6],[3,4],[4,5],[5,7],[6,9]],
+9)) # 3

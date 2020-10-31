@@ -53,10 +53,12 @@ class Solution:
         dummy = curr = ListNode(0)
 
         while l1 and l2:
-            curr.next, curr, l1 = l1, l1, l1.next
-            curr.next, curr, l2 = l2, l2, l2.next
-
-        return dummy.next'''
+            curr.next = l1
+            curr, l1 = curr.next, l1.next
+            curr.next = l2
+            curr, l2 = curr.next, l2.next
+        dummy.next = None
+        del dummy'''
 
 if __name__ == "__main__":
     head = ListNode(1)

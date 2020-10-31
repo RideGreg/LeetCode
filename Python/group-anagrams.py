@@ -17,7 +17,7 @@ class Solution(object):
             for c in s:
                 cnt[ord(c)-ord('a')] += 1
             ans[tuple(cnt)].append(s)
-        return ans.values()
+        return list(ans.values())
 
     def groupAnagrams(self, strs):
         """
@@ -28,9 +28,8 @@ class Solution(object):
         for s in strs:
             sorted_str = ("").join(sorted(s))
             anagrams_map[sorted_str].append(s)
-        return anagrams_map.values()
+        return list(anagrams_map.values())
 
 
-if __name__ == "__main__":
-    result = Solution().groupAnagrams(["cat", "dog", "act", "mac"])
-    print result
+print(Solution().groupAnagrams(["cat", "dog", "act", "mac"]))
+# [['cat', 'act'], ['dog'], ['mac']]
