@@ -37,11 +37,19 @@ class Solution:
     #  Two Pointers: T:O(m+n) S:O(1)
     def getIntersectionNode(self, headA, headB): # USE THIS
         curA, curB = headA, headB
-        finishA = finishB = False
-        ans = None
+        while curA != curB:    # will meet at shared node or null node
+            curA = curA.next if curA else headB
+            curB = curB.next if curB else headA
+        return curA
 
-        # a->c->e -> b->e
-        # b->e -> a->c->e
+
+    def getIntersectionNode2(self, headA, headB): # same idea, but more verbose
+        curA, curB = headA, headB
+        finishA = finishB = False
+
+        # concatenate 2 linked lists. Will meet if they share the same node
+        # a->c->e->f --连上-> b->'e'->f
+        # b->e->f --连上-> a->c->'e'->f
         while curA and curB:
             if curA == curB:
                 return curA
@@ -62,7 +70,8 @@ class Solution:
             else:
                 break
 
-        return ans
+        return None
+
 
 
 d = ListNode(5)
