@@ -20,21 +20,26 @@
 from typing import List
 
 class Solution(object):
+    # iterate diamond neighbors from nearest to farest
     def allCellsDistOrder(self, R, C, r0, c0):
         def append(x, y):
             if 0<=x<R and 0<=y<C:
                 ans.append([x,y])
 
         ans = [[r0, c0]]
-        maxd = max(r0+c0, R-1-r0+c0, r0+C-1-c0, R-1-r0+C-1-c0)
+        # maxd is the distance from 4 corners
+        maxd = max(r0+c0,      # from top-left corner
+                   R-1-r0+c0,  # from bottom-left
+                   r0+C-1-c0,  # from top-right
+                   R-1-r0+C-1-c0)  # from bottom-right
+
         for d in range(1, maxd+1):
-            # dx is in [-d, d]
-            append(r0-d, c0)
-            for dx in range(-d+1, d):
-                dy = d - abs(dx)
-                append(r0+dx, c0+dy)
-                append(r0+dx, c0-dy)
-            append(r0+d, c0)
+            # append cells with distance (-d, 0) (-d+1, -1) (-d+1, 1) ... (d-1, -1) (d-1, 1) (d, 0)
+            for dr in range(-d, d+1):
+                dc = d - abs(dr)
+                append(r0+dr, c0+dc)
+                if dc > 0:
+                    append(r0+dr, c0-dc)
         return ans
 
     # bfs, need extra space for queue

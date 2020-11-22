@@ -12,6 +12,10 @@
 # You must do this in-place without making a copy of the array.
 # Minimize the total number of operations.
 
+try:
+    xrange
+except NameError:
+    xrange = range
 
 class Solution(object):
     def moveZeroes(self, nums):
@@ -22,7 +26,9 @@ class Solution(object):
         pos = 0
         for i in xrange(len(nums)):
             if nums[i]:
-                nums[i], nums[pos] = nums[pos], nums[i]
+                nums[pos], nums[i] = nums[i], nums[pos]
+                # wrong for nums = [1], cannot just set item being swapped to 0
+                #    nums[pos], nums[i] = nums[i], 0
                 pos += 1
 
     def moveZeroes2(self, nums):
@@ -30,6 +36,9 @@ class Solution(object):
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
+        # cmp not exist in Python3
+        # def cmp(a, b):
+        #     return (a > b) - (a < b)
         nums.sort(cmp=lambda a, b: 0 if b else -1)
 
 
@@ -49,7 +58,6 @@ class Solution2(object):
             nums[i] = 0
 
 
-if __name__ == '__main__':
-    s = Solution()
-    r = s.moveZeroes([0, 1, 0, 3, 12])
-    print r
+a = [0, 1, 0, 13, 12]
+Solution().moveZeroes2(a)
+print(a)

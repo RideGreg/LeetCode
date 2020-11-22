@@ -39,6 +39,21 @@ class Solution(object):
         else:
             return self.rangeSumBST(root.left, L, R)
 
+
+    # return wrong result 36 for testcase. Reason is we changed range (low or high) using root.val.
+    # Should add if low > high: return 0
+    def rangeSumBST_wrong(self, root, low, high):
+        if not root:
+            return 0
+
+        if low <= root.val <= high:
+            return root.val + self.rangeSumBST(root.left, low, root.val-1) + self.rangeSumBST(root.right, root.val+1, high)
+        elif root.val < low:
+            return self.rangeSumBST(root.right, root.val+1, high)
+        else:
+            return self.rangeSumBST(root.left, low, root.val-1)
+
+
     # iterative, work for both non-unique and unique valued BST. If unique-valued BST, can simplify <= to < in the last 2 if.
     def rangeSumBST_iterative(self, root, L, R):
         result = 0
@@ -53,3 +68,15 @@ class Solution(object):
                 if node.val <= R:
                     s.append(node.right)
         return result
+
+#        10
+#     5      15
+#       7  13
+#     6
+root = TreeNode(10)
+root.left, root.right = TreeNode(5), TreeNode(15)
+root.left.right = TreeNode(7)
+root.left.right.left = TreeNode(6)
+root.right.left = TreeNode(13)
+
+print(Solution().rangeSumBST(root, 6, 10)) # 23

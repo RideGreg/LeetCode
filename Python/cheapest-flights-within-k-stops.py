@@ -59,6 +59,27 @@ class Solution(object):
                     heapq.heappush(heap, (cost + w, nei, step + 1))
         return -1
 
+    # wrong: return 9 for 1st testcase. Each state must bre represented by (node, steps),
+    # otherwise lower steps path is missing.
+    def findCheapestPrice_wrong(self, n, flights, src, dst, K):
+        graph = [{} for _ in range(n)]
+        for u, v, w in flights:
+            graph[u][v] = w
+
+        best, pq = set(), [(0, src, 0)]
+        while pq:
+            p, node, stops = heapq.heappop(pq)
+            if node == dst:
+                return p
+
+            if node not in best and stops <= K:
+                best.add(node)
+
+                for nei, w in graph[node].items():
+                    if nei not in best:
+                        heapq.heappush(pq, (p + w, nei, stops + 1))
+        return -1
+
     # Dijkstra with list
     def findCheapestPrice2(self, n, flights, src, dst, K):
         graph = [{} for _ in range(n)]
@@ -109,5 +130,7 @@ class Solution(object):
                     heapq.heappush(min_heap, (result+w, v, k-1))
         return -1
 
+print(Solution().findCheapestPrice(5,
+    [[0,1,5],[1,2,5],[0,3,2],[3,1,2],[1,4,1],[4,2,1]], 0, 2, 2)) # 7
 print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500],[1,0,600]], 0, 2, 1)) # 200
 print(Solution().findCheapestPrice(3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 0)) # 500
