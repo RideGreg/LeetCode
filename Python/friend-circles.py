@@ -34,6 +34,11 @@
 # M[i][i] = 1 for all students.
 # If M[i][j] = 1, then M[j][i] = 1.
 
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 class Solution(object):
     def findCircleNum(self, M):
         """
@@ -43,31 +48,32 @@ class Solution(object):
 
         class UnionFind(object):
             def __init__(self, n):
-                self.set = range(n)
+                self.root = list(range(n))
                 self.count = n
 
-            def find_set(self, x):
-                if self.set[x] != x:
-                    self.set[x] = self.find_set(self.set[x])  # path compression.
-                return self.set[x]
+            def find(self, x):
+                if self.root[x] != x:
+                    self.root[x] = self.find(self.root[x])  # path compression.
+                return self.root[x]
 
-            def union_set(self, x, y):
-                x_root, y_root = map(self.find_set, (x, y))
+            def union(self, x, y):
+                x_root = self.find(x)
+                y_root = self.find(y)
                 if x_root != y_root:
-                    self.set[min(x_root, y_root)] = max(x_root, y_root)
+                    self.root[max(x_root, y_root)] = min(x_root, y_root)
                     self.count -= 1
 
         circles = UnionFind(len(M))
         for i in xrange(len(M)):
             for j in xrange(len(M)):
                 if M[i][j] and i != j:
-                    circles.union_set(i, j)
+                    circles.union(i, j)
         return circles.count
 
 class Solution_quick(object): # fastest, same logic as the above orig solution
     def findCircleNum(self, M):
         size = len(M)
-        pid = range(size)
+        pid = list(range(size))
 
         def find(x):
             if pid[x] != x:
@@ -121,14 +127,14 @@ import time
 t = time.time()
 for _ in xrange(10000):
     Solution().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
+print('{} sec'.format(time.time()-t))
 
 t = time.time()
 for _ in xrange(10000):
     Solution_quick().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
+print('{} sec'.format(time.time()-t))
 
 t = time.time()
 for _ in xrange(10000):
     Solution_ming().findCircleNum([[1,0,0,1],[0,1,1,0],[0,1,1,1],[1,0,1,1]])
-print '{} sec'.format(time.time()-t)
+print('{} sec'.format(time.time()-t))
