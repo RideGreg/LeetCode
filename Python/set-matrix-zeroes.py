@@ -42,23 +42,6 @@ class Solution:
             for i in range(R):
                 matrix[i][0] = 0
 
-    # Mark the non zeros elements needs change. zero elem should be kept to set other row/col
-    # Constant space, but bad time O(m*n*(m+n)) potentially set the row/col for every cell
-    def setZeroes_bruteForce(self, matrix):
-        R = len(matrix)
-        C = len(matrix[0])
-        for r in range(R):
-            for c in range(C):
-                if matrix[r][c] is 0: # cannot use == because 0==False is True
-                    for k in range(C):
-                        matrix[r][k] = False if matrix[r][k] is not 0 else 0
-                    for k in range(R):
-                        matrix[k][c] = False if matrix[k][c] is not 0 else 0
-        for r in range(R):
-            for c in range(C):
-                if matrix[r][c] is False:
-                    matrix[r][c] = 0
-
 
     # use m+n extra space to store the row/cod ids which should be zero
     def setZeroes_extraSpace(self, matrix):
@@ -85,5 +68,5 @@ if __name__ == "__main__":
              , [1, 1, 0, 1]
              , [1, 1, 1, 0]
              , [1, 1, 1, 1]]
-    Solution().setZeroes_bruteForce(matrix)
+    Solution().setZeroes(matrix)
     print(matrix) # [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]]

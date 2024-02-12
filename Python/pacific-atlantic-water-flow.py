@@ -29,7 +29,47 @@
 #
 # [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
 
+from typing import List
+from collections import deque
 class Solution(object):
+    def pacificAtlantic1(self, heights: List[List[int]]) -> List[List[int]]:
+        def bfs(board, r, c):
+            q = deque([(r, c)])
+            used = {(r, c)}
+            while q:
+                x, y = q.popleft()
+                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    x2, y2 = x + dx, y + dy
+                    if 0 <= x2 < m and 0 <= y2 < n and heights[x2][y2] <= heights[x][y] and (x2, y2) not in used:
+                        if board[x2][y2] == 1:
+                            board[r][c] = 1
+                            return
+                        elif board[x2][y2] == 0:
+                            q.append((x2, y2))
+                            used.add((x2, y2))
+            board[r][c] = -1
+
+        m, n = len(heights), len(heights[0])
+        toPacific = [[0] * n for _ in range(m)]
+        toPacific[0] = [1] * n  # first row
+        for r in range(1, m):  # first column
+            toPacific[r][0] = 1
+
+        for r in range(1, m):
+            for c in range(1, n):
+                bfs(toPacific, r, c)
+
+        toAtlantic = [[0] * n for _ in range(m)]
+        toAtlantic[m - 1] = [1] * n  # last row
+        for r in range(0, m - 1):  # last column
+            toAtlantic[r][n - 1] = 1
+
+        for r in range(m-1):
+            for c in range(n-1):
+                bfs(toAtlantic, r, c)
+
+        return [[r, c] for r in range(m) for c in range(n) if toPacific[r][c] == toAtlantic[r][c] == 1]
+
     def pacificAtlantic(self, matrix):
         """
         :type matrix: List[List[int]]
@@ -56,13 +96,18 @@ class Solution(object):
 
         res = []
         m, n = len(matrix),len(matrix[0])
-        visited = [[0 for _ in xrange(n)] for _ in xrange(m)]
+        visited = [[0 for _ in range(n)] for _ in range(m)]
 
-        for i in xrange(m):
+        for i in range(m):
             pacificAtlanticHelper(matrix, i, 0, float("-inf"), PACIFIC, visited, res)
             pacificAtlanticHelper(matrix, i, n - 1, float("-inf"), ATLANTIC, visited, res)
-        for j in xrange(n):
+        for j in range(n):
             pacificAtlanticHelper(matrix, 0, j, float("-inf"), PACIFIC, visited, res)
             pacificAtlanticHelper(matrix, m - 1, j, float("-inf"), ATLANTIC, visited, res)
 
         return res
+
+print(Solution().pacificAtlantic([[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]))
+# [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]
+
+print(Solution().pacificAtlantic([[1]]))  # [[0, 0]]

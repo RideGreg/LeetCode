@@ -42,6 +42,23 @@ class Solution:
     # @param node, a undirected graph node
     # @return a undirected graph node
     def cloneGraph(self, node):
+        def getClone(src):  # DFS
+            if src in src2dest:
+                return src2dest[src]
+
+            dest = Node(src.val)
+            src2dest[src] = dest
+            for nei in src.neighbors:
+                nei_clone = getClone(nei)
+                dest.neighbors.append(nei_clone)
+
+            return dest
+
+        if node is None: return None
+        src2dest = {}
+        return getClone(node)
+
+    def cloneGraph2(self, node):
         if node is None:
             return None
         mapping = {}
